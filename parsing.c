@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2020/03/10 22:11:29 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/03/11 19:05:13 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,33 +39,34 @@ typedef	struct	s_int
 
 typedef struct	s_cub
 {
-	int screenlength;
-	int screenwidth;
-	int colorsky[3];
-	int colorfloor[3];
-	int northtexture;
-	int southtexture;
-	int easttexture;
-	int westtexture;
-	int spritetexture;
-	char **map;
+	int		screenlength;
+	int		screenwidth;
+	int		colorsky[3];
+	int		colorfloor[3];
+	int		northtexture;
+	int		southtexture;
+	int		easttexture;
+	int		westtexture;
+	int		spritetexture;
+	char	**map;
 	t_int	player_pos;
-	char *text[TEXTURE_COUNT];
+	char	*text[TEXTURE_COUNT];
 }				t_cub;
 
-int parse_file_cub(t_cub *map, char **argv, int argc)
+int	parse_file_cub(t_cub *map, char **argv, int argc)
 {
-	int fd;
-	char *line;
-	check_file_validity(map,argv, argc);
-	check_instruction_validity(map,argv);
-return(0);
+	int			fd;
+	char		*line;
+
+	check_file_validity(map, argv, argc);
+	check_instruction_validity(map, argv);
+	return (0);
 }
 
-int	check_instruction_validity(t_cub *map, char ** argv)
+int	check_instruction_validity(t_cub *map, char **argv)
 {
-	int fd;
-	char *line;
+	int			fd;
+	char		*line;
 
 	line = NULL;
 	fd = open(argv[1], O_RDONLY);
@@ -73,15 +74,15 @@ int	check_instruction_validity(t_cub *map, char ** argv)
 	{
 		if (line[0] != 0)
 		{
-			if (ft_strnstr(line,"R ",3) != NULL)
+			if (ft_strnstr(line, "R ", 3) != NULL)
 			{
 				check_resolution_validity(map, line);
 			}
-			else if (ft_strnstr(line,"C ",3) != NULL)
+			else if (ft_strnstr(line, "C ", 3) != NULL)
 			{
 				check_sky_validity(map, line);
 			}
-			else if (ft_strnstr(line,"F ",3) != NULL)
+			else if (ft_strnstr(line, "F ", 3) != NULL)
 			{
 				check_floor_validity(map, line);
 			}
@@ -90,74 +91,71 @@ int	check_instruction_validity(t_cub *map, char ** argv)
 	}
 }
 
-int check_floor_validity(t_cub *map, char *line)
+int	check_sky_validity(t_cub *map, char *line)
 {
+	char		*found;
+	char		*colorsky[5];
+	size_t		i;
 
-	printf("IN FLOOR%s\n",line);
-	char *found;
-	char *colorfloor[5];
-	size_t i;
+	i = 0;
+	if (map->colorsky[0] != 0 && map->colorsky[1] != 0 &&
+	map->colorsky[2] != 0)
+		error_str_return("Multiple times Color sky instruction");
+	while ((found = ft_strsep(&line, " ,")) != NULL && i != 5)
+		if (found[0] != 0)
+			colorsky[i++] = found;
+	if (i > 4 || i < 4)
+		error_str_return("Too many/not enought arguments, colorsky need 4");
+	while (--i >= 1)
+		map->colorsky[i - 1] = ft_atoi(colorsky[i]);
+	if (map->colorsky[0] < 0 || map->colorsky[0] > 255 || map->colorsky[1] < 0
+	|| map->colorsky[1] > 255 || map->colorsky[2] < 0 || map->colorsky[2] > 255)
+		error_str_return("Color sky Must be between 0 and 255");
+	while ((i < 3 && (ft_str_isdigit(colorsky[i + 1]) == 1)))
+		i++;
+	if (i < 3 && ft_str_isdigit(colorsky[i + 1]) == 0)
+		error_str_return("Color sky must be digits");
+	return (1);
+}
+
+int	check_floor_validity(t_cub *map, char *line)
+{
+	char		*found;
+	char		*colorfloor[5];
+	size_t		i;
 
 	i = 0;
 	if (map->colorfloor[0] != 0 && map->colorfloor[1] != 0 &&
 	map->colorfloor[2] != 0)
 		error_str_return("Multiple times Color floor instruction");
-	while ((found = ft_strsep(&line," ,")) != NULL &&  i != 5)
+	while ((found = ft_strsep(&line, " ,")) != NULL && i != 5)
 		if (found[0] != 0)
 			colorfloor[i++] = found;
-	if (i > 4)
-		error_str_return("Too many arguments, colorfloor need 3 got more ");
-	if (i < 4)
-		error_str_return("Not enought arguments, colorfloor need 3 got less ");
+	if (i > 4 || i < 4)
+		error_str_return("Too many/not enought arguments, colorfloor need 4");
 	while (--i >= 1)
 		map->colorfloor[i - 1] = ft_atoi(colorfloor[i]);
-	if (map->colorfloor[0] < 0 || map->colorfloor[0] > 255 ||
-	map->colorfloor[1] < 0 || map->colorfloor[1] > 255 ||
-	map->colorfloor[2] < 0 || map->colorfloor[2] > 255)
-		error_str_return("Color floor Must be between 0 and 255");
-	return (1);
-}
-
-int check_sky_validity(t_cub *map, char *line)
-{
-	char *found;
-	char *colorsky[5];
-	size_t i;
-
-	printf("IN SKY\t%s\n",line);
-	i = 0;
-	if (map->colorsky[0] != 0 && map->colorsky[1] != 0 &&
-	map->colorsky[2] != 0)
-		error_str_return("Multiple times Color sky instruction");
-	while ((found = ft_strsep(&line," ,")) != NULL &&  i != 5)
-		if (found[0] != 0)
-		{
-			colorsky[i++] = found;
-			printf("%s\n",found);
-		}
-	if (i > 4)
-		error_str_return("Too many arguments, colorsky need 3 got more ");
-	if (i < 4)
-		error_str_return("Not enought arguments, colorsky need 3 got less ");
-	while (--i >= 1)
-		map->colorsky[i - 1] = ft_atoi(colorsky[i]);
-	if (map->colorsky[0] < 0 || map->colorsky[0] > 255 ||
-	map->colorsky[1] < 0 || map->colorsky[1] > 255 ||
-	map->colorsky[2] < 0 || map->colorsky[2] > 255)
+	if (map->colorfloor[0] < 0 || map->colorfloor[0] > 255
+	|| map->colorfloor[1] < 0 || map->colorfloor[1] > 255
+	|| map->colorfloor[2] < 0 || map->colorfloor[2] > 255)
 		error_str_return("Color sky Must be between 0 and 255");
+	while ((i < 3 && (ft_str_isdigit(colorfloor[i + 1]) == 1)))
+		i++;
+	if (i < 3 && ft_str_isdigit(colorfloor[i + 1]) == 0)
+		error_str_return("Color floor must be digits");
 	return (1);
 }
 
-int check_resolution_validity(t_cub *map, char *line)
+int	check_resolution_validity(t_cub *map, char *line)
 {
-	char *found;
-	char *resolution[4];
-	size_t i;
+	char		*found;
+	char		*resolution[4];
+	size_t		i;
 
 	i = 0;
 	if (map->screenlength != 0 || map->screenwidth != 0)
 		error_str_return("Multiple times Resolution instruction");
-	while ((found = ft_strsep(&line," ")) != NULL &&  i != 4)
+	while ((found = ft_strsep(&line, " ")) != NULL && i != 4)
 		if (found[0] != 0)
 			resolution[i++] = found;
 	if (i > 3)
@@ -176,14 +174,14 @@ int check_resolution_validity(t_cub *map, char *line)
 	}
 }
 
-int	check_file_validity(t_cub *map,char **argv,int argc)
+int	check_file_validity(t_cub *map, char **argv, int argc)
 {
-	int fd;
-	char *file;
+	int			fd;
+	char		*file;
 
 	if (argc < 2)
 		error_str_return("Missing map file");
-	if(argc == 3)
+	if (argc == 3)
 		if (ft_strncmp(argv[2], "--save", 8) != 0)
 			error_str_return("Bad option here only --save available");
 	if ((file = ft_strnstr(argv[1], ".cub", ft_strlen(argv[1]))) == NULL)
@@ -197,25 +195,37 @@ int	check_file_validity(t_cub *map,char **argv,int argc)
 		if (*file != 0)
 			error_str_return("Bad Format File");
 	}
-	if ((fd = open(argv[1],O_RDONLY)) == -1)
+	if ((fd = open(argv[1], O_RDONLY)) == -1)
 		error_str_return("Could not open file");
 	else
 		close(fd);
 	return (1);
 }
 
-int error_str_return(char *str)
+int	ft_str_isdigit(char *str)
+{
+	size_t i;
+
+	i = 0;
+	while (str[i] && ft_isdigit(str[i]) == 1)
+		i++;
+	if (str[i] == 0)
+		return (1);
+	return (0);
+}
+
+int	error_str_return(char *str)
 {
 	printf("ERROR\n%s", str);
 	exit(-1);
 }
 
-int main(int argc, char** argv)
+int	main(int argc, char **argv)
 {
-	char *line;
-	char	buff[1024];
+	char		*line;
+	char		buff[1024];
+	t_cub		*map;
 
-	t_cub *map;
 	ft_bzero((map = malloc(sizeof(t_cub))), sizeof(t_cub));
 	parse_file_cub(map, argv, argc);
 	printf("file valid\n");

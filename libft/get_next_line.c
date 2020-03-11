@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/11/14 07:02:47 by mhaman            #+#    #+#             */
-/*   Updated: 2020/03/08 17:40:58 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/03/11 10:34:09 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,16 @@ size_t	next_newline(char **line, char **rest, size_t rsize)
 size_t	next_read(char **rest, int fd, char **line, size_t rsize)
 {
 	size_t	esize;
-	char	buffer2[100 + 1];
+	char	buffer2[BUFFER_SIZE + 1];
 
 	while (!(ft_strchr(*rest, '\n')))
 	{
-		esize = read(fd, buffer2, 100);
+		esize = read(fd, buffer2, BUFFER_SIZE);
 		buffer2[esize] = '\0';
 		rsize += esize;
 		if (!(*rest = ft_strjoin(*rest, buffer2)))
 			return (free_str(rest, -1));
-		if (esize != 100)
+		if (esize != BUFFER_SIZE)
 			break ;
 	}
 	return (next_newline(line, rest, rsize));
@@ -66,12 +66,12 @@ size_t	next_read(char **rest, int fd, char **line, size_t rsize)
 
 int		get_next_line(int fd, char **line)
 {
-	char			buffer[100 + 1];
+	char			buffer[BUFFER_SIZE + 1];
 	static	char	*rest = NULL;
 	size_t			rsize;
 
 	*line = NULL;
-	if (!line || 100 < 1 || read(fd, buffer, 0) < 0)
+	if (!line || BUFFER_SIZE < 1 || read(fd, buffer, 0) < 0)
 	{
 		*line = ft_strdup("");
 		return (free_str(&rest, -1));
@@ -79,7 +79,7 @@ int		get_next_line(int fd, char **line)
 	if (!rest)
 		if (!(rest = ft_strdup("")))
 			return (free_str(&rest, -1));
-	rsize = 100;
+	rsize = BUFFER_SIZE;
 	if (ft_strchr(rest, '\n'))
 		return (next_newline(line, &rest, rsize));
 	return (next_read(&rest, fd, line, rsize));

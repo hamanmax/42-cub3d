@@ -6,7 +6,7 @@
 #    By: mhaman <mhaman@student.le-101.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/25 08:58:00 by mhaman            #+#    #+#              #
-#    Updated: 2020/03/04 10:39:51 by mhaman           ###   ########lyon.fr    #
+#    Updated: 2020/03/11 14:03:11 by mhaman           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ SRC = ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c ft_isspace.c ft
 
 OBJ = $(SRC:.c=.o)
 
-WFLAGS = -Wall -Wextra -Werror
+WFLAGS = -Wall -Wextra
 
 DEBUG_FLAGS ?=
 
@@ -32,7 +32,7 @@ $(NAME):	$(OBJ)
 	ar -rc $@ $^ 
 
 %.o: %.c libft.h
-	$(CC) $(WFLAGS) $(DEBUG_FLAGS) -c $< -o $@
+	$(CC) $(WFLAGS) $(DEBUG_FLAGS) -D BUFFER_SIZE=100 -c $< -o $@
 
 clean:
 	$(RM) $(OBJ)

@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 15:58:20 by mhaman            #+#    #+#             */
-/*   Updated: 2020/03/04 10:38:04 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/03/11 10:44:57 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char	*ft_strnstr(const char *string, const char *to_find, size_t len);
 char	*ft_strsep(char **stringp, const char *delim);
 char	*ft_strrchr(const char *str, int c);
 char	*ft_strtrim(char const *s1, char const *set);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_substr(char *s, unsigned int start, size_t len);
 char	*ft_subfstr(char *s, unsigned int start, size_t len);
 int		ft_tolower(int c);
 int		ft_toupper(int c);

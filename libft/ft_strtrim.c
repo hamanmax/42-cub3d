@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/12 12:06:59 by mhaman            #+#    #+#             */
-/*   Updated: 2020/03/04 09:40:26 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/03/11 10:46:10 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,5 @@ char	*ft_strtrim(char const *s1, char const *set)
 	end = ft_strlen(s1) - 1;
 	while (buffer[(unsigned char)s1[end]] == 1)
 		end--;
-	return (ft_substr(s1, start, end - start + 1));
+	return (ft_substr((char *)s1, start, end - start + 1));
 }
