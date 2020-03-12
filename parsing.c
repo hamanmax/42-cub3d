@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaman <mhaman@student.le-101.fr>          +#+  +:+       +#+        */
+/*   By: mhaman <mhama     n@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2020/03/10 22:11:29 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/03/12 14:07:36 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 
 enum			e_text
 {
-	NORTH,
-	SOUTH,
-	WEST,
-	EAST,
+	NO,
+	SO,
+	WE,
+	EA,
 	SPRITE,
 	TEXTURE_COUNT
 };
@@ -41,8 +41,8 @@ typedef struct	s_cub
 {
 	int screenlength;
 	int screenwidth;
-	int colorsky[3];
-	int colorfloor[3];
+	int colorsky[4];
+	int colorfloor[4];
 	int northtexture;
 	int southtexture;
 	int easttexture;
@@ -85,15 +85,91 @@ int	check_instruction_validity(t_cub *map, char ** argv)
 			{
 				check_floor_validity(map, line);
 			}
+			else if (ft_strnstr(line,"S ",3) || ft_strnstr(line,"SO ",4)
+			|| ft_strnstr(line,"NO ",4) || ft_strnstr(line,"WE ",4)
+			|| ft_strnstr(line,"EA ",4))
+			{
+				check_texture_validity(map, line);
+			}
+			else if (ft_strnstr(line,"1 ",3) || ft_strnstr(line,"  ",3))
+			{
+				check_map_validity(map, line);
+			}
+			else
+			{
+				free(line);
+				error_str_return("Unreconized Arguments");
+			}
 			free(line);
 		}
 	}
 }
 
+int check_texture_validity(t_cub *map, char *line)
+{
+	char *found;
+	char *texture[2];
+	size_t i;
+
+	i = 0;
+	if ((ft_strnstr(line,"S ",3) && map->text[SPRITE]) ||
+	(ft_strnstr(line,"SO ",4) && map->text[SO]) || (ft_strnstr(line,"NO ",4)
+	&& map->text[NO]) || (ft_strnstr(line,"WE ",4) && map->text[WE]) ||
+	(ft_strnstr(line,"EA ",4) && map->text[EA]))
+		error_str_return("Textures Indication given twice");
+	while ((found = ft_strsep(&line," ")))
+		if (found[0])
+			texture[i++] = found;
+	if (i < 2 || i > 2)
+		error_str_return("Too many/not enought information");
+	map->text[check_type_texture(texture[0])] = ft_strdup(texture[1]);
+	if ((i = open(map->text[check_type_texture(texture[0])],O_RDONLY)) == -1)
+		error_str_return("can't open texture files");
+	else
+		close(i);
+}
+
+int	check_type_texture(char *line)
+{
+	if (ft_strnstr(line,"NO",3))
+		return(0);
+	else if (ft_strnstr(line,"SO",3))
+		return(1);
+	else if (ft_strnstr(line,"WE",3))
+		return(2);
+	else if (ft_strnstr(line,"EA",3))
+		return(3);
+	return(4);
+}
+
+int check_map_validity(t_cub *map, char *line)
+{
+	check_struct_validity(map);
+}
+
+int	check_struct_validity(t_cub *map)
+{
+	if (!map->screenlength || !map->screenwidth)
+		error_str_return("Resolution not set");
+	if (!map->colorfloor[0])
+		error_str_return("Color Sky not set");
+	if (!map->colorsky[0])
+		error_str_return("Color Floor not set");
+	if (!map->text[NO])
+		error_str_return("NORTH texture not set");
+	if (!map->text[SO])
+		error_str_return("SOUTH texture not set");
+	if (!map->text[WE])
+		error_str_return("WEST texture not set");
+	if (!map->text[EA])
+		error_str_return("EAST texture not set");
+	if (!map->text[SPRITE])
+		error_str_return("SPRITE texture not set");
+
+}
+
 int check_floor_validity(t_cub *map, char *line)
 {
-
-	printf("IN FLOOR%s\n",line);
 	char *found;
 	char *colorfloor[5];
 	size_t i;
@@ -102,15 +178,19 @@ int check_floor_validity(t_cub *map, char *line)
 	if (map->colorfloor[0] != 0 && map->colorfloor[1] != 0 &&
 	map->colorfloor[2] != 0)
 		error_str_return("Multiple times Color floor instruction");
-	while ((found = ft_strsep(&line," ,")) != NULL &&  i != 5)
+	while ((found = ft_strsep(&line," ,")) &&  i != 5)
 		if (found[0] != 0)
+		{
 			colorfloor[i++] = found;
+			printf("%s\n",colorfloor[i - 1]);
+		}
 	if (i > 4)
 		error_str_return("Too many arguments, colorfloor need 3 got more ");
 	if (i < 4)
 		error_str_return("Not enought arguments, colorfloor need 3 got less ");
 	while (--i >= 1)
 		map->colorfloor[i - 1] = ft_atoi(colorfloor[i]);
+	map->colorfloor[0] = colorfloor[0][0];
 	if (map->colorfloor[0] < 0 || map->colorfloor[0] > 255 ||
 	map->colorfloor[1] < 0 || map->colorfloor[1] > 255 ||
 	map->colorfloor[2] < 0 || map->colorfloor[2] > 255)
@@ -124,7 +204,6 @@ int check_sky_validity(t_cub *map, char *line)
 	char *colorsky[5];
 	size_t i;
 
-	printf("IN SKY\t%s\n",line);
 	i = 0;
 	if (map->colorsky[0] != 0 && map->colorsky[1] != 0 &&
 	map->colorsky[2] != 0)
@@ -133,7 +212,6 @@ int check_sky_validity(t_cub *map, char *line)
 		if (found[0] != 0)
 		{
 			colorsky[i++] = found;
-			printf("%s\n",found);
 		}
 	if (i > 4)
 		error_str_return("Too many arguments, colorsky need 3 got more ");
