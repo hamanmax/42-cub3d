@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2020/03/11 19:05:13 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/03/13 14:10:21 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 
 enum			e_text
 {
-	NORTH,
-	SOUTH,
-	WEST,
-	EAST,
+	NO,
+	SO,
+	WE,
+	EA,
 	SPRITE,
 	TEXTURE_COUNT
 };
@@ -39,18 +39,18 @@ typedef	struct	s_int
 
 typedef struct	s_cub
 {
-	int		screenlength;
-	int		screenwidth;
-	int		colorsky[3];
-	int		colorfloor[3];
-	int		northtexture;
-	int		southtexture;
-	int		easttexture;
-	int		westtexture;
-	int		spritetexture;
-	char	**map;
-	t_int	player_pos;
-	char	*text[TEXTURE_COUNT];
+	int			screenlength;
+	int			screenwidth;
+	int			colorsky[4];
+	int			colorfloor[4];
+	int			northtexture;
+	int			southtexture;
+	int			easttexture;
+	int			westtexture;
+	int			spritetexture;
+	char		**map;
+	t_int		player_pos;
+	char		*text[TEXTURE_COUNT];
 }				t_cub;
 
 int	parse_file_cub(t_cub *map, char **argv, int argc)
@@ -68,81 +68,120 @@ int	check_instruction_validity(t_cub *map, char **argv)
 	int			fd;
 	char		*line;
 
-	line = NULL;
 	fd = open(argv[1], O_RDONLY);
 	while (get_next_line(fd, &line) != 0)
 	{
 		if (line[0] != 0)
 		{
-			if (ft_strnstr(line, "R ", 3) != NULL)
-			{
+			if (ft_strnstr(line, "R ", 3))
 				check_resolution_validity(map, line);
-			}
-			else if (ft_strnstr(line, "C ", 3) != NULL)
+			else if (ft_strnstr(line, "C ", 3))
 			{
-				check_sky_validity(map, line);
+				check_color_validity(map, line, map->colorsky);
 			}
-			else if (ft_strnstr(line, "F ", 3) != NULL)
+			else if (ft_strnstr(line, "F ", 3))
+				check_color_validity(map, line, map->colorfloor);
+			else if (check_type_texture(line) != -1)
+				check_texture_validity(map, line);
+			else if (ft_strnstr(line, "11", 3) ||
+			ft_strnstr(line, "  ", 3) || ft_strnstr(line, "10", 3))
+				check_map_validity(map, line);
+			else
 			{
-				check_floor_validity(map, line);
+				free(line);
+				error_str_return("Unreconized Arguments");
 			}
 			free(line);
 		}
 	}
 }
 
-int	check_sky_validity(t_cub *map, char *line)
+int	check_texture_validity(t_cub *map, char *line)
 {
 	char		*found;
-	char		*colorsky[5];
+	char		*texture[3];
 	size_t		i;
 
 	i = 0;
-	if (map->colorsky[0] != 0 && map->colorsky[1] != 0 &&
-	map->colorsky[2] != 0)
-		error_str_return("Multiple times Color sky instruction");
-	while ((found = ft_strsep(&line, " ,")) != NULL && i != 5)
-		if (found[0] != 0)
-			colorsky[i++] = found;
-	if (i > 4 || i < 4)
-		error_str_return("Too many/not enought arguments, colorsky need 4");
-	while (--i >= 1)
-		map->colorsky[i - 1] = ft_atoi(colorsky[i]);
-	if (map->colorsky[0] < 0 || map->colorsky[0] > 255 || map->colorsky[1] < 0
-	|| map->colorsky[1] > 255 || map->colorsky[2] < 0 || map->colorsky[2] > 255)
-		error_str_return("Color sky Must be between 0 and 255");
-	while ((i < 3 && (ft_str_isdigit(colorsky[i + 1]) == 1)))
-		i++;
-	if (i < 3 && ft_str_isdigit(colorsky[i + 1]) == 0)
-		error_str_return("Color sky must be digits");
-	return (1);
+	if (map->text[check_type_texture(line)])
+		error_str_return("Textures Indication given twice");
+	while ((found = ft_strsep(&line, " ")) && i <= 2)
+		if (found[0])
+			texture[i++] = found;
+	if (i < 2 || i > 2)
+		error_str_return("Too many/not enought information");
+	map->text[check_type_texture(texture[0])] = ft_strdup(texture[1]);
+	if ((i = open(map->text[check_type_texture(texture[0])], O_RDONLY)) == -1)
+		error_str_return("can't open texture files");
+	else
+		close(i);
 }
 
-int	check_floor_validity(t_cub *map, char *line)
+int	check_type_texture(char *line)
+{
+	if (ft_strnstr(line, "NO", 3))
+		return (0);
+	else if (ft_strnstr(line, "SO", 3))
+		return (1);
+	else if (ft_strnstr(line, "WE", 3))
+		return (2);
+	else if (ft_strnstr(line, "EA", 3))
+		return (3);
+	else if (ft_strnstr(line, "S", 2))
+		return (4);
+	return (-1);
+}
+
+int	check_map_validity(t_cub *map, char *line)
+{
+	check_struct_validity(map);
+}
+
+int	check_struct_validity(t_cub *map)
+{
+	if (!map->screenlength || !map->screenwidth)
+		error_str_return("Resolution not set");
+	if (!map->colorfloor[0])
+		error_str_return("Color Floor not set");
+	if (!map->colorsky[0])
+		error_str_return("Color sky not set");
+	if (!map->text[NO])
+		error_str_return("NORTH texture not set");
+	if (!map->text[SO])
+		error_str_return("SOUTH texture not set");
+	if (!map->text[WE])
+		error_str_return("WEST texture not set");
+	if (!map->text[EA])
+		error_str_return("EAST texture not set");
+	if (!map->text[SPRITE])
+		error_str_return("SPRITE texture not set");
+	return (0);
+}
+
+int	check_color_validity(t_cub *map, char *line, int color[4])
 {
 	char		*found;
-	char		*colorfloor[5];
-	size_t		i;
+	char		*colorstr[5];
+	int			i;
 
 	i = 0;
-	if (map->colorfloor[0] != 0 && map->colorfloor[1] != 0 &&
-	map->colorfloor[2] != 0)
-		error_str_return("Multiple times Color floor instruction");
-	while ((found = ft_strsep(&line, " ,")) != NULL && i != 5)
+	if (color[0])
+		error_str_return("Multiple times Color sky instruction");
+	while ((found = ft_strsep(&line, " ,")) && i != 5)
 		if (found[0] != 0)
-			colorfloor[i++] = found;
+			colorstr[i++] = found;
 	if (i > 4 || i < 4)
-		error_str_return("Too many/not enought arguments, colorfloor need 4");
-	while (--i >= 1)
-		map->colorfloor[i - 1] = ft_atoi(colorfloor[i]);
-	if (map->colorfloor[0] < 0 || map->colorfloor[0] > 255
-	|| map->colorfloor[1] < 0 || map->colorfloor[1] > 255
-	|| map->colorfloor[2] < 0 || map->colorfloor[2] > 255)
+		error_str_return("Too many/not enought arguments, color need 4");
+	while (i-- >= 1)
+		color[i] = ft_atoi(colorstr[i]);
+	color[0] = colorstr[0][0];
+	if (color[1] < 0 || color[1] > 255 || color[2] < 0
+	|| color[2] > 255 || color[3] < 0 || color[3] > 255)
 		error_str_return("Color sky Must be between 0 and 255");
-	while ((i < 3 && (ft_str_isdigit(colorfloor[i + 1]) == 1)))
+	while ((i < 1 && (ft_str_isdigit(colorstr[i + 2]) == 1)))
 		i++;
-	if (i < 3 && ft_str_isdigit(colorfloor[i + 1]) == 0)
-		error_str_return("Color floor must be digits");
+	if (i < 3 && ft_str_isdigit(colorstr[i + 2]) == 0)
+		error_str_return("Color sky must be digits");
 	return (1);
 }
 
@@ -204,7 +243,7 @@ int	check_file_validity(t_cub *map, char **argv, int argc)
 
 int	ft_str_isdigit(char *str)
 {
-	size_t i;
+	size_t		i;
 
 	i = 0;
 	while (str[i] && ft_isdigit(str[i]) == 1)
