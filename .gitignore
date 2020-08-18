@@ -1,5 +1,6 @@
 *.o
 *.a
 a.out*
-toto
+test.c
 libft/*.a
+minilibx/*
