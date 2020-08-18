@@ -79,7 +79,6 @@ float	check_wall_north_side(t_cub *map, t_ray *ray, int i)
 
 float	check_wall_east_up(t_cub *map, t_ray *ray, int i)
 {
-	printf("%d\t%f\n",i,ceilf(ray[i].oppose));
 	ray[i].wallpos[0] = set_wall_pos(ray[i].raypos[0].x + ceilf(ray[i].oppose), ray[i].raypos[0].y);
 	ray[i].wallpos[1] = set_wall_pos(ray[i].raypos[0].x + ceilf(ray[i].oppose), ray[i].raypos[0].y + 1);
 	if (calc_t(ray, map, i) > 0 && ray[i].t <= 1)
