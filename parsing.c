@@ -65,7 +65,6 @@ int	check_instruction_validity(t_cub *map, char **line)
 				error_str_return("Unreconized Arguments");
 		}
 	}
-
 	free((char *)top);
 	return (1);
 }
@@ -112,7 +111,6 @@ int	check_map_validity(t_cub *map, char *found, char **line)
 	const int		j = (ft_str_char_occur(*line,'\n') + 1);
 	int		i;
 	char	*buff;
-
 
 	i = 1;
 	*line = ft_strfjoin(" ",*line, 4);
