@@ -173,7 +173,7 @@ void	check_wall_south(t_cub *map, t_ray *ray,int i)
 {
 	while (map->map[(int)ray[i].raypos[0].x][(int)ray[i].raypos[0].y] != '1')
 	{
-		ray[i].raypos[1] = set_ray_pos(ray[i].raypos[0].x - 1, ray[i].raypos[0].y + ray[i].oppose);
+		ray[i].raypos[1] = set_ray_pos(ray[i].raypos[0].x + 1, ray[i].raypos[0].y - ray[i].oppose);
 		if ((int)ray[i].raypos[1].y != (int)ray[i].raypos[0].y) /* S'il rentre la dedans c'est qu'il est en +1 +1*/
 		{
 			if (map->map[(int)ray[i].raypos[1].x][(int)ray[i].raypos[0].y] == '1') /* si la case au dessus est = a un 1 */

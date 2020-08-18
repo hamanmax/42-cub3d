@@ -3,4 +3,5 @@
 a.out*
 test.c
 libft/*.a
+toto.txt
 minilibx/*
