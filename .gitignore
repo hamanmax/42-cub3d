@@ -4,4 +4,6 @@ a.out*
 test.c
 libft/*.a
 toto.txt
+test.c
 minilibx/*
+cub3d.h.*
