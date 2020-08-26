@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:39:04 by mhaman            #+#    #+#             */
-/*   Updated: 2020/08/26 11:16:56 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/08/26 17:17:46 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,12 @@
 #include "mlx.h"
 #include "mlx_int.h"
 
-int rgb_calc(t_cub *map)
+void	move_forward(t_cub *map)
 {
-	int rgb;
-
+	mlx_pixel_put(map->mlx.mlx_ptr,map->mlx.win_ptr,map->screen.x/2,map->screen.y/2,0);
 }
 
-int deal_key(int key,void *params)
-{
-	printf("%d\n",key);
-	
-	return(0);
-}
-
-void put_front(void *mlx_ptr,void *win_ptr,t_cub *map,t_ray *ray)
+void	put_front(t_cub *map)
 {
 	size_t i;
 	size_t j;
@@ -42,11 +34,11 @@ void put_front(void *mlx_ptr,void *win_ptr,t_cub *map,t_ray *ray)
 	j = 0;
 	while (i <= map->projection_id.y)
 	{		
-		if (ray[i].pointpos.x != ray[i - 1].pointpos.x && ray[i].pointpos.y != ray[i - 1].pointpos.y)
+		if (map->ray[i].pointpos.x != map->ray[i - 1].pointpos.x && map->ray[i].pointpos.y != map->ray[i - 1].pointpos.y)
 		{
-			while (m < ray[i].wallheight)
+			while (m < map->ray[i].wallheight)
 			{
-				mlx_pixel_put(mlx_ptr,win_ptr,j +k,(map->screen.y/2 - ray[i].wallheight /2) + m,0);
+				mlx_pixel_put(map->mlx.mlx_ptr,map->mlx.win_ptr,j +k,(map->screen.y/2 - map->ray[i].wallheight /2) + m,0);
 				m++;
 			}
 			m = 1;
@@ -54,26 +46,25 @@ void put_front(void *mlx_ptr,void *win_ptr,t_cub *map,t_ray *ray)
 		}
 		while(j < map->screen.x/60)
 		{
-			while(l < ray[i].wallheight)
+			while(l < map->ray[i].wallheight)
 			{
-				mlx_pixel_put(mlx_ptr,win_ptr,j+k,(map->screen.y/2 - ray[i].wallheight /2) + l,16762880);
-				if (ray[i].pointpos.y == (int)ray[i].pointpos.y)
-				{
-					mlx_pixel_put(mlx_ptr,win_ptr,j+k,(map->screen.y/2 - ray[i].wallheight /2) + l,16743680);
-				}
+				if (map->ray[i].pointpos.y == (int)map->ray[i].pointpos.y)
+					mlx_pixel_put(map->mlx.mlx_ptr,map->mlx.win_ptr,j+k,(map->screen.y/2 - map->ray[i].wallheight /2) + l,16743680);
+				else
+					mlx_pixel_put(map->mlx.mlx_ptr,map->mlx.win_ptr,j+k,(map->screen.y/2 - map->ray[i].wallheight /2) + l,16762880);
 				l++;
 			}
-			mlx_pixel_put(mlx_ptr,win_ptr,j+k,map->screen.y/2 - ray[i].wallheight /2,0);
-			mlx_pixel_put(mlx_ptr,win_ptr,j+k,map->screen.y/2 + ray[i].wallheight/2,0);
+			mlx_pixel_put(map->mlx.mlx_ptr,map->mlx.win_ptr,j+k,map->screen.y/2 - map->ray[i].wallheight /2,0);
+			mlx_pixel_put(map->mlx.mlx_ptr,map->mlx.win_ptr,j+k,map->screen.y/2 + map->ray[i].wallheight/2,0);
 
 			l = 0;
 			j++;
 		}
-		if (ray[i].pointpos.x != ray[i + 1].pointpos.x && ray[i].pointpos.y != ray[i + 1].pointpos.y)
+		if (map->ray[i].pointpos.x != map->ray[i + 1].pointpos.x && map->ray[i].pointpos.y != map->ray[i + 1].pointpos.y)
 		{
-			while (m < ray[i].wallheight)
+			while (m < map->ray[i].wallheight)
 			{
-				mlx_pixel_put(mlx_ptr,win_ptr,j +k,(map->screen.y/2 - ray[i].wallheight /2) + m,0);
+				mlx_pixel_put(map->mlx.mlx_ptr,map->mlx.win_ptr,j +k,(map->screen.y/2 - map->ray[i].wallheight /2) + m,0);
 				m++;
 			}
 			m = 1;
@@ -89,7 +80,23 @@ void put_front(void *mlx_ptr,void *win_ptr,t_cub *map,t_ray *ray)
 }
 
 
-void put_backround(void *mlx_ptr,void *win_ptr,t_cub *map)
+int deal_key(int key,void *params)
+{
+	t_cub *map;
+	void *win_ptr2;
+	
+	map = params;
+	printf("%f\n",map->player_pos.x);
+	printf("%d\n",key);
+	if (key == 119)
+	{
+		move_forward(map);
+		return(1);
+	}
+	return(0);
+}
+
+void put_backround(t_cub *map)
 {
 	size_t i;
 	size_t j;
@@ -98,8 +105,8 @@ void put_backround(void *mlx_ptr,void *win_ptr,t_cub *map)
 	j = 0;
 	while (j <= map->screen.y/2)
 	{
-		mlx_pixel_put(mlx_ptr,win_ptr,i,j,map->colorsky);
-		mlx_pixel_put(mlx_ptr,win_ptr,i,j + map->screen.y/2,map->colorfloor);
+		mlx_pixel_put(map->mlx.mlx_ptr,map->mlx.win_ptr,i,j,map->colorsky);
+		mlx_pixel_put(map->mlx.mlx_ptr,map->mlx.win_ptr,i,j + map->screen.y/2,map->colorfloor);
 		i++;
 		if (i == map->screen.x)
 		{
@@ -110,10 +117,8 @@ void put_backround(void *mlx_ptr,void *win_ptr,t_cub *map)
 
 }
 
-void create_new_black_window(t_cub *map,t_ray *ray)
+void create_new_black_window(t_cub *map)
 {
-	void *mlx_ptr;
-	void *win_ptr;
 	int xpm1_x;
 	int xpm1_y;
 	unsigned int tutu;
@@ -121,16 +126,16 @@ void create_new_black_window(t_cub *map,t_ray *ray)
 	void *img_ptr2;
 	int i = 15;
 	int j = 0;
-	void *p;
 	
-  //  p = mlx;
-	mlx_ptr = mlx_init();
-	win_ptr = mlx_new_window(mlx_ptr, map->screen.x, map->screen.y,"Test N1");
-	//img_ptr2 = mlx_xpm_file_to_image(mlx_ptr,"mur.xpm",&xpm1_x,&xpm1_y);
-	put_backround(mlx_ptr,win_ptr,map);
-	put_front(mlx_ptr,win_ptr,map,ray);
-	//mlx_put_image_to_window(mlx_ptr,win_ptr,img_ptr2,50,50);
-   	mlx_key_hook(win_ptr,deal_key,(void*)0);
-	mlx_loop(mlx_ptr);
-	rgb_calc(map);
+
+	
+	map->mlx.mlx_ptr = mlx_init();
+	map->mlx.win_ptr = mlx_new_window(map->mlx.mlx_ptr, map->screen.x, map->screen.y,"Test N1");
+	//img_ptr2 = mlx_xpm_file_to_image(map->mlx.mlx_ptr,"mur.xpm",&xpm1_x,&xpm1_y);
+	put_backround(map);
+	put_front(map);
+	//mlx_put_image_to_window(map->mlx.mlx_ptr,map->mlx.win_ptr,img_ptr2,50,50);
+	printf("tftftft\n");
+	mlx_key_hook(map->mlx.win_ptr,deal_key,map);
+	mlx_loop(map->mlx.mlx_ptr);
 }
