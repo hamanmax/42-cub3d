@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2020/08/26 15:17:32 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/08/29 12:30:36 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,13 @@ typedef	struct	s_ray
 	t_float	pointpos;
 }				t_ray;
 
+typedef	struct	s_col
+{
+	int		id;
+	float	diff;
+	float	wallheight;
+}				t_col;
+
 typedef struct	s_cub
 {
 	t_int		screen;
@@ -74,13 +81,13 @@ typedef struct	s_cub
 	int			texture[5];
 	char		**map;
 	double		projectiondist;
-	float		wallheight;
 	t_float		projection_id;
 	t_float		projection_center;
 	t_float		player_pos;
 	t_int		player_pos_base;
 	t_mlx		mlx;
 	t_ray		ray[360];
+	t_col		*colonne;
 	char		*text[TEXTURE_COUNT];
 }				t_cub;
 
@@ -109,5 +116,5 @@ int		check_player_orientation(t_cub *map);
 t_float	set_wall_pos(float x, float y);
 void create_new_black_window(t_cub *map);
 void	draw_ray(t_cub *map,  int i, int j);
-void    calc_correct_distance(t_cub *map, int i,int j);
+void    calc_correct_wallheight(t_cub *map, int i,int j);
 #endif
