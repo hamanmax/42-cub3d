@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2020/08/29 12:30:36 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/08 14:23:21 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,11 @@ enum			e_text
 
 typedef struct	s_mlx
 {
-	void *mlx_ptr;
-	void *win_ptr;
+	void	*ptr;
+	void	*win;
+	int		*data;
+	void	*img;
+	void	*img2;
 
 }				t_mlx;
 
@@ -68,7 +71,8 @@ typedef	struct	s_ray
 
 typedef	struct	s_col
 {
-	int		id;
+	int		ivalue;
+	int		*color;
 	float	diff;
 	float	wallheight;
 }				t_col;

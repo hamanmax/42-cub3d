@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/20 14:49:25 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/04 15:02:31 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/08 14:50:59 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,25 +42,11 @@ void	fill_colonne_wallheight(t_cub *map, int i)
 	while(map->colonne[i - j].wallheight == 0)
 		j++;
 	diff = (map->colonne[i].wallheight - map->colonne[i - j].wallheight) / j;
-	//printf("%f\n",diff);
 	j--;
 	while(map->colonne[i - j].wallheight == 0)
 	{
 		map->colonne[i - j].wallheight = map->colonne[i - j - 1].wallheight + diff;
 		j--;
-	}
-}
-
-void    calc_correct_wallheight(t_cub *map, int i,int j)
-{
-	float pi;
-	int	walldiff;
-
-	pi = 3.14159265359;
-	while(i <= j)
-	{
- 		map->ray[i].wallheight = (0.5/map->ray[i].walldist)*map->projectiondist;
-		i++;
 	}
 }
 
@@ -72,7 +58,7 @@ void calc_colonne_wallheight(t_cub *map, int i,int j)
 
 	c = 0;
 	map->colonne[0].wallheight = map->ray[i].wallheight;
-	map->colonne[map->screen.x - 1].wallheight = map->ray[i - 1].wallheight;
+	map->colonne[0].ivalue = i;
 	while (i <= j)
 	{
 		c++;
@@ -80,6 +66,7 @@ void calc_colonne_wallheight(t_cub *map, int i,int j)
 		map->ray[i].pointpos.x != map->ray[i + 1].pointpos.x)
 		{
 			map->colonne[(int)(c * nbc)].wallheight = map->ray[i].wallheight;
+			map->colonne[(int)(c * nbc)].ivalue = i;
 			if (check_corner(map, i) == 0)
 				map->colonne[(int)(c * nbc) + 1].wallheight = map->ray[i + 1].wallheight;
 			fill_colonne_wallheight(map, (int)(c * nbc));
@@ -87,7 +74,26 @@ void calc_colonne_wallheight(t_cub *map, int i,int j)
 		i++;
 	}
 	map->colonne[map->screen.x - 1].wallheight = map->ray[i - 1].wallheight;
+	map->colonne[map->screen.x - 1].ivalue = i;
 	fill_colonne_wallheight(map, (map->screen.x - 1));
+	c = 0;
+	while(c < map->screen.x)
+	{
+		if (map->colonne[c].ivalue != 0)
+			printf("%f\t%f\n",map->ray[map->colonne[c].ivalue].pointpos.y,map->ray[map->colonne[c].ivalue].t);
+		c++;
+	}
+}
+
+void    calc_correct_wallheight(t_cub *map, int i,int j)
+{
+	float pi;
+	pi = 3.14159265359;
+	while(i <= j)
+	{
+ 		map->ray[i].wallheight = (0.5/map->ray[i].walldist)*map->projectiondist;
+		i++;
+	}
 }
 
 int		projection(t_cub *map)
