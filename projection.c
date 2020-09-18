@@ -5,113 +5,116 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/20 14:49:25 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/08 14:50:59 by mhaman           ###   ########lyon.fr   */
+/*   Created: 2020/09/15 13:02:24 by mhaman            #+#    #+#             */
+/*   Updated: 2020/09/18 11:54:32 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-#include <math.h>
 
-int check_corner(t_cub *map,int i)
+int set_texture(t_cub *map, int i)
 {
-	t_float p[5];
-
-	p[0]= map->ray[i].wallpos[0];
-	p[1]= map->ray[i].wallpos[1];
-	p[2]= map->ray[i + 1].wallpos[0];
-	p[3]= map->ray[i + 1].wallpos[1];
-
-	if (p[0].x == p[2].x && p[0].y == p[2].y)
-		return (1);
-	if (p[0].x == p[3].x && p[0].y == p[3].y)
-		return (1);
-	if (p[1].x == p[2].x && p[1].y == p[2].y)
-		return (1);
-	if (p[1].x == p[3].x && p[1].y == p[3].y)
-		return (1);
-	return (0);
-}
-
-void	fill_colonne_wallheight(t_cub *map, int i)
-{
+	const double a = map->ray[i].angle;
 	int j;
-	double diff;
 
 	j = 1;
-	while(map->colonne[i - j].wallheight == 0)
-		j++;
-	diff = (map->colonne[i].wallheight - map->colonne[i - j].wallheight) / j;
-	j--;
-	while(map->colonne[i - j].wallheight == 0)
+	if ( i < map->screen.x - 1 && map->ray[i].pointpos.y == map->ray[i + 1].pointpos.y)
+		j = 2;
+	if (a >= 90 && a <= 270 && j == 1)
+		j = 0;
+	if (a >= 0 && a <= 180 && j == 2)
+		j = 3;
+	return (j);
+}
+
+t_ste set_start_to_end(t_cub *map, int len, int i)
+{
+	t_ste ste;
+
+	ste.start = map->mlx.width * map->ray[i].t;
+	if (map->ray[i].t < 0.09 || map->ray[i].t > 0.95)
+		ste.start = 0;
+	ste.end = map->mlx.width * map->ray[i].t;
+	if (i + len < map->screen.x - 1 && (map->ray[i + len].t < 0.05 || map->ray[i + len].t > 0.95))
+		ste.end = map->mlx.width;
+	return (ste);
+}
+
+void set_color_ray(t_cub *map, int len, int i)
+{
+	const int k = set_texture(map, i);
+	int l;
+	void *img;
+	int *data;
+	double m;
+	int		n;
+	double diffangle2;
+	t_ste width;
+
+	l = 0;
+	n = 0;
+	m = 0;
+	img = mlx_xpm_file_to_image(map->mlx.ptr, map->text[k], &map->mlx.width, &map->mlx.height);
+	data = (int *)mlx_get_data_addr(img, &map->mlx.bpp, &map->mlx.line_size, &map->mlx.endian);
+	width = set_start_to_end(map, len, i);
+	while (n < len)
 	{
-		map->colonne[i - j].wallheight = map->colonne[i - j - 1].wallheight + diff;
-		j--;
+		diffangle2 = map->mlx.width / map->ray[i + n].wallheight;
+		while (l < (int)map->ray[i + n].wallheight)
+		{
+			map->ray[i + n].color[l] = data[(map->mlx.width * (int)m) + n];
+			l++;
+			if (width.start == 0)
+				width.start = map->mlx.width;
+			m += diffangle2;
+		}
+		m = 0;
+		l = 0;
+		n++;
 	}
 }
 
-void calc_colonne_wallheight(t_cub *map, int i,int j)
+int check_wall_end(t_cub *map, int i)
 {
-	int c;
-	float diff;
-	const float nbc = map->screen.x / 60;
-
-	c = 0;
-	map->colonne[0].wallheight = map->ray[i].wallheight;
-	map->colonne[0].ivalue = i;
-	while (i <= j)
+	if (i < map->screen.x - 1 && map->ray[i].pointpos.x == map->ray[i + 1].pointpos.x)
 	{
-		c++;
-		if (map->ray[i].pointpos.y != map->ray[i + 1].pointpos.y &&
-		map->ray[i].pointpos.x != map->ray[i + 1].pointpos.x)
+		if ((int)map->ray[i].pointpos.y != (int)map->ray[i + 1].pointpos.y)
+			return (1);
+		if (map->ray[i].pointpos.y != map->ray[i + 1].pointpos.y)
+			return (0);
+	}
+	if (i < map->screen.x - 1 && map->ray[i].pointpos.y == map->ray[i + 1].pointpos.y)
+	{
+		if ((int)map->ray[i].pointpos.x != (int)map->ray[i + 1].pointpos.x)
+			return (1);
+		if (map->ray[i].pointpos.x != map->ray[i + 1].pointpos.x)
+			return (0);
+	}
+	return (1);
+}
+
+void get_wall_lenght(t_cub *map)
+{
+	int i;
+	int j;
+
+	j = 0;
+	i = 0;
+	while (i + j < map->screen.x)
+	{
+		if (check_wall_end(map, j + i) == 1)
 		{
-			map->colonne[(int)(c * nbc)].wallheight = map->ray[i].wallheight;
-			map->colonne[(int)(c * nbc)].ivalue = i;
-			if (check_corner(map, i) == 0)
-				map->colonne[(int)(c * nbc) + 1].wallheight = map->ray[i + 1].wallheight;
-			fill_colonne_wallheight(map, (int)(c * nbc));
+			j += i;
+			set_color_ray(map, i, j - i + 1);
+			i = 0;
 		}
 		i++;
 	}
-	map->colonne[map->screen.x - 1].wallheight = map->ray[i - 1].wallheight;
-	map->colonne[map->screen.x - 1].ivalue = i;
-	fill_colonne_wallheight(map, (map->screen.x - 1));
-	c = 0;
-	while(c < map->screen.x)
-	{
-		if (map->colonne[c].ivalue != 0)
-			printf("%f\t%f\n",map->ray[map->colonne[c].ivalue].pointpos.y,map->ray[map->colonne[c].ivalue].t);
-		c++;
-	}
+	set_color_ray(map, i, j);
 }
 
-void    calc_correct_wallheight(t_cub *map, int i,int j)
+void projection(t_cub *map)
 {
-	float pi;
-	pi = 3.14159265359;
-	while(i <= j)
-	{
- 		map->ray[i].wallheight = (0.5/map->ray[i].walldist)*map->projectiondist;
-		i++;
-	}
-}
-
-int		projection(t_cub *map)
-{
-	float	pi;
-
-	pi = 3.14159265359;
-	map->projection_center.x = map->screen.x / 2;
-	map->projection_center.y = map->screen.y / 2;
-	map->projectiondist = (map->screen.x / 2) / tanf((30 * (pi / 180)));
-	if (check_player_orientation(map) == 0)
-		map->projection_id = set_wall_pos(15, 75);
-	if (check_player_orientation(map) == 1)
-		map->projection_id = set_wall_pos(195, 255);
-	if (check_player_orientation(map) == 2)
-		map->projection_id = set_wall_pos(285, 345);
-	if (check_player_orientation(map) == 3)
-		map->projection_id = set_wall_pos(105, 165);
-	calc_correct_wallheight(map, map->projection_id.x,map->projection_id.y);
-	calc_colonne_wallheight(map, map->projection_id.x,map->projection_id.y);
+	get_wall_lenght(map);
+	//set_color_ray();
 }

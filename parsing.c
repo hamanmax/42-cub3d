@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2020/08/25 23:52:59 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/16 13:29:09 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,9 @@ int		check_type_texture(char *line)
 		return (0);
 	else if (ft_strnstr(line, "SO", 2))
 		return (1);
-	else if (ft_strnstr(line, "WE", 2))
-		return (2);
 	else if (ft_strnstr(line, "EA", 2))
+		return (2);
+	else if (ft_strnstr(line, "WE", 2))
 		return (3);
 	else if (ft_strnstr(line, "S", 1))
 		return (4);

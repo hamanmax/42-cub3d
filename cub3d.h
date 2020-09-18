@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/08 14:23:21 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/16 21:57:10 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,16 @@
 #include "mlx.h"
 #include "mlx_int.h"
 
+#define PI	3.14159265359
+#define FOV	60
+#define MVS 0.2
+
 enum			e_text
 {
 	NO,
 	SO,
-	WE,
 	EA,
+	WE,
 	SPRITE,
 	TEXTURE_COUNT
 };
@@ -40,7 +44,13 @@ typedef struct	s_mlx
 	void	*win;
 	int		*data;
 	void	*img;
-	void	*img2;
+	void	*img_text;
+	int		*data_text;
+	int		height;
+	int		width;
+	int		bpp;
+	int		endian;
+	int		line_size;
 
 }				t_mlx;
 
@@ -49,6 +59,19 @@ typedef	struct	s_float
 	double	x;
 	double	y;
 }				t_float;
+
+typedef	struct	s_ste
+{
+	double	start;
+	double	end;
+}				t_ste;
+
+
+typedef	struct	s_raytab
+{
+	double	angle;
+	double	oppose;
+}				t_raytab;
 
 typedef	struct	s_int
 {
@@ -59,39 +82,36 @@ typedef	struct	s_int
 typedef	struct	s_ray
 {
 	int		id;
-	float	t;
-	int		angle;
-	float	oppose;
-	float	walldist;
-	float	wallheight;
+	double	t;
+	double	angle;
+	double	oppose;
+	double	walldist;
+	double	wallheight;
+	int		*color;
 	t_float	raypos[2];
 	t_float	wallpos[2];
 	t_float	pointpos;
 }				t_ray;
 
-typedef	struct	s_col
-{
-	int		ivalue;
-	int		*color;
-	float	diff;
-	float	wallheight;
-}				t_col;
 
 typedef struct	s_cub
 {
 	t_int		screen;
 	int			colorsky;
 	int			colorfloor;
-	int			texture[5];
+	int			texture[TEXTURE_COUNT];
 	char		**map;
+	double		diffangle;
 	double		projectiondist;
 	t_float		projection_id;
 	t_float		projection_center;
 	t_float		player_pos;
+	double		player_orientation;
 	t_int		player_pos_base;
 	t_mlx		mlx;
-	t_ray		ray[360];
-	t_col		*colonne;
+	t_ray		*ray;
+	t_raytab	*raytab;
+	int			tabsize;
 	char		*text[TEXTURE_COUNT];
 }				t_cub;
 
@@ -115,8 +135,7 @@ int		test_map_overall_integrity(t_cub *map, int nbline);
 int		test_map_validity(t_cub *map,int nbline);
 int		check_around_char(char **tab, size_t x, size_t y, char *tofind);
 int		raytracing(t_cub *map);
-int		projection(t_cub *map);
-int		check_player_orientation(t_cub *map);
+void	projection(t_cub *map);
 t_float	set_wall_pos(float x, float y);
 void create_new_black_window(t_cub *map);
 void	draw_ray(t_cub *map,  int i, int j);
