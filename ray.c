@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/24 15:56:30 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/24 16:59:09 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,152 +58,134 @@ int		calc_del(t_ray ray)
 	return (t);
 }
 
-float	calc_t(t_cub *map, int i)
+float	calc_t(t_ray *r,t_cub *map)
 {
 	t_float		p[5];
 
-	p[1] = map->ray[i].wallpos[0];
-	p[2] = map->ray[i].wallpos[1];
+	p[1] = r[0].wallpos[0];
+	p[2] = r[0].wallpos[1];
 	p[3] = map->player_pos;
-	p[4] = map->ray[i].raypos[1];
-	map->ray[i].t = ((p[1].y - p[3].y) *
+	p[4] = r[0].pos[1];
+	r[0].t = ((p[1].y - p[3].y) *
 	(p[3].x - p[4].x) - (p[1].x - p[3].x) *
 	(p[3].y - p[4].y)) / ((p[1].y - p[2].y) *
 	(p[3].x - p[4].x) - (p[1].x - p[2].x) *
 	(p[3].y - p[4].y));
-	return (map->ray[i].t);
+	return (r[0].t);
 }
 
-float	set_wall_north_south(t_cub *map,  int i, char c)
+float	set_wall_north_south(t_ray *r,t_cub *map,char c)
 {
-	const t_float *rp = map->ray[i].raypos;
-	const double op = map->ray[i].oppose;
+	const t_float *rp = r[0].pos;
+	const double op = r[0].oppose;
 	
 	if (c == 'N')
 	{
-		map->ray[i].wallpos[0] = set_wall_pos(rp[0].x, rp[0].y);
-		map->ray[i].wallpos[1] = set_wall_pos(rp[0].x, rp[0].y + 1);
-		if (calc_t(map, i) > 0 && (map->ray[i].t <= 1))
-			return (map->ray[i].t);
-		return ((map->ray[i].t = 0));
+		r[0].wallpos[0] = set_wall_pos(rp[0].x, rp[0].y);
+		r[0].wallpos[1] = set_wall_pos(rp[0].x, rp[0].y + 1);
+		if (calc_t(r, map) > 0 && (r[0].t <= 1))
+			return (r[0].t);
+		return ((r[0].t = 0));
 	}
 	if (c == 'S')
 	{
-		map->ray[i].wallpos[0] = set_wall_pos(rp[0].x + 1, rp[0].y);
-		map->ray[i].wallpos[1] = set_wall_pos(rp[0].x + 1, rp[0].y + 1);
-		if (calc_t(map, i) > 0 && (map->ray[i].t <= 1))
-			return (map->ray[i].t);
-		return ((map->ray[i].t = 0));
+		r[0].wallpos[0] = set_wall_pos(rp[0].x + 1, rp[0].y);
+		r[0].wallpos[1] = set_wall_pos(rp[0].x + 1, rp[0].y + 1);
+		if (calc_t(r, map) > 0 && (r[0].t <= 1))
+			return (r[0].t);
+		return ((r[0].t = 0));
 	}
-	map->ray[i].wallpos[0] = set_wall_pos(rp[0].x, rp[0].y + ceilf(op));
-	map->ray[i].wallpos[1] = set_wall_pos(rp[0].x + 1, rp[0].y + ceilf(op));
-	if (calc_t(map, i) > 0 && (map->ray[i].t <= 1))
-		return (map->ray[i].t);
-	return ((map->ray[i].t = 0));
+	r[0].wallpos[0] = set_wall_pos(rp[0].x, rp[0].y + ceilf(op));
+	r[0].wallpos[1] = set_wall_pos(rp[0].x + 1, rp[0].y + ceilf(op));
+	if (calc_t(r, map) > 0 && (r[0].t <= 1))
+		return (r[0].t);
+	return ((r[0].t = 0));
 }
 
-float	check_wall_north_south_side(t_cub *map,  int i)
+float	set_wall_east_west(t_ray *r,t_cub *map, char c)
 {
-	map->ray[i].wallpos[0].x = (int)map->ray[i].raypos[0].x;
-	map->ray[i].wallpos[0].y = (int)map->ray[i].raypos[0].y + ceilf(map->ray[i].oppose);
-	map->ray[i].wallpos[1].x = (int)map->ray[i].raypos[0].x + 1;
-	map->ray[i].wallpos[1].y = (int)map->ray[i].raypos[0].y + ceilf(map->ray[i].oppose);
-	if (calc_t(map, i) > 0 && (map->ray[i].t <= 1))
-		return (map->ray[i].t);
-	return ((map->ray[i].t = 0));
-}
-
-float	check_wall_east_west_up(t_cub *map,  int i)
-{
-	map->ray[i].wallpos[0] = set_wall_pos(map->ray[i].raypos[0].x +
-	ceilf(map->ray[i].oppose), map->ray[i].raypos[0].y);
-	map->ray[i].wallpos[1] = set_wall_pos(map->ray[i].raypos[0].x +
-	ceilf(map->ray[i].oppose), map->ray[i].raypos[0].y + 1);
-	if (calc_t(map, i) > 0 && (map->ray[i].t <= 1))
-		return (map->ray[i].t);
-	return ((map->ray[i].t = 0));
-}
-
-float	check_wall_east_west_side(t_cub *map,  int i,char c)
-{
+	const t_float *rp = r[0].pos;
+	const double op = r[0].oppose;
+	
 	if (c == 'W')
 	{
-		map->ray[i].wallpos[0].x = (int)map->ray[i].raypos[0].x;
-		map->ray[i].wallpos[0].y = (int)map->ray[i].raypos[0].y;
-		map->ray[i].wallpos[1].x = (int)map->ray[i].raypos[0].x + 1;
-		map->ray[i].wallpos[1].y = (int)map->ray[i].raypos[0].y;
-		if (calc_t(map, i) > 0 && (map->ray[i].t <= 1))
-			return (map->ray[i].t);
-		return ((map->ray[i].t = 0));
+		r[0].wallpos[0] = set_wall_pos(rp[0].x,rp[0].y);
+		r[0].wallpos[1] = set_wall_pos(rp[0].x + 1,rp[0].y);
+		if (calc_t(r, map) > 0 && (r[0].t <= 1))
+			return (r[0].t);
+		return ((r[0].t = 0));
 	}
 	if (c == 'E')
 	{
-		map->ray[i].wallpos[0].x = (int)map->ray[i].raypos[0].x;
-		map->ray[i].wallpos[0].y = (int)map->ray[i].raypos[0].y + 1;
-		map->ray[i].wallpos[1].x = (int)map->ray[i].raypos[0].x + 1;
-		map->ray[i].wallpos[1].y = (int)map->ray[i].raypos[0].y + 1;
-		if (calc_t(map, i) > 0 && (map->ray[i].t <= 1))
-			return (map->ray[i].t);
-		return ((map->ray[i].t = 0));
+		r[0].wallpos[0] = set_wall_pos(rp[0].x,rp[0].y + 1);
+		r[0].wallpos[1] = set_wall_pos(rp[0].x + 1,rp[0].y + 1);
+		if (calc_t(r, map) > 0 && (r[0].t <= 1))
+			return (r[0].t);
+		return ((r[0].t = 0));
 	}
-	return (0);
+	r[0].wallpos[0] = set_wall_pos(rp[0].x + ceilf(op), rp[0].y);
+	r[0].wallpos[1] = set_wall_pos(rp[0].x + ceilf(op), rp[0].y + 1);
+	if (calc_t(r, map) > 0 && (r[0].t <= 1))
+		return (r[0].t);
+	return ((r[0].t = 0));
 }
 
 t_ray	check_wall_north_south(t_ray r,t_cub *map, int j,char c)
 {
-	while (map->map[(int)map->ray[i].raypos[0].x][(int)map->ray[i].raypos[0].y] != '1')
+	while (map->map[(int)r.pos[0].x][(int)r.pos[0].y] != '1')
 	{
-		map->ray[i].raypos[1] = set_ray_pos(map->ray[i].raypos[0].x + j, map->ray[i].raypos[0].y + map->ray[i].oppose);
-		if ((int)map->ray[i].raypos[1].y != (int)map->ray[i].raypos[0].y)
+		r.pos[1] = set_ray_pos(r.pos[0].x + j, r.pos[0].y + r.oppose);
+		if ((int)r.pos[1].y != (int)r.pos[0].y)
 		{
-			if (map->map[(int)map->ray[i].raypos[1].x][(int)map->ray[i].raypos[0].y] == '1')
-				if (set_wall_north_south(map, i, c) != 0)
+			if (map->map[(int)r.pos[1].x][(int)r.pos[0].y] == '1')
+				if (set_wall_north_south(&r, map, c) != 0)
 					break ;
-			if (map->map[(int)map->ray[i].raypos[0].x][(int)map->ray[i].raypos[1].y] == '1')
-				if (set_wall_north_south(map, i, 0) != 0)
+			if (map->map[(int)r.pos[0].x][(int)r.pos[1].y] == '1')
+				if (set_wall_north_south(&r, map, 0) != 0)
 					break ;
 		}
-		map->ray[i].raypos[0] = set_ray_pos(map->ray[i].raypos[1].x, map->ray[i].raypos[1].y);
+		r.pos[0] = set_ray_pos(r.pos[1].x, r.pos[1].y);
 	}
-	if (map->ray[i].t == 0)
+	if (r.t == 0)
 	{
-		map->ray[i].raypos[0] = set_ray_pos(map->ray[i].raypos[1].x - j, map->ray[i].raypos[1].y);
-		set_wall_north_south(map, i, c);
-		if (map->ray[i].t == 0 && map->ray[i].angle != 45)
+		r.pos[0] = set_ray_pos(r.pos[1].x - j, r.pos[1].y);
+		set_wall_north_south(&r, map, c);
+		if (r.t == 0)
 		{
-			map->ray[i].raypos[0] = set_ray_pos(map->ray[i].raypos[1].x, (map->ray[i].raypos[1].y + calc_del(map->ray[i])));
-			set_wall_north_south(map, i,0);
+			r.pos[0] = set_ray_pos(r.pos[1].x, (r.pos[1].y + calc_del(r)));
+			set_wall_north_south(&r, map, 0);
 		}
 	}
 	return(r);
 }
 
-t_ray	check_wall_east_west(t_ray r,t_cub *map int j,char c)
+t_ray	check_wall_east_west(t_ray r,t_cub *map, int j,char c)
 {
-	while (map->map[(int)map->ray[i].raypos[0].x][(int)map->ray[i].raypos[0].y] != '1')
+	while (map->map[(int)r.pos[0].x][(int)r.pos[0].y] != '1')
 	{
-		map->ray[i].raypos[1] = set_ray_pos(map->ray[i].raypos[0].x + map->ray[i].oppose, map->ray[i].raypos[0].y + j);
-		if ((int)map->ray[i].raypos[1].x != (int)map->ray[i].raypos[0].x)
+		r.pos[1] = set_ray_pos(r.pos[0].x + r.oppose, r.pos[0].y + j);
+		if ((int)r.pos[1].x != (int)r.pos[0].x)
 		{
-			if (map->map[(int)map->ray[i].raypos[1].x][(int)map->ray[i].raypos[0].y] == '1')
-				if (check_wall_east_west_up(map, i) != 0)
+			if (map->map[(int)r.pos[1].x][(int)r.pos[0].y] == '1')
+				if (set_wall_east_west(&r, map, 0) != 0)
 					break ;
-			if (map->map[(int)map->ray[i].raypos[0].x][(int)map->ray[i].raypos[1].y] == '1')
-				if (check_wall_east_west_side(map, i,c) != 0)
+			if (map->map[(int)r.pos[0].x][(int)r.pos[1].y] == '1')
+				if (set_wall_east_west(&r, map, c) != 0)
 					break ;
 		}
-		map->ray[i].raypos[0] = set_ray_pos(map->ray[i].raypos[1].x, map->ray[i].raypos[1].y);
+		r.pos[0] = set_ray_pos(r.pos[1].x, r.pos[1].y);
 	}
-	if (map->ray[i].t == 0)
+	if (r.t == 0)
 	{
-		map->ray[i].raypos[0] = set_ray_pos(map->ray[i].raypos[1].x + calc_del(map->ray[i]), map->ray[i].raypos[1].y);
-		check_wall_east_west_up(map, i);
-		if (map->ray[i].t == 0 && map->ray[i].angle != 45)
+		r.pos[0] = set_ray_pos(r.pos[1].x + calc_del(r), r.pos[1].y);
+		set_wall_east_west(&r, map, 0);
+		if (r.t == 0)
 		{
-			map->ray[i].raypos[0] = set_ray_pos(map->ray[i].raypos[1].x ,map->ray[i].raypos[1].y - j);
-			check_wall_east_west_side(map, i,c);
+			r.pos[0] = set_ray_pos(r.pos[1].x ,r.pos[1].y - j);
+			set_wall_east_west(&r, map, c);
 		}
 	}
+	return (r);
 }
 
 int		check_wall_dist(t_cub *map,  int i)
@@ -225,18 +207,17 @@ int		check_wall_dist(t_cub *map,  int i)
 int		check_wall_pos(t_cub *map, int i)
 {
 	const double	angle = map->ray[i].angle;
-	const			t_ray ray = map->ray[i];
 
-	map->ray[i].raypos[0] = map->player_pos;
-	map->ray[i].raypos[1] = map->ray[i].raypos[0];
+	map->ray[i].pos[0] = map->player_pos;
+	map->ray[i].pos[1] = map->ray[i].pos[0];
 	if (angle >= 0 && angle < 45 || angle >= 315 && angle < 360)
-		map->ray[i] = check_wall_north_south(ray,map, -1, 'N');
+		map->ray[i] = check_wall_north_south(map->ray[i],map, -1, 'N');
 	if (angle >= 45 && angle < 135)
-		map->ray[i] = check_wall_east_west(ray,map, 1, 'E');
+		map->ray[i] = check_wall_east_west(map->ray[i],map, 1, 'E');
 	if (angle >= 135 && angle < 225)
-		map->ray[i] = check_wall_north_south(ray,map, 1, 'S');
+		map->ray[i] = check_wall_north_south(map->ray[i],map, 1, 'S');
 	if (angle >= 225 && angle < 315)
-		map->ray[i] = check_wall_east_west(ray,map, -1, 'W');
+		map->ray[i] = check_wall_east_west(map->ray[i],map, -1, 'W');
 	return (0);
 }
 

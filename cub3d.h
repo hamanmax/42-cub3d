@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/24 11:43:40 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/24 16:49:03 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ typedef	struct	s_ray
 	double	walldist;
 	double	wheight;
 	int		*color;
-	t_float	raypos[2];
+	t_float	pos[2];
 	t_float	wallpos[2];
 	t_float	pointpos;
 }				t_ray;
