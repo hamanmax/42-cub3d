@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 13:02:24 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/18 11:54:32 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/24 12:33:03 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int set_texture(t_cub *map, int i)
 	int j;
 
 	j = 1;
-	if ( i < map->screen.x - 1 && map->ray[i].pointpos.y == map->ray[i + 1].pointpos.y)
+	if (i < map->screen.x - 1 && map->ray[i].pointpos.y == map->ray[i + 1].pointpos.y)
 		j = 2;
 	if (a >= 90 && a <= 270 && j == 1)
 		j = 0;
@@ -31,66 +31,62 @@ t_ste set_start_to_end(t_cub *map, int len, int i)
 {
 	t_ste ste;
 
-	ste.start = map->mlx.width * map->ray[i].t;
-	if (map->ray[i].t < 0.09 || map->ray[i].t > 0.95)
+	ste.start = (int)(map->mlx.w * map->ray[i].t);
+	if (map->ray[i + len].t < map->ray[i].t)
+		ste.start = (int)(map->mlx.w * (1-map->ray[i].t));
+	if (map->ray[i].t < 0.05 || map->ray[i].t > 0.95)
 		ste.start = 0;
-	ste.end = map->mlx.width * map->ray[i].t;
-	if (i + len < map->screen.x - 1 && (map->ray[i + len].t < 0.05 || map->ray[i + len].t > 0.95))
-		ste.end = map->mlx.width;
+	ste.end = (int)(map->mlx.w * map->ray[i + len].t);
+	if (map->ray[i + len].t < map->ray[i].t)
+		ste.end = (int)(map->mlx.w * (1 - map->ray[i + len].t));
+	if (map->ray[i + len].t < 0.05 || map->ray[i + len].t > 0.95)
+		ste.end = (int)map->mlx.w;
 	return (ste);
+}
+
+int set_color(double ligne,double colonne,double width)
+{
+	return((int)(ligne) * width + colonne);
 }
 
 void set_color_ray(t_cub *map, int len, int i)
 {
 	const int k = set_texture(map, i);
-	int l;
-	void *img;
-	int *data;
-	double m;
-	int		n;
-	double diffangle2;
+	int col;
 	t_ste width;
 
-	l = 0;
-	n = 0;
-	m = 0;
-	img = mlx_xpm_file_to_image(map->mlx.ptr, map->text[k], &map->mlx.width, &map->mlx.height);
-	data = (int *)mlx_get_data_addr(img, &map->mlx.bpp, &map->mlx.line_size, &map->mlx.endian);
-	width = set_start_to_end(map, len, i);
-	while (n < len)
+	map->mlx.img = mlx_xpm_file_to_image(map->mlx.ptr,
+	map->text[k], &map->mlx.w, &map->mlx.h);
+	map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img,
+	&map->mlx.bpp, &map->mlx.line_size, &map->mlx.endian);
+	width = set_start_to_end(map, len - 1, i);
+	while ((int)map->b < len)
 	{
-		diffangle2 = map->mlx.width / map->ray[i + n].wallheight;
-		while (l < (int)map->ray[i + n].wallheight)
+		map->diffangle2 = (width.end - width.start) / (double)len;
+		while ((int)map->a <= (int)map->ray[i + (int)map->b].wheight)
 		{
-			map->ray[i + n].color[l] = data[(map->mlx.width * (int)m) + n];
-			l++;
-			if (width.start == 0)
-				width.start = map->mlx.width;
-			m += diffangle2;
+			map->diffangle = map->mlx.h / (map->ray[i + (int)map->b].wheight);
+			col = set_color(map->a * map->diffangle,
+			(map->b * map->diffangle2) + width.start,map->mlx.h);
+			map->ray[i + (int)map->b].color[(int)map->a] = map->mlx.data[col];
+			map->a++;
 		}
-		m = 0;
-		l = 0;
-		n++;
+		map->a = 0;
+		map->b++;
 	}
 }
 
 int check_wall_end(t_cub *map, int i)
 {
-	if (i < map->screen.x - 1 && map->ray[i].pointpos.x == map->ray[i + 1].pointpos.x)
-	{
-		if ((int)map->ray[i].pointpos.y != (int)map->ray[i + 1].pointpos.y)
-			return (1);
-		if (map->ray[i].pointpos.y != map->ray[i + 1].pointpos.y)
-			return (0);
-	}
-	if (i < map->screen.x - 1 && map->ray[i].pointpos.y == map->ray[i + 1].pointpos.y)
-	{
-		if ((int)map->ray[i].pointpos.x != (int)map->ray[i + 1].pointpos.x)
-			return (1);
-		if (map->ray[i].pointpos.x != map->ray[i + 1].pointpos.x)
-			return (0);
-	}
-	return (1);
+	if (map->ray[i].wallpos[1].x != map->ray[i - 1].wallpos[1].x)
+		return (1);
+	if (map->ray[i].wallpos[1].y != map->ray[i - 1].wallpos[1].y)
+		return (1);
+	if (map->ray[i].wallpos[0].x != map->ray[i - 1].wallpos[0].x)
+		return (1);
+	if (map->ray[i].wallpos[0].y != map->ray[i - 1].wallpos[0].y)
+		return (1);
+	return (0);
 }
 
 void get_wall_lenght(t_cub *map)
@@ -98,23 +94,26 @@ void get_wall_lenght(t_cub *map)
 	int i;
 	int j;
 
-	j = 0;
-	i = 0;
+	j = 1;
+	i = 1;
+
 	while (i + j < map->screen.x)
 	{
-		if (check_wall_end(map, j + i) == 1)
+		if (check_wall_end(map, j + i) != 0)
 		{
+			set_color_ray(map, i, j);
+			map->b = 0;
 			j += i;
-			set_color_ray(map, i, j - i + 1);
 			i = 0;
 		}
 		i++;
 	}
-	set_color_ray(map, i, j);
+	set_color_ray(map, i - 1, j);
 }
 
 void projection(t_cub *map)
 {
 	get_wall_lenght(map);
 	//set_color_ray();
+	mlx_destroy_image(map->mlx.ptr,map->mlx.img);
 }

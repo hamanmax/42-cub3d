@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:39:04 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/18 12:31:30 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/24 12:13:56 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,43 +35,38 @@ void print_front(t_cub *map)
 	int j;
 	int k;
 	int l;
-	int m;
 
 	l = 0;
-	m = 0;
 	i = 0;
-	j = (map->screen.y - (int)map->ray[i].wallheight) / 2;
+	j = (map->screen.y - (int)map->ray[i].wheight) / 2;
 	if (j < 0)
 		j = 0;
-	k = j + (int)map->ray[i].wallheight;
+	k = j + (int)map->ray[i].wheight;
 	if (k > map->screen.y)
 		k = map->screen.y - 1;
-	//printf("%d\t%d\n",j,k);
 	while (i < map->screen.x)
 	{
-		map->mlx.data[j * map->screen.x + i] = 0;
-		while (j++ < k)
+		while (l <= (int)map->ray[i].wheight && j <= k + 1)
 		{
 			map->mlx.data[j * map->screen.x + i] = map->ray[i].color[l];
+			if ((int)map->ray[i].wheight == 218)
+			dprintf(1,"%d\t%d\t%d\n",map->ray[i].color[l],l,(int)map->ray[i].wheight);
 			l++;
+			j++;
 		}
 		l = 0;
-		map->mlx.data[(j)*map->screen.x + i] = 0;
-		j = (map->screen.y - (int)map->ray[i].wallheight) / 2;
+		i++;
+		j = (map->screen.y - (int)map->ray[i].wheight) / 2;
 		if (j < 0)
 			j = 0;
-		k = j + (int)map->ray[i].wallheight;
+		k = j + (int)map->ray[i].wheight;
 		if (k > map->screen.y)
 			k = map->screen.y - 1;
-		i++;
 	}
 }
 
 void move_forward(t_cub *map)
 {
-	int size_line;
-	int endian;
-	int bpp[2];
 
 	map->player_pos.x += 0.3;
 	//map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img2,bpp,&size_line,&endian);
@@ -98,20 +93,10 @@ int deal_key(int key, void *params)
 
 void create_new_black_window(t_cub *map)
 {
-	int size_line;
-	int endian;
-	int size_line2;
-	int endian2;
-	int bpp[2];
-	int bpp2[2];
-	void *img;
-	int *data;
-	int width;
-	int height;
-
+	
 	map->mlx.win = mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Test N1");
 	map->mlx.img = mlx_new_image(map->mlx.ptr, map->screen.x, map->screen.y);
-	map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, bpp, &size_line, &endian);
+	map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &map->mlx.bpp, &map->mlx.line_size, &map->mlx.endian);
 	//map->mlx.img2 = mlx_xpm_file_to_image(map->mlx.ptr,map->text[NO],&width,&height);
 	//map->mlx.data2 = (int *)mlx_get_data_addr(map->mlx.img2,bpp2,&size_line2,&endian2);
 	//printf("%d\n",size_line2);

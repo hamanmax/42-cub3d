@@ -6,11 +6,12 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/18 12:28:21 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/24 14:30:59 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+#include <assert.h>
 
 double	set_player_orientation(t_cub *map, double i)
 {
@@ -87,11 +88,9 @@ float	check_wall_north_up(t_cub *map,  int i)
 float	check_wall_north_side(t_cub *map,  int i)
 {
 	map->ray[i].wallpos[0].x = (int)map->ray[i].raypos[0].x;
-	map->ray[i].wallpos[0].y = (int)map->ray[i].raypos[0].y +
-	ceilf(map->ray[i].oppose);
+	map->ray[i].wallpos[0].y = (int)map->ray[i].raypos[0].y + ceilf(map->ray[i].oppose);
 	map->ray[i].wallpos[1].x = (int)map->ray[i].raypos[0].x + 1;
-	map->ray[i].wallpos[1].y = (int)map->ray[i].raypos[0].y +
-	ceilf(map->ray[i].oppose);
+	map->ray[i].wallpos[1].y = (int)map->ray[i].raypos[0].y + ceilf(map->ray[i].oppose);
 	if (calc_t(map, i) > 0 && (map->ray[i].t <= 1))
 		return (map->ray[i].t);
 	return ((map->ray[i].t = 0));
@@ -141,8 +140,10 @@ float	check_wall_south_side(t_cub *map,  int i)
 
 float	check_wall_west_up(t_cub *map,  int i)
 {
-	map->ray[i].wallpos[0] = set_wall_pos(map->ray[i].raypos[0].x + ceilf(map->ray[i].oppose), map->ray[i].raypos[0].y);
-	map->ray[i].wallpos[1] = set_wall_pos(map->ray[i].raypos[0].x + ceilf(map->ray[i].oppose), map->ray[i].raypos[0].y + 1);
+	map->ray[i].wallpos[0] = set_wall_pos(map->ray[i].raypos[0].x +
+	ceilf(map->ray[i].oppose), map->ray[i].raypos[0].y);
+	map->ray[i].wallpos[1] = set_wall_pos(map->ray[i].raypos[0].x +
+	ceilf(map->ray[i].oppose), map->ray[i].raypos[0].y + 1);
 	if (calc_t(map, i) > 0 && (map->ray[i].t <= 1))
 		return (map->ray[i].t);
 	return ((map->ray[i].t = 0));
@@ -198,10 +199,8 @@ void	check_wall_east(t_cub *map,  int i)
 				if (check_wall_east_up(map, i) != 0)
 					break ;
 			if (map->map[(int)map->ray[i].raypos[0].x][(int)map->ray[i].raypos[1].y] == '1')
-			{
 				if (check_wall_east_side(map, i) != 0)
 					break ;
-			}
 		}
 		map->ray[i].raypos[0] = set_ray_pos(map->ray[i].raypos[1].x, map->ray[i].raypos[1].y);
 	}
@@ -285,9 +284,10 @@ int		check_wall_dist(t_cub *map,  int i)
 	map->ray[i].pointpos.x = p[1].x + (map->ray[i].t * (p[2].x - p[1].x));
 	map->ray[i].pointpos.y = p[1].y + (map->ray[i].t * (p[2].y - p[1].y));
 	p[4] = map->ray[i].pointpos;
-	map->ray[i].walldist = sqrt(((p[4].x - p[3].x) * (p[4].x - p[3].x) + ((p[4].y - p[3].y) * (p[4].y - p[3].y))));
-	map->ray[i].wallheight = (0.5 / map->ray[i].walldist) * map->projectiondist;
-	map->ray[i].color = malloc(sizeof(int *) * map->ray[i].wallheight);
+	map->ray[i].walldist = sqrt(((p[4].x - p[3].x) * (p[4].x - p[3].x) + 
+	((p[4].y - p[3].y) * (p[4].y - p[3].y))));
+	map->ray[i].wheight = (0.5 / map->ray[i].walldist) * map->projectiondist;
+	map->ray[i].color = ft_calloc((int)map->ray[i].wheight,sizeof(int*));
 }
 
 int		check_wall_pos(t_cub *map, int i)
@@ -317,10 +317,14 @@ void	draw_raytab(t_cub *map)
 	while ((k += map->diffangle) < 360)
 		i++;
 	map->tabsize = i;
-	map->raytab = malloc(sizeof(t_raytab) * i);
+	map->raytab = malloc(sizeof(t_raytab) * (i + 1));
 	while (i > 0 && (k -= map->diffangle) >= 0)
-		map->raytab[--i].angle = k;
-	i = 1;
+	{
+		map->raytab[i].angle = k;
+		i--;
+	}
+	map->raytab[0].angle = 0;
+	i = 0;
 	k = 0;
 	while (i < map->tabsize - 1 && map->raytab[i + 1].angle > 0)
 	{
@@ -341,11 +345,12 @@ void	draw_base_ray(t_cub *map)
 	int			i;
 	int			start;
 
-	i = 0;
-	while (i < map->screen.x && map->raytab[i].angle <= map->player_orientation)
+	i = 1;
+	while (i < map->tabsize && map->raytab[i].angle <= map->player_orientation)
 		i++;
 	if (map->screen.x % 2 != 0 && map->raytab[i - 1].angle != map->player_orientation)
 		map->player_orientation = set_player_orientation(map, map->raytab[i].angle + map->diffangle);
+
 	start = i - (map->screen.x / 2) - 1;
 	if (start < 0)
 		start += map->tabsize;
@@ -377,7 +382,7 @@ int		raytracing(t_cub *map)
 	map->player_pos.x = map->player_pos_base.x + 0.5;
 	map->player_pos.y = map->player_pos_base.y + 0.5;
 	map->projectiondist = (map->screen.x / 2) / tanf((30 * (PI / 180)));
-	map->diffangle = FOV / (double)map->screen.x;
+	map->diffangle = (FOV / (double)map->screen.x);
 	map->player_orientation = set_player_orientation(map, 0);
 	draw_raytab(map);
 	draw_base_ray(map);

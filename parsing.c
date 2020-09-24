@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: mhaman <mhaman@student.le-101.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/16 13:29:09 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/21 13:09:32 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int		check_texture_validity(t_cub *map, char *line)
 			texture[i++] = found;
 	if (i < 2 || i > 2)
 		error_str_return("Too many/not enought information");
-	map->text[check_type_texture(texture[0])] = texture[1];
+	map->text[check_type_texture(texture[0])] = ft_strdup(texture[1]);
 	if ((i = open(map->text[check_type_texture(texture[0])], O_RDONLY)) == -1)
 		error_str_return("can't open texture files");
 	map->texture[check_type_texture(texture[0])] = i;

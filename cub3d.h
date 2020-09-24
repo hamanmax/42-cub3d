@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/16 21:57:10 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/24 11:43:40 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,8 @@ typedef struct	s_mlx
 	void	*win;
 	int		*data;
 	void	*img;
-	void	*img_text;
-	int		*data_text;
-	int		height;
-	int		width;
+	int		h;
+	int		w;
 	int		bpp;
 	int		endian;
 	int		line_size;
@@ -86,7 +84,7 @@ typedef	struct	s_ray
 	double	angle;
 	double	oppose;
 	double	walldist;
-	double	wallheight;
+	double	wheight;
 	int		*color;
 	t_float	raypos[2];
 	t_float	wallpos[2];
@@ -102,6 +100,7 @@ typedef struct	s_cub
 	int			texture[TEXTURE_COUNT];
 	char		**map;
 	double		diffangle;
+	double		diffangle2;
 	double		projectiondist;
 	t_float		projection_id;
 	t_float		projection_center;
@@ -113,6 +112,8 @@ typedef struct	s_cub
 	t_raytab	*raytab;
 	int			tabsize;
 	char		*text[TEXTURE_COUNT];
+	double		a;
+	double		b;
 }				t_cub;
 
 
@@ -137,7 +138,6 @@ int		check_around_char(char **tab, size_t x, size_t y, char *tofind);
 int		raytracing(t_cub *map);
 void	projection(t_cub *map);
 t_float	set_wall_pos(float x, float y);
-void create_new_black_window(t_cub *map);
+void	create_new_black_window(t_cub *map);
 void	draw_ray(t_cub *map,  int i, int j);
-void    calc_correct_wallheight(t_cub *map, int i,int j);
 #endif
