@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:39:04 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/24 12:13:56 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/29 07:34:27 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,34 +46,78 @@ void print_front(t_cub *map)
 		k = map->screen.y - 1;
 	while (i < map->screen.x)
 	{
-		while (l <= (int)map->ray[i].wheight && j <= k + 1)
+		while (l <= (int)map->ray[i].wheight && j <= k)
 		{
 			map->mlx.data[j * map->screen.x + i] = map->ray[i].color[l];
-			if ((int)map->ray[i].wheight == 218)
-			dprintf(1,"%d\t%d\t%d\n",map->ray[i].color[l],l,(int)map->ray[i].wheight);
 			l++;
 			j++;
 		}
 		l = 0;
+		free(map->ray[i].color);
 		i++;
-		j = (map->screen.y - (int)map->ray[i].wheight) / 2;
-		if (j < 0)
-			j = 0;
-		k = j + (int)map->ray[i].wheight;
-		if (k > map->screen.y)
-			k = map->screen.y - 1;
+		if (i < map->screen.x)
+		{
+			j = (map->screen.y - (int)map->ray[i].wheight) / 2;
+			if (j < 0)
+				j = 0;
+			k = j + (int)map->ray[i].wheight;
+			if (k > map->screen.y)
+				k = map->screen.y - 1;
+		}
 	}
 }
 
-void move_forward(t_cub *map)
+void  move_forward(t_cub *map)
 {
-
-	map->player_pos.x += 0.3;
-	//map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img2,bpp,&size_line,&endian);
-	print_backround(map);
-	print_front(map);
-	mlx_destroy_image(map->mlx.ptr, map->mlx.img);
-	//mlx_put_image_to_window(map->mlx.ptr,map->mlx.win,map->mlx.img2,0,0);
+	if (map->kp == 119)
+	{
+		map->player_pos.x -= map->player_dir * 0.2;
+		map->player_pos.y += map->player_dir * 0.2;
+		if (map->map[(int)map->player_pos.x][(int)map->player_pos.y] == '1')
+		{
+		map->player_pos.x += 0.2;
+		map->player_pos.y -= map->player_dir * 0.2;
+		}
+	}
+	if (map->kp == 115)
+	{
+		map->player_pos.x += 0.2;
+		map->player_pos.y += map->player_dir * 0.2;
+		if (map->map[(int)map->player_pos.x][(int)map->player_pos.y] == '1')
+		{
+		map->player_pos.x -= 0.2;
+		}
+	}
+	if (map->kp == 97)
+	{
+		map->player_pos.y -= 0.2;
+		map->player_pos.y -= map->player_dir * 0.2;
+		if (map->map[(int)map->player_pos.x][(int)map->player_pos.y] == '1')
+		{
+		map->player_pos.y += 0.2;
+		}
+	}
+	if (map->kp == 100)
+	{
+		map->player_pos.y += 0.2;
+		map->player_pos.y -= map->player_dir * 0.2;
+		if (map->map[(int)map->player_pos.x][(int)map->player_pos.y] == '1')
+		{
+		map->player_pos.y -= 0.2;
+		}
+	}
+	if (map->kp == 101)
+	{
+		map->player_orientation += 2;
+		if (map->player_orientation >= 360)
+		map->player_orientation = 0;
+	}
+	if (map->kp == 113)
+	{
+		map->player_orientation -= 2;
+		if (map->player_orientation <= 0)
+		map->player_orientation = 360;
+	}
 }
 
 int deal_key(int key, void *params)
@@ -81,28 +125,62 @@ int deal_key(int key, void *params)
 	t_cub *map;
 
 	map = params;
-	printf("%d\n", key);
+	dprintf(1,"%d\n", key);
 	if (key == 119)
 	{
-		mlx_destroy_image(map->mlx.ptr, map->mlx.img);
-		//move_forward(map);
+		map->kp = key;
 		return (1);
+	}
+	if (key == 115)
+	{
+		map->kp = key;
+		return (1);
+	}
+	if (key == 100)
+	{
+		map->kp = 100;
+	}
+	if (key == 97)
+	{
+		map->kp = 97;
+	}
+	if (key == 101)
+	{
+		map->kp = 101;
+	}
+	if (key == 113)
+	{
+		map->kp = 113;
+	}
+	if (key == 32)
+	{
+		map->kp = 0;
 	}
 	return (0);
 }
 
-void create_new_black_window(t_cub *map)
+int main_loop(t_cub *map)
 {
-	
-	map->mlx.win = mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Test N1");
-	map->mlx.img = mlx_new_image(map->mlx.ptr, map->screen.x, map->screen.y);
-	map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &map->mlx.bpp, &map->mlx.line_size, &map->mlx.endian);
-	//map->mlx.img2 = mlx_xpm_file_to_image(map->mlx.ptr,map->text[NO],&width,&height);
-	//map->mlx.data2 = (int *)mlx_get_data_addr(map->mlx.img2,bpp2,&size_line2,&endian2);
-	//printf("%d\n",size_line2);
+	map->c++;
+	//map->kp = 0;
+	mlx_key_hook(map->mlx.ptr,deal_key,map);
+	move_forward(map);
+	draw_base_ray(map);
+	get_wall_lenght(map);
 	print_backround(map);
 	print_front(map);
 	mlx_put_image_to_window(map->mlx.ptr, map->mlx.win, map->mlx.img, 0, 0);
-	//mlx_put_image_to_window(map->mlx.ptr,map->mlx.win,map->mlx.img2,0,0);
+	//dprintf(1,"%d\n",map->c);
+	ft_bzero(map->ray,sizeof(t_ray)* map->screen.x - 1);
+	if (map->c == 1000)
+	exit(1);
+}
+
+void create_new_black_window(t_cub *map)
+{
+	map->mlx.win = mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3d");
+	map->mlx.img = mlx_new_image(map->mlx.ptr, map->screen.x, map->screen.y);
+	map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &map->mlx.bpp, &map->mlx.line_size, &map->mlx.endian);
+	mlx_loop_hook(map->mlx.ptr, &main_loop,map);
 	mlx_key_hook(map->mlx.win, deal_key, map);
 }

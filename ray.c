@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/24 16:59:09 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/29 07:19:16 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,12 +259,9 @@ void	draw_base_ray(t_cub *map)
 	int			i;
 	int			start;
 
-	i = 1;
+	i = 0;
 	while (i < map->tabsize && map->raytab[i].angle <= map->player_orientation)
 		i++;
-	if (map->screen.x % 2 != 0 && map->raytab[i - 1].angle != map->player_orientation)
-		map->player_orientation = set_player_orientation(map, map->raytab[i].angle + map->diffangle);
-
 	start = i - (map->screen.x / 2) - 1;
 	if (start < 0)
 		start += map->tabsize;
@@ -280,15 +277,7 @@ void	draw_base_ray(t_cub *map)
 			start = 0;
 		i++;
 	}
-}
-
-void	draw_ray(t_cub *map, int i, int j)
-{
-	while (i < j)
-	{
-		check_wall_pos(map, i);
-		check_wall_dist(map, i);
-	}
+	map->player_dir = map->ray[map->screen.x / 2].oppose;
 }
 
 int		raytracing(t_cub *map)
@@ -298,7 +287,8 @@ int		raytracing(t_cub *map)
 	map->projectiondist = (map->screen.x / 2) / tanf((30 * (PI / 180)));
 	map->diffangle = (FOV / (double)map->screen.x);
 	map->player_orientation = set_player_orientation(map, 0);
+	map->player_orientation += 2;
 	draw_raytab(map);
-	draw_base_ray(map);
+	//draw_base_ray(map);
 	return (0);
 }

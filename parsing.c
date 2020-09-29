@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaman <mhaman@student.le-101.fr>          +#+  +:+       +#+        */
+/*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/21 13:09:32 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/29 04:37:32 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,7 +214,7 @@ int		test_map_overall_integrity(t_cub *map, int nbline)
 	while (--i > 0)
 	{
 		map->map[i] = ft_strfjoin(" ", map->map[i], 2);
-		map->map[i] = ft_strfjoin(map->map[i], ft_str_malloc(j - ft_strlen(map->map[i]), ' '), 5);
+		map->map[i] = ft_strfjoin(map->map[i], ft_str_malloc(j - ft_strlen(map->map[i]), ' '), 3);
 	}
 	i = 1;
 	j = 1;

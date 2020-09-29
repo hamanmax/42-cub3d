@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/24 16:49:03 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/29 07:18:47 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,11 @@ typedef struct	s_mlx
 	void	*ptr;
 	void	*win;
 	int		*data;
+	int		*data_text[TEXTURE_COUNT];
+	void	*img_text[TEXTURE_COUNT];
 	void	*img;
-	int		h;
-	int		w;
+	int		h[TEXTURE_COUNT];
+	int		w[TEXTURE_COUNT];
 	int		bpp;
 	int		endian;
 	int		line_size;
@@ -79,7 +81,6 @@ typedef	struct	s_int
 
 typedef	struct	s_ray
 {
-	int		id;
 	double	t;
 	double	angle;
 	double	oppose;
@@ -98,6 +99,7 @@ typedef struct	s_cub
 	int			colorsky;
 	int			colorfloor;
 	int			texture[TEXTURE_COUNT];
+	int			kp;
 	char		**map;
 	double		diffangle;
 	double		diffangle2;
@@ -107,6 +109,7 @@ typedef struct	s_cub
 	t_float		player_pos;
 	double		player_orientation;
 	t_int		player_pos_base;
+	double		player_dir;
 	t_mlx		mlx;
 	t_ray		*ray;
 	t_raytab	*raytab;
@@ -114,6 +117,7 @@ typedef struct	s_cub
 	char		*text[TEXTURE_COUNT];
 	double		a;
 	double		b;
+	int			c;
 }				t_cub;
 
 
@@ -139,5 +143,7 @@ int		raytracing(t_cub *map);
 void	projection(t_cub *map);
 t_float	set_wall_pos(float x, float y);
 void	create_new_black_window(t_cub *map);
-void	draw_ray(t_cub *map,  int i, int j);
+void	draw_base_ray(t_cub *map);
+void	get_wall_lenght(t_cub *map);
+
 #endif

@@ -6,12 +6,25 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/23 16:39:22 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/29 04:35:29 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include <mlx.h>
+
+void free_all(t_cub *map)
+{
+	int i;
+	
+	i = 0;
+	while (map->map[i])
+	{
+		free(map->map[i]);
+		i++;
+	}
+	free(map);
+}
 
 int		main(int argc, char **argv)
 {
@@ -28,14 +41,8 @@ int		main(int argc, char **argv)
 	map->ray = ft_calloc(map->screen.x,sizeof(t_ray));
 	raytracing(map);
 	projection(map);
-	while (i < map->screen.x)
-	{
-		//dprintf(1,"%f\t%f\t%f\n",map->ray[i].oppose,map->ray[i].angle,map->ray[i].pointpos.y);
-		//dprintf(1,"%d\t%d\n",(int)map->ray[i].wheight,i);
-		i++;
-	}
 	create_new_black_window(map);
 	mlx_loop(map->mlx.ptr);
-	free(map);
+	free_all(map);
 	return (0);
 }
