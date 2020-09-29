@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:39:04 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/29 07:34:27 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/29 07:42:21 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,6 @@ int main_loop(t_cub *map)
 	print_backround(map);
 	print_front(map);
 	mlx_put_image_to_window(map->mlx.ptr, map->mlx.win, map->mlx.img, 0, 0);
-	//dprintf(1,"%d\n",map->c);
 	ft_bzero(map->ray,sizeof(t_ray)* map->screen.x - 1);
 	if (map->c == 1000)
 	exit(1);
