@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/29 07:18:47 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/29 16:20:48 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ typedef	struct	s_ste
 
 typedef	struct	s_raytab
 {
+	int		k;
 	double	angle;
 	double	oppose;
 }				t_raytab;
@@ -82,8 +83,7 @@ typedef	struct	s_int
 typedef	struct	s_ray
 {
 	double	t;
-	double	angle;
-	double	oppose;
+	t_raytab tan;
 	double	walldist;
 	double	wheight;
 	int		*color;
@@ -109,7 +109,7 @@ typedef struct	s_cub
 	t_float		player_pos;
 	double		player_orientation;
 	t_int		player_pos_base;
-	double		player_dir;
+	t_float		player_dir;
 	t_mlx		mlx;
 	t_ray		*ray;
 	t_raytab	*raytab;

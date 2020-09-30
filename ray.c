@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/29 07:19:16 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/29 16:20:35 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,10 @@ int		calc_del(t_ray ray)
 	int			t;
 
 	t = 0;
-	if (ray.oppose > 0)
-		t = ceilf(ray.oppose) * -1;
-	if (ray.oppose < 0)
-		t = floorf(ray.oppose) * -1;
+	if (ray.tan.oppose > 0)
+		t = ceilf(ray.tan.oppose) * -1;
+	if (ray.tan.oppose < 0)
+		t = floorf(ray.tan.oppose) * -1;
 	return (t);
 }
 
@@ -77,7 +77,7 @@ float	calc_t(t_ray *r,t_cub *map)
 float	set_wall_north_south(t_ray *r,t_cub *map,char c)
 {
 	const t_float *rp = r[0].pos;
-	const double op = r[0].oppose;
+	const double op = r[0].tan.oppose;
 	
 	if (c == 'N')
 	{
@@ -105,7 +105,7 @@ float	set_wall_north_south(t_ray *r,t_cub *map,char c)
 float	set_wall_east_west(t_ray *r,t_cub *map, char c)
 {
 	const t_float *rp = r[0].pos;
-	const double op = r[0].oppose;
+	const double op = r[0].tan.oppose;
 	
 	if (c == 'W')
 	{
@@ -134,7 +134,7 @@ t_ray	check_wall_north_south(t_ray r,t_cub *map, int j,char c)
 {
 	while (map->map[(int)r.pos[0].x][(int)r.pos[0].y] != '1')
 	{
-		r.pos[1] = set_ray_pos(r.pos[0].x + j, r.pos[0].y + r.oppose);
+		r.pos[1] = set_ray_pos(r.pos[0].x + j, r.pos[0].y + r.tan.oppose);
 		if ((int)r.pos[1].y != (int)r.pos[0].y)
 		{
 			if (map->map[(int)r.pos[1].x][(int)r.pos[0].y] == '1')
@@ -163,7 +163,7 @@ t_ray	check_wall_east_west(t_ray r,t_cub *map, int j,char c)
 {
 	while (map->map[(int)r.pos[0].x][(int)r.pos[0].y] != '1')
 	{
-		r.pos[1] = set_ray_pos(r.pos[0].x + r.oppose, r.pos[0].y + j);
+		r.pos[1] = set_ray_pos(r.pos[0].x + r.tan.oppose, r.pos[0].y + j);
 		if ((int)r.pos[1].x != (int)r.pos[0].x)
 		{
 			if (map->map[(int)r.pos[1].x][(int)r.pos[0].y] == '1')
@@ -206,7 +206,7 @@ int		check_wall_dist(t_cub *map,  int i)
 
 int		check_wall_pos(t_cub *map, int i)
 {
-	const double	angle = map->ray[i].angle;
+	const double	angle = map->ray[i].tan.angle;
 
 	map->ray[i].pos[0] = map->player_pos;
 	map->ray[i].pos[1] = map->ray[i].pos[0];
@@ -232,11 +232,9 @@ void	draw_raytab(t_cub *map)
 		i++;
 	map->tabsize = i;
 	map->raytab = malloc(sizeof(t_raytab) * (i + 1));
-	while (i > 0 && (k -= map->diffangle) >= 0)
-	{
+	i++;
+	while (i-- > 0 && (k -= map->diffangle) >= 0)
 		map->raytab[i].angle = k;
-		i--;
-	}
 	map->raytab[0].angle = 0;
 	i = 0;
 	k = 0;
@@ -247,7 +245,8 @@ void	draw_raytab(t_cub *map)
 		map->raytab[i].angle >= 225 && map->raytab[i - 1].angle < 225 ||
 		map->raytab[i].angle >= 315 && map->raytab[i - 1].angle < 315)
 			k += 2;
-		map->raytab[i].oppose = tan((map->raytab[i].angle - (k*45)) * (PI / 180));
+		map->raytab[i].k = k;
+		map->raytab[i].oppose = tan((map->raytab[i].angle - (k * 45)) * (PI / 180));
 		if (map->raytab[i].angle > 135 && map->raytab[i].angle < 315)
 			map->raytab[i].oppose *= -1;
 		i++;
@@ -268,8 +267,7 @@ void	draw_base_ray(t_cub *map)
 	i = 0;
 	while (i < map->screen.x)
 	{
-		map->ray[i].angle = map->raytab[start].angle;
-		map->ray[i].oppose = map->raytab[start].oppose;
+		map->ray[i].tan = map->raytab[start];
 		check_wall_pos(map, i);
 		check_wall_dist(map, i);
 		start++;
@@ -277,7 +275,6 @@ void	draw_base_ray(t_cub *map)
 			start = 0;
 		i++;
 	}
-	map->player_dir = map->ray[map->screen.x / 2].oppose;
 }
 
 int		raytracing(t_cub *map)
@@ -287,7 +284,6 @@ int		raytracing(t_cub *map)
 	map->projectiondist = (map->screen.x / 2) / tanf((30 * (PI / 180)));
 	map->diffangle = (FOV / (double)map->screen.x);
 	map->player_orientation = set_player_orientation(map, 0);
-	map->player_orientation += 2;
 	draw_raytab(map);
 	//draw_base_ray(map);
 	return (0);

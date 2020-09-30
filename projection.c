@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 13:02:24 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/29 05:06:24 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/29 15:46:18 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int set_texture(t_cub *map, int i)
 {
-	const double a = map->ray[i].angle;
+	const double a = map->ray[i].tan.angle;
 	int j;
 
 	j = 1;
@@ -55,10 +55,6 @@ void set_color_ray(t_cub *map, int len, int i)
 	int col;
 	t_ste width;
 
-	//map->mlx.img2 = mlx_xpm_file_to_image(map->mlx.ptr,
-	//map->text[k], &map->mlx.w, &map->mlx.h);
-	//map->mlx.data2 = (int *)mlx_get_data_addr(map->mlx.img2,
-	//&map->mlx.bpp, &map->mlx.line_size, &map->mlx.endian);
 	width = set_start_to_end(map, len - 1, i, k);
 	while ((int)map->b < len)
 	{

@@ -2,16 +2,14 @@
 R     1920 1080
 
 
+NO ./textures/mur.xpm
+SO ./textures/mur.xpm
 
+S ./textures/mur.xpm
 
-NO ./map.cub
-SO ./map.cub
+WE ./textures/mur.xpm
 
-S ./map.cub
-
-WE ./map.cub
-
-EA ./map.cub
+EA ./textures/mur.xpm
 
 C 250,80,0
 F 200,25,30

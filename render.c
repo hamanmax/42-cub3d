@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:39:04 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/29 07:42:21 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/30 08:35:25 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,54 +67,67 @@ void print_front(t_cub *map)
 	}
 }
 
+void set_player_dir(t_cub *map, double angle)
+{
+	map->player_dir.x = -1 * cos(angle*(PI/180)) * 0.1;
+	map->player_dir.y = sin(angle*(PI/180)) * 0.1;
+}
+
 void  move_forward(t_cub *map)
 {
 	if (map->kp == 119)
 	{
-		map->player_pos.x -= map->player_dir * 0.2;
-		map->player_pos.y += map->player_dir * 0.2;
+		set_player_dir(map,map->player_orientation);
+		map->player_pos.x += map->player_dir.x;
+		map->player_pos.y += map->player_dir.y;
 		if (map->map[(int)map->player_pos.x][(int)map->player_pos.y] == '1')
 		{
-		map->player_pos.x += 0.2;
-		map->player_pos.y -= map->player_dir * 0.2;
+		map->player_pos.x -= map->player_dir.x;
+		map->player_pos.y -= map->player_dir.y;
 		}
 	}
 	if (map->kp == 115)
 	{
-		map->player_pos.x += 0.2;
-		map->player_pos.y += map->player_dir * 0.2;
+		set_player_dir(map,map->player_orientation);
+		map->player_pos.x -= map->player_dir.x;
+		map->player_pos.y -= map->player_dir.y;
 		if (map->map[(int)map->player_pos.x][(int)map->player_pos.y] == '1')
 		{
-		map->player_pos.x -= 0.2;
+		map->player_pos.x += map->player_dir.x;
+		map->player_pos.y += map->player_dir.y;
 		}
 	}
 	if (map->kp == 97)
 	{
-		map->player_pos.y -= 0.2;
-		map->player_pos.y -= map->player_dir * 0.2;
+		set_player_dir(map,map->player_orientation - 90);
+		map->player_pos.x += map->player_dir.x;
+		map->player_pos.y += map->player_dir.y;
 		if (map->map[(int)map->player_pos.x][(int)map->player_pos.y] == '1')
 		{
-		map->player_pos.y += 0.2;
+		map->player_pos.x -= map->player_dir.x + 0.01;
+		map->player_pos.y -= map->player_dir.y + 0.01;
 		}
 	}
 	if (map->kp == 100)
 	{
-		map->player_pos.y += 0.2;
-		map->player_pos.y -= map->player_dir * 0.2;
+		set_player_dir(map,map->player_orientation - 90);
+		map->player_pos.x -= map->player_dir.x;
+		map->player_pos.y -= map->player_dir.y;
 		if (map->map[(int)map->player_pos.x][(int)map->player_pos.y] == '1')
 		{
-		map->player_pos.y -= 0.2;
+		map->player_pos.x += map->player_dir.x *2;
+		map->player_pos.y += map->player_dir.y *2;
 		}
 	}
 	if (map->kp == 101)
 	{
-		map->player_orientation += 2;
+		map->player_orientation += 1;
 		if (map->player_orientation >= 360)
 		map->player_orientation = 0;
 	}
 	if (map->kp == 113)
 	{
-		map->player_orientation -= 2;
+		map->player_orientation -= 1;
 		if (map->player_orientation <= 0)
 		map->player_orientation = 360;
 	}
@@ -162,15 +175,22 @@ int deal_key(int key, void *params)
 int main_loop(t_cub *map)
 {
 	map->c++;
-	//map->kp = 0;
 	mlx_key_hook(map->mlx.ptr,deal_key,map);
+	dprintf(1,"Test1\n");
 	move_forward(map);
-	draw_base_ray(map);
-	get_wall_lenght(map);
-	print_backround(map);
-	print_front(map);
-	mlx_put_image_to_window(map->mlx.ptr, map->mlx.win, map->mlx.img, 0, 0);
+	dprintf(1,"Test2\n");
 	ft_bzero(map->ray,sizeof(t_ray)* map->screen.x - 1);
+	dprintf(1,"Test3\n");
+	draw_base_ray(map);
+	dprintf(1,"Test4\n");
+	get_wall_lenght(map);
+	dprintf(1,"Test5\n");
+	print_backround(map);
+	dprintf(1,"Test6\n");
+	print_front(map);
+	dprintf(1,"Test7\n");
+	mlx_put_image_to_window(map->mlx.ptr, map->mlx.win, map->mlx.img, 0, 0);
+	dprintf(1,"Test8\n");
 	if (map->c == 1000)
 	exit(1);
 }
