@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 13:02:24 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/29 15:46:18 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/10/01 17:26:32 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int set_texture(t_cub *map, int i)
 	int j;
 
 	j = 1;
-	if (i < map->screen.x - 1 && map->ray[i].pointpos.y == map->ray[i + 1].pointpos.y)
+	if (i < map->screen.x - 1 && map->ray[i].wallpos[0].x != map->ray[i].wallpos[1].x)
 		j = 2;
 	if (a >= 90 && a <= 270 && j == 1)
 		j = 0;
@@ -31,47 +31,19 @@ t_ste set_start_to_end(t_cub *map, int len, int i,int k)
 {
 	t_ste ste;
 
-	ste.start = (int)(map->mlx.w[k] * map->ray[i].t);
+	ste.start = (map->mlx.w[k] * map->ray[i].t);
 	if (map->ray[i + len].t < map->ray[i].t)
-		ste.start = (int)(map->mlx.w[k] * (1-map->ray[i].t));
+		ste.start = (map->mlx.w[k] * (1-map->ray[i].t));
 	if (map->ray[i].t < 0.05 || map->ray[i].t > 0.95)
 		ste.start = 0;
-	ste.end = (int)(map->mlx.w[k] * map->ray[i + len].t);
+	ste.end = (map->mlx.w[k] * map->ray[i + len].t);
 	if (map->ray[i + len].t < map->ray[i].t)
-		ste.end = (int)(map->mlx.w[k] * (1 - map->ray[i + len].t));
+		ste.end = (map->mlx.w[k] * (1 - map->ray[i + len].t));
 	if (map->ray[i + len].t < 0.05 || map->ray[i + len].t > 0.95)
-		ste.end = (int)map->mlx.w[k];
+		ste.end = map->mlx.w[k];
 	return (ste);
 }
 
-int set_color(double ligne,double colonne,double width)
-{
-	return((int)(ligne) * width + colonne);
-}
-
-void set_color_ray(t_cub *map, int len, int i)
-{
-	const int k = set_texture(map, i);
-	int col;
-	t_ste width;
-
-	width = set_start_to_end(map, len - 1, i, k);
-	while ((int)map->b < len)
-	{
-		map->diffangle2 = (width.end - width.start) / (double)len;
-		while ((int)map->a <= (int)map->ray[i + (int)map->b].wheight)
-		{
-			map->diffangle = map->mlx.h[k] / (map->ray[i + (int)map->b].wheight);
-			col = set_color(map->a * map->diffangle,
-			(map->b * map->diffangle2) + width.start,map->mlx.h[k]);
-			map->ray[i + (int)map->b].color[(int)map->a] = map->mlx.data_text[k][col];
-			map->a++;
-		}
-		map->a = 0;
-		map->b++;
-	}
-	map->b = 0;
-}
 
 int check_wall_end(t_cub *map, int i)
 {
@@ -86,26 +58,39 @@ int check_wall_end(t_cub *map, int i)
 	return (0);
 }
 
+int set_textpos(t_cub *map, int width,int i)
+{
+	int ret;
+	const double angle = map->ray[i].tan.angle;
+
+	ret = 0;
+	if (angle > 180 && map->ray[i].wallpos[0].x != map->ray[i].wallpos[1].x)
+	{
+		ret = (1 - map->ray[i].t) * width;
+	}
+	else
+	{
+		ret = map->ray[i].t * width;
+	}
+	return(ret);
+}
+
 void get_wall_lenght(t_cub *map)
 {
 	int i;
-	int j;
 
-	j = 0;
-	i = 1;
-
-	while (i + j < map->screen.x)
+	i = 0;
+	while (i < map->screen.x)
 	{
-		if (check_wall_end(map, j + i) != 0)
-		{
-			set_color_ray(map, i, j);
-			map->b = 0;
-			j += i;
-			i = 0;
-		}
+		map->ray[i].texture = set_texture(map, i);
+		map->ray[i].textpos = set_textpos(map, map->mlx.w[set_texture(map, i)], i);
+		map->ray[i].diffangle = map->mlx.w[set_texture(map, i)] / map->ray[i].wheight;
+		map->ray[i].data = map->mlx.data_text[set_texture(map,i)];
+		map->ray[i].w = map->mlx.w[set_texture(map , i)];
+		if (map->ray[i].wheight > map->screen.y)
+			map->ray[i].wheight = map->screen.y;
 		i++;
 	}
-	set_color_ray(map, i - 1, j);
 }
 
 void set_data(t_cub *map)
@@ -114,13 +99,14 @@ void set_data(t_cub *map)
 	int endian;
 	int line_size;
 	int i;
+	void *img_txt;
 
 	i = 0;
 
 	while (i < TEXTURE_COUNT)
 	{
-		map->mlx.img_text[i] = mlx_xpm_file_to_image(map->mlx.ptr,map->text[i],&map->mlx.w[i],&map->mlx.h[i]);
-		map->mlx.data_text[i] = (int *)mlx_get_data_addr(map->mlx.img_text[i],&bpp,&line_size,&endian);
+		img_txt = mlx_xpm_file_to_image(map->mlx.ptr,map->text[i],&map->mlx.w[i],&map->mlx.h[i]);
+		map->mlx.data_text[i] = (int *)mlx_get_data_addr(img_txt,&bpp,&line_size,&endian);
 		i++;
 	}
 }

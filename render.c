@@ -6,10 +6,11 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:39:04 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/30 08:35:25 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/10/02 12:13:37 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "timecheck.h"
 #include "cub3d.h"
 #include "mlx.h"
 #include "mlx_int.h"
@@ -31,105 +32,91 @@ void print_backround(t_cub *map)
 
 void print_front(t_cub *map)
 {
+	t_ray r;
+	const t_int s = map->screen;
 	int i;
 	int j;
-	int k;
-	int l;
-
-	l = 0;
+	double k;
 	i = 0;
-	j = (map->screen.y - (int)map->ray[i].wheight) / 2;
-	if (j < 0)
-		j = 0;
-	k = j + (int)map->ray[i].wheight;
-	if (k > map->screen.y)
-		k = map->screen.y - 1;
-	while (i < map->screen.x)
+	while (i < s.x)
 	{
-		while (l <= (int)map->ray[i].wheight && j <= k)
+		j = 0;
+		r = map->ray[i];
+		k = 0;
+		while (j <= r.wheight / 2)
 		{
-			map->mlx.data[j * map->screen.x + i] = map->ray[i].color[l];
-			l++;
+			map->mlx.data[(s.y / 2 + j) * s.x + i]= r.data[(r.w / 2 + (int)k) * r.w + r.textpos];
+			map->mlx.data[(s.y / 2 - j) * s.x + i] = r.data[(r.w / 2 - (int)k) * r.w + r.textpos];
 			j++;
+			k += r.diffangle;
 		}
-		l = 0;
-		free(map->ray[i].color);
 		i++;
-		if (i < map->screen.x)
-		{
-			j = (map->screen.y - (int)map->ray[i].wheight) / 2;
-			if (j < 0)
-				j = 0;
-			k = j + (int)map->ray[i].wheight;
-			if (k > map->screen.y)
-				k = map->screen.y - 1;
-		}
 	}
 }
 
 void set_player_dir(t_cub *map, double angle)
 {
-	map->player_dir.x = -1 * cos(angle*(PI/180)) * 0.1;
-	map->player_dir.y = sin(angle*(PI/180)) * 0.1;
+	map->player.dir.x = -1 * cos(angle*(PI/180)) * MVS;
+	map->player.dir.y = sin(angle*(PI/180)) * MVS;
 }
 
 void  move_forward(t_cub *map)
 {
 	if (map->kp == 119)
 	{
-		set_player_dir(map,map->player_orientation);
-		map->player_pos.x += map->player_dir.x;
-		map->player_pos.y += map->player_dir.y;
-		if (map->map[(int)map->player_pos.x][(int)map->player_pos.y] == '1')
+		set_player_dir(map,map->player.orientation);
+		map->player.pos.x += map->player.dir.x;
+		map->player.pos.y += map->player.dir.y;
+		if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == '1')
 		{
-		map->player_pos.x -= map->player_dir.x;
-		map->player_pos.y -= map->player_dir.y;
+		map->player.pos.x -= map->player.dir.x;
+		map->player.pos.y -= map->player.dir.y;
 		}
 	}
 	if (map->kp == 115)
 	{
-		set_player_dir(map,map->player_orientation);
-		map->player_pos.x -= map->player_dir.x;
-		map->player_pos.y -= map->player_dir.y;
-		if (map->map[(int)map->player_pos.x][(int)map->player_pos.y] == '1')
+		set_player_dir(map,map->player.orientation);
+		map->player.pos.x -= map->player.dir.x;
+		map->player.pos.y -= map->player.dir.y;
+		if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == '1')
 		{
-		map->player_pos.x += map->player_dir.x;
-		map->player_pos.y += map->player_dir.y;
+		map->player.pos.x += map->player.dir.x;
+		map->player.pos.y += map->player.dir.y;
 		}
 	}
 	if (map->kp == 97)
 	{
-		set_player_dir(map,map->player_orientation - 90);
-		map->player_pos.x += map->player_dir.x;
-		map->player_pos.y += map->player_dir.y;
-		if (map->map[(int)map->player_pos.x][(int)map->player_pos.y] == '1')
+		set_player_dir(map,map->player.orientation - 90);
+		map->player.pos.x += map->player.dir.x;
+		map->player.pos.y += map->player.dir.y;
+		if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == '1')
 		{
-		map->player_pos.x -= map->player_dir.x + 0.01;
-		map->player_pos.y -= map->player_dir.y + 0.01;
+		map->player.pos.x -= map->player.dir.x + 0.005;
+		map->player.pos.y -= map->player.dir.y + 0.005;
 		}
 	}
 	if (map->kp == 100)
 	{
-		set_player_dir(map,map->player_orientation - 90);
-		map->player_pos.x -= map->player_dir.x;
-		map->player_pos.y -= map->player_dir.y;
-		if (map->map[(int)map->player_pos.x][(int)map->player_pos.y] == '1')
+		set_player_dir(map,map->player.orientation - 90);
+		map->player.pos.x -= map->player.dir.x;
+		map->player.pos.y -= map->player.dir.y;
+		if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == '1')
 		{
-		map->player_pos.x += map->player_dir.x *2;
-		map->player_pos.y += map->player_dir.y *2;
+		map->player.pos.x += map->player.dir.x *2;
+		map->player.pos.y += map->player.dir.y *2;
 		}
 	}
 	if (map->kp == 101)
 	{
-		map->player_orientation += 1;
-		if (map->player_orientation >= 360)
-		map->player_orientation = 0;
+		map->player.orientation += 1;
+		if (map->player.orientation >= 360)
+		map->player.orientation = 0;
 	}
 	if (map->kp == 113)
 	{
-		map->player_orientation -= 1;
-		if (map->player_orientation <= 0)
-		map->player_orientation = 360;
+		map->player.orientation -= 1;
+		if (map->player.orientation <= 0)
+		map->player.orientation = 360;
 	}
 }
 
@@ -169,37 +156,38 @@ int deal_key(int key, void *params)
 	{
 		map->kp = 0;
 	}
+	if (key == 114)
+	{
+		map->kp = key;
+		return (1);
+	}
 	return (0);
 }
 
 int main_loop(t_cub *map)
 {
-	map->c++;
-	mlx_key_hook(map->mlx.ptr,deal_key,map);
-	dprintf(1,"Test1\n");
+	//mlx_key_hook(map->mlx.ptr,deal_key,map);
 	move_forward(map);
-	dprintf(1,"Test2\n");
 	ft_bzero(map->ray,sizeof(t_ray)* map->screen.x - 1);
-	dprintf(1,"Test3\n");
 	draw_base_ray(map);
-	dprintf(1,"Test4\n");
 	get_wall_lenght(map);
-	dprintf(1,"Test5\n");
 	print_backround(map);
-	dprintf(1,"Test6\n");
 	print_front(map);
-	dprintf(1,"Test7\n");
 	mlx_put_image_to_window(map->mlx.ptr, map->mlx.win, map->mlx.img, 0, 0);
-	dprintf(1,"Test8\n");
-	if (map->c == 1000)
+	//dprintf(1,"%d\n",map->c);
+	if (map->kp == 114)
 	exit(1);
 }
 
 void create_new_black_window(t_cub *map)
 {
+	int bpp;
+	int line_size;
+	int endien;
+	
 	map->mlx.win = mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3d");
 	map->mlx.img = mlx_new_image(map->mlx.ptr, map->screen.x, map->screen.y);
-	map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &map->mlx.bpp, &map->mlx.line_size, &map->mlx.endian);
+	map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &bpp, &line_size, &endien);
 	mlx_loop_hook(map->mlx.ptr, &main_loop,map);
 	mlx_key_hook(map->mlx.win, deal_key, map);
 }

@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/29 04:37:32 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/10/01 17:50:29 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,12 +179,12 @@ int		test_map_char_integrity(t_cub *map, int nbline, char buffer[256], int j)
 		if (map->map[nbline][j] && buffer[map->map[nbline][j]] != 1)
 		{
 			if (buffer[map->map[nbline][j]] == 0 ||
-			(buffer[map->map[nbline][j]] == 2 && map->player_pos_base.y != 0))
+			(buffer[map->map[nbline][j]] == 2 && map->player.pos_base.y != 0))
 				exit(printf("ERROR\nProblem at line %d column %d", nbline + 1, j));
 			else if (buffer[map->map[nbline][j]] == 2)
 			{
-				map->player_pos_base.x = nbline;
-				map->player_pos_base.y = j + 1;
+				map->player.pos_base.x = nbline;
+				map->player.pos_base.y = j + 1;
 			}
 		}
 		if (map->map[nbline][j] == 0)
@@ -194,7 +194,7 @@ int		test_map_char_integrity(t_cub *map, int nbline, char buffer[256], int j)
 		}
 		j++;
 	}
-	if (map->player_pos_base.y == 0 || map->player_pos_base.x == 0)
+	if (map->player.pos_base.y == 0 || map->player.pos_base.x == 0)
 		error_str_return("Player pos not set");
 	return (0);
 }

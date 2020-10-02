@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: aviscogl <aviscogl@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/29 16:20:48 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/10/02 21:51:46 by aviscogl         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
 
 #define PI	3.14159265359
 #define FOV	60
-#define MVS 0.2
+#define MVS 0.05
+#define RTS 1
 
 enum			e_text
 {
@@ -44,13 +45,9 @@ typedef struct	s_mlx
 	void	*win;
 	int		*data;
 	int		*data_text[TEXTURE_COUNT];
-	void	*img_text[TEXTURE_COUNT];
 	void	*img;
 	int		h[TEXTURE_COUNT];
 	int		w[TEXTURE_COUNT];
-	int		bpp;
-	int		endian;
-	int		line_size;
 
 }				t_mlx;
 
@@ -84,14 +81,25 @@ typedef	struct	s_ray
 {
 	double	t;
 	t_raytab tan;
+	double	diffangle;
 	double	walldist;
 	double	wheight;
-	int		*color;
+	int		texture;
+	int		textpos;
+	int		*data;
+	int		w;
 	t_float	pos[2];
 	t_float	wallpos[2];
 	t_float	pointpos;
 }				t_ray;
 
+typedef struct s_player
+{
+	t_float		pos;
+	double		orientation;
+	t_int		pos_base;
+	t_float		dir;
+}				t_player;
 
 typedef struct	s_cub
 {
@@ -99,25 +107,15 @@ typedef struct	s_cub
 	int			colorsky;
 	int			colorfloor;
 	int			texture[TEXTURE_COUNT];
-	int			kp;
+	char		*text[TEXTURE_COUNT];
 	char		**map;
-	double		diffangle;
-	double		diffangle2;
-	double		projectiondist;
-	t_float		projection_id;
-	t_float		projection_center;
-	t_float		player_pos;
-	double		player_orientation;
-	t_int		player_pos_base;
-	t_float		player_dir;
+	t_player	player;
 	t_mlx		mlx;
 	t_ray		*ray;
 	t_raytab	*raytab;
 	int			tabsize;
-	char		*text[TEXTURE_COUNT];
-	double		a;
-	double		b;
-	int			c;
+	int			loop;
+	int			kp;
 }				t_cub;
 
 

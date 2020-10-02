@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2020/09/29 04:35:29 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/09/30 18:32:44 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int		main(int argc, char **argv)
 
 	i = 0;
 	t_cub			*map;
+
 	ft_bzero((map = malloc(sizeof(t_cub))), sizeof(t_cub));
 	map->colorfloor = -1;
 	map->colorsky = -1;
