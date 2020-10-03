@@ -1,7 +1,6 @@
 *.o
 *.a
 *.txt
-*.xpm
 a.out*
 test.c
 libft/*.a
