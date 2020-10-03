@@ -6,7 +6,7 @@
 /*   By: aviscogl <aviscogl@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/02 21:49:02 by aviscogl         ###   ########lyon.fr   */
+/*   Updated: 2020/10/02 22:22:18 by aviscogl         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,10 +157,10 @@ double check_for_wall(t_ray *r, t_cub *map, char c)
 	return (0);
 }
 
-check_for_sprite(t_ray r,t_cub *map,char c)
-{
-	dprintf(1,"tutut\n");
-}
+// check_for_sprite(t_ray r,t_cub *map,char c)
+// {
+// 	dprintf(1,"tutut\n");
+// }
 
 t_ray check_wall_north_south(t_ray r, t_cub *map, int j, char c)
 {
@@ -170,8 +170,8 @@ t_ray check_wall_north_south(t_ray r, t_cub *map, int j, char c)
 		if ((int)r.pos[1].y != (int)r.pos[0].y)
 			if (check_for_wall(&r, map, c) != 0)
 				break;
-		if (map->map[(int)r.pos[0].x][(int)r.pos[0].y] == '2')
-			check_for_sprite(r, map, c);
+		//if (map->map[(int)r.pos[0].x][(int)r.pos[0].y] == '2')
+		//	check_for_sprite(r, map, c);
 		r.pos[0] = set_ray_pos(r.pos[1].x, r.pos[1].y);
 	}
 	if (r.t == 0)
@@ -197,8 +197,8 @@ t_ray check_wall_east_west(t_ray r, t_cub *map, int j, char c)
 			if (check_for_wall(&r, map, c) != 0)
 				break;
 		}
-		if (map->map[(int)r.pos[0].x][(int)r.pos[0].y] == '2')
-			check_for_sprite(r, map, c);
+		// if (map->map[(int)r.pos[0].x][(int)r.pos[0].y] == '2')
+		// 	check_for_sprite(r, map, c);
 		r.pos[0] = set_ray_pos(r.pos[1].x, r.pos[1].y);
 	}
 	if (r.t == 0)

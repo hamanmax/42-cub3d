@@ -6,7 +6,7 @@
 /*   By: aviscogl <aviscogl@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/02 21:51:46 by aviscogl         ###   ########lyon.fr   */
+/*   Updated: 2020/10/02 22:19:57 by aviscogl         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 #include <fcntl.h>
 #include <string.h>
 #include <math.h>
-#include <mlx.h>
+//#include <mlx.h>
 #include "libft/libft.h"
-#include "mlx.h"
-#include "mlx_int.h"
+//#include "mlx.h"
+//#include "mlx_int.h"
 
 #define PI	3.14159265359
 #define FOV	60

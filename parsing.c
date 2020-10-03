@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: aviscogl <aviscogl@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/01 17:50:29 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/10/02 22:04:59 by aviscogl         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,7 +341,7 @@ void	resizing_map(t_cub *map)
 	{
 		printf("Resizing up screen resolution\n");
 		map->screen.x = 640;
-		map->screen.y = 360;
+		map->screen.y = 480;
 	}
 }
 
@@ -372,32 +372,6 @@ int		check_file_validity(t_cub *map, char **argv, int argc)
 	else
 		close(fd);
 	return (1);
-}
-
-int		ft_str_char_occur(char *str, int c)
-{
-	size_t			i;
-
-	i = 0;
-	while (*str)
-	{
-		if (*str == c)
-			i++;
-		str++;
-	}
-	return (i);
-}
-
-int		ft_str_isdigit(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i] && ft_isdigit(str[i]) == 1)
-		i++;
-	if (str[i] == 0)
-		return (1);
-	return (0);
 }
 
 int		error_str_return(char *str)

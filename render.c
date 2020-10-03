@@ -3,17 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: aviscogl <aviscogl@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:39:04 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/02 12:13:37 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/10/02 22:22:43 by aviscogl         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "timecheck.h"
 #include "cub3d.h"
-#include "mlx.h"
-#include "mlx_int.h"
 
 void print_backround(t_cub *map)
 {
@@ -184,7 +182,7 @@ void create_new_black_window(t_cub *map)
 	int bpp;
 	int line_size;
 	int endien;
-	
+
 	map->mlx.win = mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3d");
 	map->mlx.img = mlx_new_image(map->mlx.ptr, map->screen.x, map->screen.y);
 	map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &bpp, &line_size, &endien);
