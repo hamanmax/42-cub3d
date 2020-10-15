@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aviscogl <aviscogl@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/02 22:19:57 by aviscogl         ###   ########lyon.fr   */
+/*   Updated: 2020/10/15 10:16:27 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <math.h>
-//#include <mlx.h>
+#include <mlx.h>
 #include "libft/libft.h"
 //#include "mlx.h"
 //#include "mlx_int.h"
@@ -79,6 +79,7 @@ typedef	struct	s_int
 
 typedef	struct	s_ray
 {
+	int		id;
 	double	t;
 	t_raytab tan;
 	double	diffangle;
@@ -97,24 +98,25 @@ typedef struct s_player
 {
 	t_float		pos;
 	double		orientation;
-	t_int		pos_base;
 	t_float		dir;
 }				t_player;
 
 typedef struct	s_cub
 {
 	t_int		screen;
+	t_int		mapsize;
 	int			colorsky;
 	int			colorfloor;
 	int			texture[TEXTURE_COUNT];
 	char		*text[TEXTURE_COUNT];
 	char		**map;
+	int			nbsprite;
 	t_player	player;
 	t_mlx		mlx;
 	t_ray		*ray;
+	t_ray		*spr;
 	t_raytab	*raytab;
 	int			tabsize;
-	int			loop;
 	int			kp;
 }				t_cub;
 
@@ -133,7 +135,7 @@ int		ft_str_isdigit(char *str);
 int		error_str_return(char *str);
 void	resizing_map(t_cub *map);
 int		test_map_integrity(t_cub *map, int nbline);
-int		test_map_char_integrity(t_cub *map,int nbline, char buffer[256],int j);
+void	test_map_char_integrity(t_cub *map,int nbline, char buffer[256],int j);
 int		test_map_overall_integrity(t_cub *map, int nbline);
 int		test_map_validity(t_cub *map,int nbline);
 int		check_around_char(char **tab, size_t x, size_t y, char *tofind);

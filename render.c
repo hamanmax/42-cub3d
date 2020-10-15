@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aviscogl <aviscogl@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:39:04 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/02 22:22:43 by aviscogl         ###   ########lyon.fr   */
+/*   Updated: 2020/10/15 10:16:05 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,7 +164,7 @@ int deal_key(int key, void *params)
 
 int main_loop(t_cub *map)
 {
-	//mlx_key_hook(map->mlx.ptr,deal_key,map);
+	
 	move_forward(map);
 	ft_bzero(map->ray,sizeof(t_ray)* map->screen.x - 1);
 	draw_base_ray(map);
@@ -173,8 +173,8 @@ int main_loop(t_cub *map)
 	print_front(map);
 	mlx_put_image_to_window(map->mlx.ptr, map->mlx.win, map->mlx.img, 0, 0);
 	//dprintf(1,"%d\n",map->c);
-	if (map->kp == 114)
-	exit(1);
+	//if (map->kp == 255)
+	//exit(1);
 }
 
 void create_new_black_window(t_cub *map)

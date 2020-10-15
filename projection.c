@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 13:02:24 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/01 17:26:32 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/10/09 10:59:37 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,30 +91,4 @@ void get_wall_lenght(t_cub *map)
 			map->ray[i].wheight = map->screen.y;
 		i++;
 	}
-}
-
-void set_data(t_cub *map)
-{
-	int bpp;
-	int endian;
-	int line_size;
-	int i;
-	void *img_txt;
-
-	i = 0;
-
-	while (i < TEXTURE_COUNT)
-	{
-		img_txt = mlx_xpm_file_to_image(map->mlx.ptr,map->text[i],&map->mlx.w[i],&map->mlx.h[i]);
-		map->mlx.data_text[i] = (int *)mlx_get_data_addr(img_txt,&bpp,&line_size,&endian);
-		i++;
-	}
-}
-
-void projection(t_cub *map)
-{
-	set_data(map);
-	//get_wall_lenght(map);
-	//mlx_destroy_image(map->mlx.ptr,map->mlx.img2);
-	//map->mlx.data2 = 0;
 }

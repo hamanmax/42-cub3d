@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aviscogl <aviscogl@student.42lyon.fr>      +#+  +:+       +#+        */
+/*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/02 22:22:18 by aviscogl         ###   ########lyon.fr   */
+/*   Updated: 2020/10/15 10:15:23 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ double set_player_orientation(t_cub *map, double i)
 {
 	if (i != 0)
 		return (i);
-	if (map->map[map->player.pos_base.x][map->player.pos_base.y] == 'N')
+	if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == 'N')
 		return (0);
-	if (map->map[map->player.pos_base.x][map->player.pos_base.y] == 'E')
+	if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == 'E')
 		return (90);
-	if (map->map[map->player.pos_base.x][map->player.pos_base.y] == 'S')
+	if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == 'S')
 		return (180);
-	if (map->map[map->player.pos_base.x][map->player.pos_base.y] == 'W')
+	if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == 'W')
 		return (270);
 	return (0);
 }
@@ -157,10 +157,6 @@ double check_for_wall(t_ray *r, t_cub *map, char c)
 	return (0);
 }
 
-// check_for_sprite(t_ray r,t_cub *map,char c)
-// {
-// 	dprintf(1,"tutut\n");
-// }
 
 t_ray check_wall_north_south(t_ray r, t_cub *map, int j, char c)
 {
@@ -170,8 +166,6 @@ t_ray check_wall_north_south(t_ray r, t_cub *map, int j, char c)
 		if ((int)r.pos[1].y != (int)r.pos[0].y)
 			if (check_for_wall(&r, map, c) != 0)
 				break;
-		//if (map->map[(int)r.pos[0].x][(int)r.pos[0].y] == '2')
-		//	check_for_sprite(r, map, c);
 		r.pos[0] = set_ray_pos(r.pos[1].x, r.pos[1].y);
 	}
 	if (r.t == 0)
@@ -197,8 +191,6 @@ t_ray check_wall_east_west(t_ray r, t_cub *map, int j, char c)
 			if (check_for_wall(&r, map, c) != 0)
 				break;
 		}
-		// if (map->map[(int)r.pos[0].x][(int)r.pos[0].y] == '2')
-		// 	check_for_sprite(r, map, c);
 		r.pos[0] = set_ray_pos(r.pos[1].x, r.pos[1].y);
 	}
 	if (r.t == 0)
@@ -278,6 +270,31 @@ void draw_raytab(t_cub *map, double diffangle)
 	}
 }
 
+void set_sprite(t_cub *map,double angle)
+{
+	int i;
+	int j;
+	int k;
+
+	i = 0;
+	j = 0;
+	k = 0;
+	while (i < map->mapsize.y)
+	{
+		if (map->map[i][j] == '2')
+		{
+			map->spr[k].wallpos[0].x = cos(angle + 180 * (PI / 180)) / 2 + i * -1;
+			map->spr[k].wallpos[0].y = sin(angle + 180 * (PI / 180)) / 2 + j;
+			map->spr[k].wallpos[1].x = cos(angle * (PI / 180)) / 2 + i * -1;
+			map->spr[k].wallpos[1].y = sin(angle * (PI / 180)) / 2 + j;
+			k++;
+		}
+		if (map->map[i++][j] = 0)
+			j = 0;
+		j++;
+	}
+}
+
 void draw_base_ray(t_cub *map)
 {
 	int i;
@@ -286,6 +303,7 @@ void draw_base_ray(t_cub *map)
 	i = 0;
 	while (i < map->tabsize && map->raytab[i].angle <= map->player.orientation)
 		i++;
+	set_sprite(map,map->player.orientation);
 	start = i - (map->screen.x / 2) - 1;
 	if (start < 0)
 		start += map->tabsize;
@@ -293,13 +311,10 @@ void draw_base_ray(t_cub *map)
 	while (i < map->screen.x)
 	{
 		map->ray[i].tan = map->raytab[start];
+		map->ray[i].id = i;
 		check_wall_pos(map, i);
+		dprintf(1,"%f\n",map->player.orientation);
 		check_wall_dist(map, i);
-		if (map->kp == 114)
-		{
-			dprintf(1, "Wh=%f\tWd=%f\tt=%f\ti=%d\n", map->ray[i].wallpos[0].x, map->ray[i].wallpos[0].y, map->ray[i].wheight, i);
-			//dprintf(1,"Wh=%f\tWd=%f\tt=%f\ti=%d\n",map->ray[i].wallpos[1].x,map->ray[i].wallpos[1].y,map->ray[i].wheight,i);
-		}
 		start++;
 		if (start == map->tabsize)
 			start = 0;
@@ -310,11 +325,10 @@ void draw_base_ray(t_cub *map)
 int raytracing(t_cub *map)
 {
 	double angle;
-	map->player.pos.x = map->player.pos_base.x + 0.5;
-	map->player.pos.y = map->player.pos_base.y + 0.5;
-	angle = (FOV / (double)map->screen.x);
+	map->player.pos.x += 0.5;
+	map->player.pos.y += 0.5;
 	map->player.orientation = set_player_orientation(map, 0);
+	angle = (FOV / (double)map->screen.x);
 	draw_raytab(map, angle);
-	//draw_base_ray(map);
 	return (0);
 }
