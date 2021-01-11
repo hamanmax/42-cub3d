@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 13:02:24 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/09 10:59:37 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/10/15 11:46:43 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,24 +26,6 @@ int set_texture(t_cub *map, int i)
 		j = 3;
 	return (j);
 }
-
-t_ste set_start_to_end(t_cub *map, int len, int i,int k)
-{
-	t_ste ste;
-
-	ste.start = (map->mlx.w[k] * map->ray[i].t);
-	if (map->ray[i + len].t < map->ray[i].t)
-		ste.start = (map->mlx.w[k] * (1-map->ray[i].t));
-	if (map->ray[i].t < 0.05 || map->ray[i].t > 0.95)
-		ste.start = 0;
-	ste.end = (map->mlx.w[k] * map->ray[i + len].t);
-	if (map->ray[i + len].t < map->ray[i].t)
-		ste.end = (map->mlx.w[k] * (1 - map->ray[i + len].t));
-	if (map->ray[i + len].t < 0.05 || map->ray[i + len].t > 0.95)
-		ste.end = map->mlx.w[k];
-	return (ste);
-}
-
 
 int check_wall_end(t_cub *map, int i)
 {
@@ -82,7 +64,6 @@ void get_wall_lenght(t_cub *map)
 	i = 0;
 	while (i < map->screen.x)
 	{
-		map->ray[i].texture = set_texture(map, i);
 		map->ray[i].textpos = set_textpos(map, map->mlx.w[set_texture(map, i)], i);
 		map->ray[i].diffangle = map->mlx.w[set_texture(map, i)] / map->ray[i].wheight;
 		map->ray[i].data = map->mlx.data_text[set_texture(map,i)];

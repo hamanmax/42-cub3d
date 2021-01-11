@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:39:04 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/15 10:16:05 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/10/20 10:51:46 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,27 @@ void print_front(t_cub *map)
 		}
 		i++;
 	}
+	i = 0;
+	while (i < s.x)
+	{
+	j = 0;
+		if (map->spr[0].ray[i].wheight != 0)
+		{
+			while(j <= map->spr[0].ray[i].wheight / 2)
+			{
+				map->mlx.data[(s.y / 2 + j) * s.x + i]= 2520205;
+				map->mlx.data[(s.y / 2 - j) * s.x + i] = 2555151;
+				j++;
+			}
+		}
+		i++;
+	}
 }
 
 void set_player_dir(t_cub *map, double angle)
 {
-	map->player.dir.x = -1 * cos(angle*(PI/180)) * MVS;
-	map->player.dir.y = sin(angle*(PI/180)) * MVS;
+	map->player.dir.x = -1 * cos(angle*RAD) * MVS;
+	map->player.dir.y = sin(angle*RAD) * MVS;
 }
 
 void  move_forward(t_cub *map)
@@ -164,17 +179,17 @@ int deal_key(int key, void *params)
 
 int main_loop(t_cub *map)
 {
-	
+	//map->kp++;
 	move_forward(map);
 	ft_bzero(map->ray,sizeof(t_ray)* map->screen.x - 1);
+	ft_bzero(map->spr[0].ray,sizeof(t_ray)* map->screen.x - 1);
 	draw_base_ray(map);
 	get_wall_lenght(map);
 	print_backround(map);
 	print_front(map);
 	mlx_put_image_to_window(map->mlx.ptr, map->mlx.win, map->mlx.img, 0, 0);
-	//dprintf(1,"%d\n",map->c);
-	//if (map->kp == 255)
-	//exit(1);
+	if (map->kp == 114)
+		exit(1);
 }
 
 void create_new_black_window(t_cub *map)

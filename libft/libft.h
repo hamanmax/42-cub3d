@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaman <mhaman@student.le-101.fr>          +#+  +:+       +#+        */
+/*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 15:58:20 by mhaman            #+#    #+#             */
-/*   Updated: 2020/03/16 14:42:35 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/10/19 14:04:56 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,6 @@ char	*ft_itoa_base(unsigned int i, char *base);
 char	*ft_itoa_base_long(unsigned long nbr, char *base);
 char	*ft_itoa_unsigned(unsigned int i);
 int		get_next_line(int fd, char **line);
+int		ft_pow(int nb, int power);
+double	ft_round(double nb,int round);
 #endif

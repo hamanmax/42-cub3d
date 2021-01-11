@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/15 10:15:11 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/10/15 13:24:17 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,9 @@ int		main(int argc, char **argv)
 	printf("file valid\n");
 	set_data(map);
 	map->ray = ft_calloc(map->screen.x, sizeof(t_ray));
-	map->spr = ft_calloc(map->nbsprite, sizeof(t_ray));
+	map->spr = ft_calloc(map->nbsprite, sizeof(t_sprite));
+	while (i < map->nbsprite)
+		map->spr[i++].ray = ft_calloc(map->screen.x, sizeof(t_ray));
 	raytracing(map);
 	create_new_black_window(map);
 	mlx_loop(map->mlx.ptr);

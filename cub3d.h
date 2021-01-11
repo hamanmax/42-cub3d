@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/15 10:16:27 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/10/15 15:40:56 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #define FOV	60
 #define MVS 0.05
 #define RTS 1
+#define RAD PI/180
 
 enum			e_text
 {
@@ -57,13 +58,6 @@ typedef	struct	s_float
 	double	y;
 }				t_float;
 
-typedef	struct	s_ste
-{
-	double	start;
-	double	end;
-}				t_ste;
-
-
 typedef	struct	s_raytab
 {
 	int		k;
@@ -85,7 +79,6 @@ typedef	struct	s_ray
 	double	diffangle;
 	double	walldist;
 	double	wheight;
-	int		texture;
 	int		textpos;
 	int		*data;
 	int		w;
@@ -101,20 +94,26 @@ typedef struct s_player
 	t_float		dir;
 }				t_player;
 
+typedef struct s_sprite
+{
+	t_float	pos[2];
+	t_ray *ray;
+}				t_sprite;
+
 typedef struct	s_cub
 {
 	t_int		screen;
-	t_int		mapsize;
 	int			colorsky;
 	int			colorfloor;
 	int			texture[TEXTURE_COUNT];
 	char		*text[TEXTURE_COUNT];
 	char		**map;
-	int			nbsprite;
+	t_int		mapsize;
 	t_player	player;
 	t_mlx		mlx;
+	t_sprite	*spr;
+	int			nbsprite;
 	t_ray		*ray;
-	t_ray		*spr;
 	t_raytab	*raytab;
 	int			tabsize;
 	int			kp;

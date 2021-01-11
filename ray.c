@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
+/*   By: aviscogl <aviscogl@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/15 10:15:23 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2020/12/26 03:40:27 by aviscogl         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,23 +59,74 @@ int calc_del(t_ray ray)
 	return (t);
 }
 
-double calc_t(t_ray *r, t_cub *map)
+double calc_t(t_ray *r, t_float raypos, t_float *wallpos, t_float playerpos)
 {
 	t_float p[5];
+	double t;
 
-	p[1] = r[0].wallpos[0];
-	p[2] = r[0].wallpos[1];
-	p[3] = map->player.pos;
-	p[4] = r[0].pos[1];
-	r[0].t = ((p[1].y - p[3].y) *
-				  (p[3].x - p[4].x) -
-			  (p[1].x - p[3].x) *
-				  (p[3].y - p[4].y)) /
-			 ((p[1].y - p[2].y) *
-				  (p[3].x - p[4].x) -
-			  (p[1].x - p[2].x) *
-				  (p[3].y - p[4].y));
+	p[1] = wallpos[0];
+	p[2] = wallpos[1];
+	p[3] = playerpos;
+	p[4] = raypos;
+	r[0].t = ((p[1].y - p[3].y) * (p[3].x - p[4].x) - (p[1].x - p[3].x) *
+	(p[3].y - p[4].y)) / ((p[1].y - p[2].y) * (p[3].x - p[4].x) -
+	(p[1].x - p[2].x) * (p[3].y - p[4].y));
 	return (r[0].t);
+}
+
+t_float check_point_pos(t_ray *r,t_float *p)
+{
+	t_int t[2];
+
+	t[0].x = 0;
+	t[0].y = 0;
+	t[1].x = 0;
+	t[1].y = 0;
+
+	if (r[0].pointpos.x >= p[1].x && r[0].pointpos.x <= p[2].x ||
+		r[0].pointpos.x <= p[1].x && r[0].pointpos.x >= p[2].x)
+		t[0].x = 1;
+	if (r[0].pointpos.x >= p[3].x && r[0].pointpos.x <= p[4].x ||
+		r[0].pointpos.x <= p[3].x && r[0].pointpos.x >= p[4].x)
+		t[1].x = 1;
+	if (r[0].pointpos.y >= p[1].y && r[0].pointpos.y <= p[2].y ||
+		r[0].pointpos.y <= p[1].y && r[0].pointpos.y >= p[2].y)
+		t[0].y = 1;
+	if (r[0].pointpos.y >= p[3].y && r[0].pointpos.y <= p[4].y ||
+		r[0].pointpos.y <= p[3].y && r[0].pointpos.y >= p[4].y)
+		t[1].y = 1;
+	dprintf(1,"%d\t%d\t%d\t%d\n",t[0].x,t[0].y,t[1].x,t[1].y);
+	if (t[0].x + t[0].y + t[1].x + t[1].y == 4)
+		return (r[0].pointpos);
+	return(set_ray_pos(0,0));
+}
+
+t_float calc_u(t_ray *r, t_float raypos, t_float *wallpos, t_float playerpos)
+{
+	t_float p[5];
+	double A[2];
+	double B[2];
+	double C[2];
+
+	p[1] = wallpos[0];
+	p[2] = wallpos[1];
+	p[3] = playerpos;
+	p[4] = raypos;
+	A[0] = p[2].y - p[1].y;
+	B[0] = p[1].x - p[2].x;
+	A[1] = p[4].y - p[3].y;
+	B[1] = p[3].x - p[4].x;
+	C[0] = A[0] * p[1].x + B[0] * p[1].y;
+	C[1] = A[1] * p[3].x + B[1] * p[3].y;
+	r[0].pointpos.x = (B[1] * C[0] - B[0] * C[1]) / (A[0] * B[1] - A[1] * B[0]);
+	r[0].pointpos.y = (A[0] * C[1] - A[1] * C[0]) / (A[0] * B[1] - A[1] * B[0]);
+	r[0].pointpos = check_point_pos(r, p);
+	//if (r[0].pointpos.x != 0)
+/* 		dprintf(1,"(%.20f,%.20f)\n",p[1].x,p[1].y);
+		dprintf(1,"(%.20f,%.20f)\n",p[2].x,p[2].y);
+		dprintf(1,"(%.20f,%.20f)\n",p[3].x,p[3].y);
+		dprintf(1,"(%.20f,%.20f)\n\n",p[4].x,p[4].y); */
+	return (r[0].pointpos);
 }
 
 double set_wall_north_south(t_ray *r, t_cub *map, char c)
@@ -87,7 +138,7 @@ double set_wall_north_south(t_ray *r, t_cub *map, char c)
 	{
 		r[0].wallpos[0] = set_wall_pos(rp[0].x, rp[0].y);
 		r[0].wallpos[1] = set_wall_pos(rp[0].x, rp[0].y + 1);
-		if (calc_t(r, map) > 0 && (r[0].t <= 1))
+		if (calc_t(r, rp[1], r[0].wallpos, map->player.pos) > 0 && r[0].t <= 1)
 			return (r[0].t);
 		return ((r[0].t = 0));
 	}
@@ -95,13 +146,13 @@ double set_wall_north_south(t_ray *r, t_cub *map, char c)
 	{
 		r[0].wallpos[0] = set_wall_pos(rp[0].x + 1, rp[0].y);
 		r[0].wallpos[1] = set_wall_pos(rp[0].x + 1, rp[0].y + 1);
-		if (calc_t(r, map) > 0 && (r[0].t <= 1))
+		if (calc_t(r, rp[1], r[0].wallpos, map->player.pos) > 0 && r[0].t <= 1)
 			return (r[0].t);
 		return ((r[0].t = 0));
 	}
 	r[0].wallpos[0] = set_wall_pos(rp[0].x, rp[0].y + ceilf(op));
 	r[0].wallpos[1] = set_wall_pos(rp[0].x + 1, rp[0].y + ceilf(op));
-	if (calc_t(r, map) > 0 && (r[0].t <= 1))
+		if (calc_t(r, rp[1], r[0].wallpos, map->player.pos) > 0 && r[0].t <= 1)
 		return (r[0].t);
 	return ((r[0].t = 0));
 }
@@ -115,7 +166,7 @@ double set_wall_east_west(t_ray *r, t_cub *map, char c)
 	{
 		r[0].wallpos[0] = set_wall_pos(rp[0].x, rp[0].y);
 		r[0].wallpos[1] = set_wall_pos(rp[0].x + 1, rp[0].y);
-		if (calc_t(r, map) > 0 && (r[0].t <= 1))
+		if (calc_t(r, rp[1], r[0].wallpos, map->player.pos) > 0 && r[0].t <= 1)
 			return (r[0].t);
 		return ((r[0].t = 0));
 	}
@@ -123,13 +174,13 @@ double set_wall_east_west(t_ray *r, t_cub *map, char c)
 	{
 		r[0].wallpos[0] = set_wall_pos(rp[0].x, rp[0].y + 1);
 		r[0].wallpos[1] = set_wall_pos(rp[0].x + 1, rp[0].y + 1);
-		if (calc_t(r, map) > 0 && (r[0].t <= 1))
+		if (calc_t(r, rp[1], r[0].wallpos, map->player.pos) > 0 && r[0].t <= 1)
 			return (r[0].t);
 		return ((r[0].t = 0));
 	}
 	r[0].wallpos[0] = set_wall_pos(rp[0].x + ceilf(op), rp[0].y);
 	r[0].wallpos[1] = set_wall_pos(rp[0].x + ceilf(op), rp[0].y + 1);
-	if (calc_t(r, map) > 0 && (r[0].t <= 1))
+		if (calc_t(r, rp[1], r[0].wallpos, map->player.pos) > 0 && r[0].t <= 1)
 		return (r[0].t);
 	return ((r[0].t = 0));
 }
@@ -156,7 +207,6 @@ double check_for_wall(t_ray *r, t_cub *map, char c)
 	}
 	return (0);
 }
-
 
 t_ray check_wall_north_south(t_ray r, t_cub *map, int j, char c)
 {
@@ -206,24 +256,24 @@ t_ray check_wall_east_west(t_ray r, t_cub *map, int j, char c)
 	return (r);
 }
 
-int check_wall_dist(t_cub *map, int i)
+int check_wall_dist(t_cub *map, t_ray *r,t_float *wallpos)
 {
 	t_float p[5];
-	const double projdist = (map->screen.x / 2) / tanf((30 * (PI / 180)));
-	p[1] = map->ray[i].wallpos[0];
-	p[2] = map->ray[i].wallpos[1];
+	const double projdist = (map->screen.x / 2) / tanf((30 * RAD));
+
+	p[1] = wallpos[0];
+	p[2] = wallpos[1];
 	p[3] = map->player.pos;
-	map->ray[i].pointpos.x = p[1].x + (map->ray[i].t * (p[2].x - p[1].x));
-	map->ray[i].pointpos.y = p[1].y + (map->ray[i].t * (p[2].y - p[1].y));
-	p[4] = map->ray[i].pointpos;
-	map->ray[i].walldist = sqrt(((p[4].x - p[3].x) * (p[4].x - p[3].x) +
-								 ((p[4].y - p[3].y) * (p[4].y - p[3].y))));
-	map->ray[i].wheight = (0.5 / map->ray[i].walldist) * projdist;
+	p[4] = r[0].pointpos;
+	r[0].walldist = sqrt(((p[4].x - p[3].x) * (p[4].x - p[3].x) +
+						((p[4].y - p[3].y) * (p[4].y - p[3].y))));
+	r[0].wheight = (0.5 / r[0].walldist) * projdist;
 }
 
 int check_wall_pos(t_cub *map, int i)
 {
 	const double angle = map->ray[i].tan.angle;
+	t_float *wp;
 
 	map->ray[i].pos[0] = map->player.pos;
 	map->ray[i].pos[1] = map->player.pos;
@@ -235,6 +285,10 @@ int check_wall_pos(t_cub *map, int i)
 		map->ray[i] = check_wall_north_south(map->ray[i], map, 1, 'S');
 	if (angle >= 225 && angle < 315)
 		map->ray[i] = check_wall_east_west(map->ray[i], map, -1, 'W');
+	wp = map->ray[i].wallpos;
+	map->ray[i].pointpos.x = wp[0].x + (map->ray[i].t * (wp[1].x - wp[0].x));
+	map->ray[i].pointpos.y = wp[0].y + (map->ray[i].t * (wp[1].y - wp[0].y));
+	check_wall_dist(map, &map->ray[i],map->ray[i].wallpos);
 	return (0);
 }
 
@@ -263,35 +317,51 @@ void draw_raytab(t_cub *map, double diffangle)
 			map->raytab[i].angle >= 315 && map->raytab[i - 1].angle < 315)
 			k += 2;
 		map->raytab[i].k = k;
-		map->raytab[i].oppose = tan((map->raytab[i].angle - (k * 45)) * (PI / 180));
+		map->raytab[i].oppose = tan((map->raytab[i].angle - (k * 45)) * RAD);
 		if (map->raytab[i].angle > 135 && map->raytab[i].angle < 315)
 			map->raytab[i].oppose *= -1;
 		i++;
 	}
 }
 
-void set_sprite(t_cub *map,double angle)
+void set_sprite(t_cub *map, double angle)
 {
 	int i;
 	int j;
 	int k;
+	const double r = 0.5;
 
 	i = 0;
 	j = 0;
 	k = 0;
-	while (i < map->mapsize.y)
+	while (map->map[i][j] != 0)
 	{
 		if (map->map[i][j] == '2')
 		{
-			map->spr[k].wallpos[0].x = cos(angle + 180 * (PI / 180)) / 2 + i * -1;
-			map->spr[k].wallpos[0].y = sin(angle + 180 * (PI / 180)) / 2 + j;
-			map->spr[k].wallpos[1].x = cos(angle * (PI / 180)) / 2 + i * -1;
-			map->spr[k].wallpos[1].y = sin(angle * (PI / 180)) / 2 + j;
+			map->spr[k].pos[0].x = sin((angle) * RAD) / 2 + i - r;
+			map->spr[k].pos[0].y = cos((angle) * RAD) / 2 + j + r;
+			map->spr[k].pos[1].x = -1 * sin((angle) * RAD) / 2 + i - r;
+			map->spr[k].pos[1].y = -1 * cos((angle) * RAD) / 2 + j + r;
 			k++;
 		}
-		if (map->map[i++][j] = 0)
-			j = 0;
 		j++;
+		if (map->map[i][j] == 0 && i++ < map->mapsize.y)
+			j = 0;
+	}
+}
+
+void check_sprite(t_cub *map,int i)
+{
+	int k;
+
+	k = 0;
+	while (k < map->nbsprite)
+	{
+		calc_u(&map->spr[k].ray[i],map->ray[i].pos[1], map->spr[k].pos,map->player.pos);
+		if (map->spr[k].ray[i].pointpos.x != 0)
+			check_wall_dist(map,&map->spr[k].ray[i],map->spr->pos);
+		//dprintf(1,"(%f,%f)\t%f\t%d\t%d\n",map->spr[k].ray[i].pointpos.x,map->spr[k].ray[i].pointpos.y,map->spr[k].ray[i].wheight,i,k);
+		k++;
 	}
 }
 
@@ -313,8 +383,8 @@ void draw_base_ray(t_cub *map)
 		map->ray[i].tan = map->raytab[start];
 		map->ray[i].id = i;
 		check_wall_pos(map, i);
-		dprintf(1,"%f\n",map->player.orientation);
-		check_wall_dist(map, i);
+		//dprintf(1,"%f\t%f\n",map->ray[i].pos[1].x,map->ray[i].pos[1].y);
+		check_sprite(map,i);
 		start++;
 		if (start == map->tabsize)
 			start = 0;
