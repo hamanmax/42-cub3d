@@ -6,11 +6,11 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:39:04 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/20 10:51:46 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/15 16:13:13 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "timecheck.h"
+//#include "timecheck.h"
 #include "cub3d.h"
 
 void print_backround(t_cub *map)

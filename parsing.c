@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/12 14:14:51 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/15 16:46:35 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,15 +178,15 @@ void	test_map_char_integrity(t_cub *map, int nbline, char b[256], int j)
 		{
 			if (b[map->map[nbline][j]] == 0 || 
 			(b[map->map[nbline][j]] == 2 && map->player.pos.y != 0))
-				exit(printf("ERROR\nProblem at line %d column %d\n", nbline + 1, j));
+				 exit(printf("ERROR\nProblem at line %d column %d\n", nbline + 1, j));
 			else if (b[map->map[nbline][j]] == 2)
 			{
 				map->player.pos.x = (double)nbline;
-				map->player.pos.y = (double)j + 1;
+				map->player.pos.y = (double)j + 1;	
 			}
 		}
-		if (b[map->map[nbline][j]] == 1 && map->map[nbline][j] == '2')
-			map->nbsprite++;
+		// if (b[map->map[nbline][j]] == 1 && map->map[nbline][j] == '2')
+		// 	map->nbsprite++;
 		if (map->map[nbline][j] == 0)
 		{
 			nbline--;

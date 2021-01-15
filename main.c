@@ -6,11 +6,37 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2020/10/15 13:24:17 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/15 16:49:21 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void set_dir_plane_vector(t_cub *map)
+{
+	const char c = map->player.orientation;
+
+	if (c == 'N')
+	{
+		map->player.dir.x = -1;
+		map->player.plane.y = 0.66;
+	}
+	if (c == 'S')
+	{
+		map->player.dir.x = 1;
+		map->player.plane.y = -0.66;
+	}
+	if (c == 'E')
+	{
+		map->player.dir.y = -1;
+		map->player.plane.x = 0.66;
+	}
+	if (c == 'W')
+	{
+		map->player.dir.y = 1;
+		map->player.plane.x = -0.66;
+	}
+}
 
 void set_data(t_cub *map)
 {
@@ -43,6 +69,27 @@ void free_all(t_cub *map)
 	free(map);
 }
 
+void ft_init_struct(t_cub *map, int code)
+{
+	if (code == 0)
+	{
+		map->colorfloor = -1;
+		map->colorsky = -1;
+		map->mlx.ptr = mlx_init(); // Potentiellement a enlever //
+	}
+	if (code == 1)
+	{
+		map->player.pos.x += 0.5;
+		map->player.pos.y += 0.5;
+		map->player.orientation = 
+		map->map[(int)map->player.pos.x][(int)map->player.pos.y];
+		set_dir_plane_vector(map);
+		set_data(map);
+		map->ray.pos.x = map->player.pos.x;
+		map->ray.pos.y = map->player.pos.y;
+	}
+}
+
 int		main(int argc, char **argv)
 {
 	int i;
@@ -51,19 +98,13 @@ int		main(int argc, char **argv)
 	t_cub			*map;
 
 	map = ft_calloc(1,sizeof(t_cub));
-	map->colorfloor = -1;
-	map->colorsky = -1;
-	map->mlx.ptr = mlx_init();
+	ft_init_struct(map, 0);
 	parse_file_cub(map, argv, argc);
+	ft_init_struct(map, 1);
 	printf("file valid\n");
-	set_data(map);
-	map->ray = ft_calloc(map->screen.x, sizeof(t_ray));
-	map->spr = ft_calloc(map->nbsprite, sizeof(t_sprite));
-	while (i < map->nbsprite)
-		map->spr[i++].ray = ft_calloc(map->screen.x, sizeof(t_ray));
-	raytracing(map);
-	create_new_black_window(map);
-	mlx_loop(map->mlx.ptr);
+	raycasting(map);
+	//create_new_black_window(map);
+	//mlx_loop(map->mlx.ptr);
 	free_all(map);
 	return (0);
 }
