@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/15 16:27:29 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/17 08:13:18 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@
 #include <fcntl.h>
 #include <string.h>
 #include <math.h>
-#include "minilibx/mlx.h"
+#include <stddef.h>
+#include "minilibx-linux/mlx.h"
 #include "libft/libft.h"
 
 #define PI	3.14159265359
@@ -45,6 +46,9 @@ typedef struct	s_mlx
 	int		*data;
 	int		*data_text[TEXTURE_COUNT];
 	void	*img;
+	int		bpp;
+	int		line_size;
+	int		endien;
 	int		h[TEXTURE_COUNT];
 	int		w[TEXTURE_COUNT];
 
@@ -126,6 +130,7 @@ typedef struct	s_cub
 	int			texture[TEXTURE_COUNT];
 	char		*text[TEXTURE_COUNT];
 	char		**map;
+	int			screenpx[1920][1080];
 	int			hit;
 	int			side;
 	t_ste		draw;

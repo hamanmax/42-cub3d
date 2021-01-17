@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:39:04 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/15 16:13:13 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/16 16:40:58 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,7 @@ int main_loop(t_cub *map)
 	get_wall_lenght(map);
 	print_backround(map);
 	print_front(map);
-	mlx_put_image_to_window(map->mlx.ptr, map->mlx.win, map->mlx.img, 0, 0);
+	
 	if (map->kp == 114)
 		exit(1);
 }
@@ -198,9 +198,7 @@ void create_new_black_window(t_cub *map)
 	int line_size;
 	int endien;
 
-	map->mlx.win = mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3d");
-	map->mlx.img = mlx_new_image(map->mlx.ptr, map->screen.x, map->screen.y);
-	map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &bpp, &line_size, &endien);
+	
 	mlx_loop_hook(map->mlx.ptr, &main_loop,map);
 	mlx_key_hook(map->mlx.win, deal_key, map);
 }

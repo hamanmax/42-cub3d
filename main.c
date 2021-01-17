@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/15 16:49:21 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/17 07:39:04 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void set_dir_plane_vector(t_cub *map)
 
 	if (c == 'N')
 	{
-		map->player.dir.x = -1;
+		map->player.dir.x = -1.0;
 		map->player.plane.y = 0.66;
 	}
 	if (c == 'S')
@@ -28,13 +28,13 @@ void set_dir_plane_vector(t_cub *map)
 	}
 	if (c == 'E')
 	{
-		map->player.dir.y = -1;
-		map->player.plane.x = 0.66;
+		map->player.dir.y = 1;
+		map->player.plane.x = -0.66;
 	}
 	if (c == 'W')
 	{
-		map->player.dir.y = 1;
-		map->player.plane.x = -0.66;
+		map->player.dir.y = -1.0;
+		map->player.plane.x = 0.66;
 	}
 }
 
@@ -79,14 +79,14 @@ void ft_init_struct(t_cub *map, int code)
 	}
 	if (code == 1)
 	{
-		map->player.pos.x += 0.5;
-		map->player.pos.y += 0.5;
 		map->player.orientation = 
 		map->map[(int)map->player.pos.x][(int)map->player.pos.y];
+		map->player.pos.x += 0.5;
+		map->player.pos.y += 0.5;
 		set_dir_plane_vector(map);
 		set_data(map);
-		map->ray.pos.x = map->player.pos.x;
-		map->ray.pos.y = map->player.pos.y;
+		map->mlx.img = mlx_new_image(map->mlx.ptr, map->screen.x, map->screen.y);
+		map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &map->mlx.bpp, &map->mlx.line_size, &map->mlx.endien);
 	}
 }
 
@@ -104,7 +104,7 @@ int		main(int argc, char **argv)
 	printf("file valid\n");
 	raycasting(map);
 	//create_new_black_window(map);
-	//mlx_loop(map->mlx.ptr);
-	free_all(map);
+	mlx_loop(map->mlx.ptr);
+	//free_all(map);
 	return (0);
 }
