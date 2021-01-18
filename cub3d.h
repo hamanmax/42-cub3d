@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/17 08:13:18 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/18 16:47:05 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <string.h>
 #include <math.h>
 #include <stddef.h>
-#include "minilibx-linux/mlx.h"
+#include "minilibx/mlx.h"
 #include "libft/libft.h"
 
 #define PI	3.14159265359
@@ -133,6 +133,10 @@ typedef struct	s_cub
 	int			screenpx[1920][1080];
 	int			hit;
 	int			side;
+	int			textpx;
+	double		textstep;
+	t_float		tex;
+	double		texpos;
 	t_ste		draw;
 	t_int		mapsize;
 	t_mlx		mlx;
