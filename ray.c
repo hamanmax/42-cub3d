@@ -6,32 +6,30 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/18 17:15:39 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/19 20:05:32 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 #include <assert.h>
 
-int	set_screenpx(t_cub *map)
+int	set_backgroud(t_cub *map)
 {
 	int x;
 	int y;
-	int i;
 	
 	x = 0;
 	y = 0;
-	i = 0;
-	while (y < map->screen.y / 2)
+	while (x < map->screen.x)
 	{
-		while (x < map->screen.x)
+		while (y < map->screen.y / 2)
 		{
-			map->screenpx[y][x] = map->colorsky;
-			map->screenpx[y + map->screen.y / 2][x] = map->colorfloor;
-			x++;
+			map->screenpx[x][y] = map->colorsky;
+			map->screenpx[x][y + map->screen.y / 2] = map->colorfloor;
+			y++;
 		}
-		y++;
-		x = 0;
+		x++;
+		y = 0;
 	}
 }
 
@@ -88,7 +86,7 @@ void	perform_dda(t_cub *map)
 	}
 }
 
-void draw_wall(t_cub *map)
+void draw(t_cub *map)
 {
 	int x;
 	int y;
@@ -101,7 +99,7 @@ void draw_wall(t_cub *map)
 	{
 		while (x < map->screen.x)
 		{
-			map->mlx.data[i] = map->screenpx[y][x];
+			map->mlx.data[i] = map->screenpx[x][y];
 			x++;
 			i++;
 		}
@@ -109,16 +107,23 @@ void draw_wall(t_cub *map)
 		x = 0;
 	}
 }
-
-int set_wall_screen(t_cub *map,int x)
+int main_loop(t_cub *map)
+{
+	raycasting(map);
+	draw(map);
+	mlx_put_image_to_window(map->mlx.ptr,map->mlx.win,map->mlx.img,0,0);
+	map->player.pos.x -= 1;
+	printf("%d\n",map->kp);
+}
+int set_wall(t_cub *map,int x)
 {
 	int y = map->draw.start;
 	while (y < map->draw.end)
 	{
 		map->tex.y = (int)map->texpos & (map->mlx.h[map->textpx] - 1);
 		map->texpos += map->textstep;
-		map->screenpx[y][x] = 
-	  map->mlx.data_text[map->textpx][(int)(map->mlx.h[map->textpx] * map->tex.y + map->tex.x)];;
+		map->screenpx[x][y] = 
+		map->mlx.data_text[map->textpx][(int)(map->mlx.h[map->textpx] * map->tex.y + map->tex.x)];
 		y++;
 	}
 }
@@ -128,12 +133,9 @@ int		raycasting(t_cub *map)
 		int i;
 		int j = 0;
 		double wallx;
+		set_backgroud(map);
 		i = 0;
-		set_screenpx(map);
-		map->mlx.win = mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3d");
-		mlx_put_image_to_window(map->mlx.ptr,map->mlx.win,map->mlx.img,0,0);
-		i = 0;
-		while (i <= map->screen.x)
+		while (i < map->screen.x)
 		{
 			map->ray.pos.x = (int)map->player.pos.x;
 			map->ray.pos.y = (int)map->player.pos.y;
@@ -142,7 +144,6 @@ int		raycasting(t_cub *map)
 			map->ray.dir.y = map->player.dir.y + map->player.plane.y * map->player.camera.x;
 			set_next_wall_dist(map);
 			perform_dda(map);
-
 			if (map->side == 0)
 				map->ray.perpdist = (map->ray.pos.x - map->player.pos.x + (1 - map->ray.step.x) / 2) / map->ray.dir.x;
 			else
@@ -155,36 +156,41 @@ int		raycasting(t_cub *map)
 			if (map->draw.end >= map->screen.y)
 				map->draw.end = map->screen.y - 1;
 			if (map->side)
+			{
 				if (map->ray.dir.y < 0)
+				{
 					map->textpx = 2;
+				}
 				else
+				{
 					map->textpx = 3;
+				}
+			}
 			else
+			{
 				if (map->ray.dir.x < 0)
+				{
 					map->textpx = 0;
+				}
 				else
+				{
 					map->textpx = 1;
+				}
+			}
 			if (map->side == 0)
-				wallx = map->ray.pos.y + map->ray.perpdist * map->ray.dir.y;
+				wallx = map->player.pos.y + map->ray.perpdist * map->ray.dir.y;
 			else
-				wallx = map->ray.pos.x + map->ray.perpdist * map->ray.dir.x;
+				wallx = map->player.pos.x + map->ray.perpdist * map->ray.dir.x;
 			wallx -= (int)wallx;
 			map->tex.x = (int)(wallx * (double)(map->mlx.w[map->textpx]));
 			if (map->side == 0 && map->ray.dir.x > 0)
-				map->tex.x = map->mlx.w[map->textpx] - map->tex.x - 1;
+				map->tex.x = map->mlx.h[map->textpx] - map->tex.x - 1;
 			if (map->side == 1 && map->ray.dir.y < 0)
-				map->tex.x = map->mlx.w[map->textpx] - map->tex.x - 1;
-			map->textstep = 1.0 * map->mlx.h[map->textpx] / map->ray.height;
+				map->tex.x = map->mlx.h[map->textpx] - map->tex.x - 1;
+			map->textstep = 1.0 * map->mlx.w[map->textpx] / map->ray.height;
 			map->texpos = (map->draw.start - map->screen.y / 2 + map->ray.height / 2) * map->textstep;
-			set_wall_screen(map, i);
-					while (j < map->screen.y)
-			{
-				dprintf(1,"%d\t%d\t%d\n",map->screenpx[i][j],i,j);
-				j++;
-			}
+			set_wall(map, i);
 			i++;
 		}
-		draw_wall(map);
-		mlx_put_image_to_window(map->mlx.ptr,map->mlx.win,map->mlx.img,0,0);
 		return(0);
 }

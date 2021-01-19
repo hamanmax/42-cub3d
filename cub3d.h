@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/18 16:47:05 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/19 20:02:56 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <string.h>
 #include <math.h>
 #include <stddef.h>
-#include "minilibx/mlx.h"
+#include "minilibx-linux/mlx.h"
 #include "libft/libft.h"
 
 #define PI	3.14159265359
@@ -59,14 +59,6 @@ typedef	struct	s_float
 	double	x;
 	double	y;
 }				t_float;
-
-typedef	struct	s_raytab
-{
-	int		k;
-	double	angle;
-	double	oppose;
-}				t_raytab;
-
 typedef	struct	s_int
 {
 	int		x;
@@ -78,28 +70,6 @@ typedef	struct	s_ste
 	int		start;
 	int		end;
 }				t_ste;
-
-// typedef	struct	s_ray
-// {
-// 	int		id;
-// 	double	t;
-// 	t_raytab tan;
-// 	double	diffangle;
-// 	double	walldist;
-// 	double	wheight;
-// 	int		textpos;
-// 	int		*data;
-// 	int		w;
-// 	t_float	pos[2];
-// 	t_float	wallpos[2];
-// 	t_float	pointpos;
-// }				t_ray;
-
-// typedef struct s_sprite
-// {
-// 	t_float	pos[2];
-// 	t_ray *ray;
-// }				t_sprite;
 
 typedef struct s_player
 {
@@ -141,12 +111,7 @@ typedef struct	s_cub
 	t_int		mapsize;
 	t_mlx		mlx;
 	t_ray		ray;
-	//t_sprite	*spr;
 	t_player	player;
-	//int			nbsprite;
-	//t_ray		*ray;
-	//t_raytab	*raytab;
-	//int			tabsize;
 	int			kp;
 }				t_cub;
 
@@ -169,11 +134,11 @@ void	test_map_char_integrity(t_cub *map,int nbline, char buffer[256],int j);
 int		test_map_overall_integrity(t_cub *map, int nbline);
 int		test_map_validity(t_cub *map,int nbline);
 int		check_around_char(char **tab, size_t x, size_t y, char *tofind);
-int		raycasting(t_cub *map);
-void	projection(t_cub *map);
+int		main_loop(t_cub *map);
 t_float	set_wall_pos(float x, float y);
 void	create_new_black_window(t_cub *map);
 void	draw_base_ray(t_cub *map);
 void	get_wall_lenght(t_cub *map);
+int		deal_key(int key,t_cub *map);
 
 #endif

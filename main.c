@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/18 09:27:49 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/19 20:04:01 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ void set_dir_plane_vector(t_cub *map)
 	if (c == 'E')
 	{
 		map->player.dir.y = 1;
-		map->player.plane.x = -0.66;
+		map->player.plane.x = 0.66;
 	}
 	if (c == 'W')
 	{
 		map->player.dir.y = -1.0;
-		map->player.plane.x = 0.66;
+		map->player.plane.x = -0.66;
 	}
 }
 
@@ -87,7 +87,54 @@ void ft_init_struct(t_cub *map, int code)
 		set_data(map);
 		map->mlx.img = mlx_new_image(map->mlx.ptr, map->screen.x, map->screen.y);
 		map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &map->mlx.bpp, &map->mlx.line_size, &map->mlx.endien);
+		map->mlx.win = mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3d");
 	}
+}
+
+int				ft_key_press(int keycode, t_cub *map)
+{
+	map->kp = keycode;
+	printf("%d\n",keycode);
+/* 	if (keycode == KEY_ESC)
+		ft_close(c, 1);
+	if (keycode == KEY_W)
+		c->move = 'W';
+	else if (keycode == KEY_S)
+		c->move = 'S';
+	else if (keycode == KEY_A)
+		c->move_ad = 'A';
+	else if (keycode == KEY_D)
+		c->move_ad = 'D';
+	else if (keycode == ARROW_LEFT)
+		c->rot = 'E';
+	else if (keycode == ARROW_RIGHT)
+		c->rot = 'Q';
+	else if (keycode == KEY_LSHIFT)
+		c->sprint = 2; */
+	return (1);
+}
+
+int				ft_key_release(int keycode, t_cub *map)
+{
+/* 	if (keycode == KEY_W)
+		c->move = 0;
+	else if (keycode == KEY_S)
+		c->move = 0;
+	else if (keycode == KEY_A)
+		c->move_ad = 0;
+	else if (keycode == KEY_D)
+		c->move_ad = 0;
+	else if (keycode == ARROW_LEFT)
+		c->rot = 0;
+	else if (keycode == ARROW_RIGHT)
+		c->rot = 0;
+	else if (keycode == KEY_LSHIFT)
+		c->sprint = 1;
+	else if (c->flag == 'e' && (keycode == KEY_0 || keycode == KEY_1 ||
+		keycode == KEY_2 || keycode == KEY_3 || keycode == KEY_4 ||
+		keycode == KEY_5))
+		ft_edit_map(keycode, c); */
+	return (1);
 }
 
 int		main(int argc, char **argv)
@@ -102,8 +149,10 @@ int		main(int argc, char **argv)
 	parse_file_cub(map, argv, argc);
 	ft_init_struct(map, 1);
 	printf("file valid\n");
-	raycasting(map);
-	//create_new_black_window(map);
+	//raycasting(map);
+	mlx_loop_hook(map->mlx.ptr, &main_loop, map);
+	mlx_hook(map->mlx.win, 2, 0, &ft_key_press, map);
+	mlx_hook(map->mlx.win, 3, 0, &ft_key_release, map);
 	mlx_loop(map->mlx.ptr);
 	//free_all(map);
 	return (0);
