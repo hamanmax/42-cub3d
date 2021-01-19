@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/19 20:05:32 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/19 20:14:21 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,22 @@ int main_loop(t_cub *map)
 	raycasting(map);
 	draw(map);
 	mlx_put_image_to_window(map->mlx.ptr,map->mlx.win,map->mlx.img,0,0);
-	map->player.pos.x -= 1;
+	if (map->kp == 119)
+	{
+		map->player.pos.x -= 0.3;
+	}
+	if (map->kp == 115)
+	{
+		map->player.pos.x += 0.3;
+	}
+	if (map->kp == 97)
+	{
+		map->player.pos.y -= 0.3;
+	}
+	if (map->kp == 100)
+	{
+		map->player.pos.y += 0.3;
+	}
 	printf("%d\n",map->kp);
 }
 int set_wall(t_cub *map,int x)

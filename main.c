@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/19 20:04:01 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/19 20:11:24 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ void ft_init_struct(t_cub *map, int code)
 int				ft_key_press(int keycode, t_cub *map)
 {
 	map->kp = keycode;
-	printf("%d\n",keycode);
 /* 	if (keycode == KEY_ESC)
 		ft_close(c, 1);
 	if (keycode == KEY_W)
@@ -116,6 +115,10 @@ int				ft_key_press(int keycode, t_cub *map)
 
 int				ft_key_release(int keycode, t_cub *map)
 {
+	if (keycode == map->kp)
+	{
+	map->kp = 0;
+	}
 /* 	if (keycode == KEY_W)
 		c->move = 0;
 	else if (keycode == KEY_S)
@@ -151,8 +154,8 @@ int		main(int argc, char **argv)
 	printf("file valid\n");
 	//raycasting(map);
 	mlx_loop_hook(map->mlx.ptr, &main_loop, map);
-	mlx_hook(map->mlx.win, 2, 0, &ft_key_press, map);
-	mlx_hook(map->mlx.win, 3, 0, &ft_key_release, map);
+	mlx_hook(map->mlx.win, 2, 1L << 0, &ft_key_press, map);
+	mlx_hook(map->mlx.win, 3, 1L << 1, &ft_key_release, map);
 	mlx_loop(map->mlx.ptr);
 	//free_all(map);
 	return (0);
