@@ -6,12 +6,12 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/19 20:02:56 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/20 22:15:02 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CUB3D_H
-# define CUB3D_H
+#define CUB3D_H
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -20,13 +20,14 @@
 #include <string.h>
 #include <math.h>
 #include <stddef.h>
+#include "keycode.h"
 #include "minilibx-linux/mlx.h"
 #include "libft/libft.h"
 
 #define PI	3.14159265359
 #define FOV	60
 #define MVS 0.05
-#define RTS 1
+#define RTS 0.05
 #define RAD PI/180
 
 enum			e_text
@@ -80,8 +81,24 @@ typedef struct s_player
 	t_float		camera;
 }				t_player;
 
+typedef struct s_move
+{
+	int		forward;
+	int		backward;
+	int		rightside;
+	int		leftside;
+	int		rightrot;
+	int		leftrot;
+	int		close;
+}			t_move;
 
-typedef struct s_ray
+typedef struct	s_sprite
+{
+	t_float	pos;
+	double	dist;
+}				t_sprite;
+
+typedef struct	s_ray
 {
 	t_float		dir;
 	t_int		pos;
@@ -100,7 +117,7 @@ typedef struct	s_cub
 	int			texture[TEXTURE_COUNT];
 	char		*text[TEXTURE_COUNT];
 	char		**map;
-	int			screenpx[1920][1080];
+	int			*screenpx;
 	int			hit;
 	int			side;
 	int			textpx;
@@ -112,7 +129,10 @@ typedef struct	s_cub
 	t_mlx		mlx;
 	t_ray		ray;
 	t_player	player;
-	int			kp;
+	int			nbsprite;
+	t_sprite	*sprite;
+	t_move		move;
+	double		zbuffer[1920];
 }				t_cub;
 
 
@@ -135,6 +155,7 @@ int		test_map_overall_integrity(t_cub *map, int nbline);
 int		test_map_validity(t_cub *map,int nbline);
 int		check_around_char(char **tab, size_t x, size_t y, char *tofind);
 int		main_loop(t_cub *map);
+int		raycasting(t_cub *map);
 t_float	set_wall_pos(float x, float y);
 void	create_new_black_window(t_cub *map);
 void	draw_base_ray(t_cub *map);

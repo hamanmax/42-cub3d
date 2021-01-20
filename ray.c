@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/19 20:14:21 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/20 22:28:09 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,14 @@
 
 int	set_backgroud(t_cub *map)
 {
-	int x;
-	int y;
-	
-	x = 0;
-	y = 0;
-	while (x < map->screen.x)
+	int i;
+
+	i = 0;
+	while (i < (map->screen.x * map->screen.y) / 2)
 	{
-		while (y < map->screen.y / 2)
-		{
-			map->screenpx[x][y] = map->colorsky;
-			map->screenpx[x][y + map->screen.y / 2] = map->colorfloor;
-			y++;
-		}
-		x++;
-		y = 0;
+		map->screenpx[i] = map->colorsky;
+		map->screenpx[(map->screen.x * map->screen.y) / 2 + i] = map->colorfloor;
+		i++;
 	}
 }
 
@@ -88,68 +81,168 @@ void	perform_dda(t_cub *map)
 
 void draw(t_cub *map)
 {
-	int x;
-	int y;
 	int i;
 
 	i = 0;
-	x = 0;
-	y = 0;
-	while (y < map->screen.y)
+	while (i < map->screen.x * map->screen.y)
 	{
-		while (x < map->screen.x)
-		{
-			map->mlx.data[i] = map->screenpx[x][y];
-			x++;
-			i++;
-		}
-		y++;
-		x = 0;
+		map->mlx.data[i] = map->screenpx[i];
+		//map->mlx.data[i + (map->screen.x * map->screen.y / 2)] = map->screenpx[i + (map->screen.x * map->screen.y / 2)];
+		i++;
 	}
 }
+
+int move(t_cub *map)
+{
+	if (map->move.close)
+	{
+		mlx_destroy_window(map->mlx.ptr,map->mlx.win);
+		free_all(map);
+		exit(1);
+	}
+	if (map->move.forward)
+	{
+		if (map->map[(int)(map->player.pos.x + map->player.dir.x * MVS)][(int)(map->player.pos.y)] != '1')
+			map->player.pos.x += map->player.dir.x * MVS;
+		if (map->map[(int)(map->player.pos.x)][(int)(map->player.pos.y + map->player.dir.y * MVS)] != '1')
+			map->player.pos.y += map->player.dir.y * MVS;
+	}
+	if (map->move.backward)
+	{
+		if (map->map[(int)(map->player.pos.x - map->player.dir.x * MVS)][(int)(map->player.pos.y)] != '1')
+			map->player.pos.x -= map->player.dir.x * MVS;
+		if (map->map[(int)(map->player.pos.x)][(int)(map->player.pos.y - map->player.dir.y * MVS)] != '1')
+			map->player.pos.y -= map->player.dir.y * MVS;
+	}
+	if (map->move.rightside)
+	{
+		map->player.pos.x += map->player.plane.x * MVS;
+		if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == '1')
+			map->player.pos.x -= map->player.plane.x * MVS;
+		map->player.pos.y += map->player.plane.y * MVS;
+		if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == '1')
+			map->player.pos.y -= map->player.plane.y * MVS;
+	}
+	if (map->move.leftside)
+	{
+		map->player.pos.x -= map->player.plane.x * MVS;
+		if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == '1')
+			map->player.pos.x += map->player.plane.x * MVS;
+		map->player.pos.y -= map->player.plane.y * MVS;
+		if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == '1')
+			map->player.pos.y += map->player.plane.y * MVS;
+	}
+	if (map->move.rightrot)
+	{
+		double oldDirX = map->player.dir.x;
+		map->player.dir.x = map->player.dir.x * cos(-RTS) - map->player.dir.y * sin(-RTS);
+		map->player.dir.y = oldDirX * sin(-RTS) + map->player.dir.y * cos(-RTS);
+		double oldPlaneX = map->player.plane.x;
+		map->player.plane.x = map->player.plane.x * cos(-RTS) - map->player.plane.y * sin(-RTS);
+		map->player.plane.y = oldPlaneX * sin(-RTS) + map->player.plane.y * cos(-RTS);
+	}
+	if (map->move.leftrot)
+	{
+		double oldDirX = map->player.dir.x;
+		map->player.dir.x = map->player.dir.x * cos(RTS) - map->player.dir.y * sin(RTS);
+		map->player.dir.y = oldDirX * sin(RTS) + map->player.dir.y * cos(RTS);
+		double oldPlaneX = map->player.plane.x;
+		map->player.plane.x = map->player.plane.x * cos(-RTS) - map->player.plane.y * sin(RTS);
+		map->player.plane.y = oldPlaneX * sin(RTS) + map->player.plane.y * cos(RTS);
+	}
+}
+
 int main_loop(t_cub *map)
 {
+	move(map);
 	raycasting(map);
 	draw(map);
 	mlx_put_image_to_window(map->mlx.ptr,map->mlx.win,map->mlx.img,0,0);
-	if (map->kp == 119)
-	{
-		map->player.pos.x -= 0.3;
-	}
-	if (map->kp == 115)
-	{
-		map->player.pos.x += 0.3;
-	}
-	if (map->kp == 97)
-	{
-		map->player.pos.y -= 0.3;
-	}
-	if (map->kp == 100)
-	{
-		map->player.pos.y += 0.3;
-	}
-	printf("%d\n",map->kp);
+	//ft_bzero(map->mlx.data,(map->screen.x * map->screen.y) * sizeof(int));
 }
 int set_wall(t_cub *map,int x)
 {
 	int y = map->draw.start;
+
+/* 	while (y < map->draw.start)
+	{
+		map->screenpx[y * map->screen.x + x] = map->colorsky;
+		y++;
+	} */
 	while (y < map->draw.end)
 	{
 		map->tex.y = (int)map->texpos & (map->mlx.h[map->textpx] - 1);
 		map->texpos += map->textstep;
-		map->screenpx[x][y] = 
+		map->screenpx[y * map->screen.x + x] = 
 		map->mlx.data_text[map->textpx][(int)(map->mlx.h[map->textpx] * map->tex.y + map->tex.x)];
 		y++;
 	}
+/* 	while (y < map->screen.y)
+	{
+		map->mlx.data[y * map->screen.x + x] = map->colorfloor;
+		y++;
+	} */
+}
+
+void draw_sprite(t_cub *map,int i)
+{
+	t_float sprite;
+	int i;
+	int y;
+	int d;
+	double invdet;
+
+	i = 0;
+	while (i < map->nbsprite)
+	{
+		sprite.x = map->sprite[i].pos.x - map->player.pos.x;
+		sprite.y = map->sprite[i].pos.y - map->player.pos.y;
+		invdet = 1.0 / (map->player.plane.x * map->player.dir.y - map->player.dir.x * map->player.plane.y);
+	}
+
+}
+
+void sort_sprite(t_cub *map)
+{
+	t_sprite temp;
+	int i;
+
+	i = 0;
+	while (i < map->nbsprite)
+	{
+		if (map->sprite[i].dist < map->sprite[i + 1].dist)
+		{
+			map->sprite[i] = temp;
+			map->sprite[i] = map->sprite[i + 1];
+			map->sprite[i + 1] = temp;
+			i = 0;
+		}
+		i++;
+	}
+}
+
+void raycast_sprite(t_cub *map)
+{
+	int i;
+
+	i = 0;
+	while (i< map->nbsprite)
+	{
+		map->sprite[i].dist = ((map->player.pos.x - map->sprite[i].pos.x) *
+		(map->player.pos.x - map->sprite[i].pos.x) + (map->player.pos.y - map->sprite[i].pos.y) *
+		(map->player.pos.y - map->sprite[i].pos.y));
+		i++;
+	}
+	sort_sprite(map);
+	draw_sprite(map);
 }
 
 int		raycasting(t_cub *map)
 {
 		int i;
-		int j = 0;
 		double wallx;
-		set_backgroud(map);
 		i = 0;
+		set_backgroud(map);
 		while (i < map->screen.x)
 		{
 			map->ray.pos.x = (int)map->player.pos.x;
@@ -205,7 +298,9 @@ int		raycasting(t_cub *map)
 			map->textstep = 1.0 * map->mlx.w[map->textpx] / map->ray.height;
 			map->texpos = (map->draw.start - map->screen.y / 2 + map->ray.height / 2) * map->textstep;
 			set_wall(map, i);
+			map->zbuffer[i] = map->ray.perpdist;
 			i++;
 		}
+		raycast_sprite(map);
 		return(0);
 }

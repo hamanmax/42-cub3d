@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/15 16:46:35 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/20 21:19:41 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,8 +185,8 @@ void	test_map_char_integrity(t_cub *map, int nbline, char b[256], int j)
 				map->player.pos.y = (double)j + 1;	
 			}
 		}
-		// if (b[map->map[nbline][j]] == 1 && map->map[nbline][j] == '2')
-		// 	map->nbsprite++;
+		if (b[map->map[nbline][j]] == 1 && map->map[nbline][j] == '2')
+			map->nbsprite++;
 		if (map->map[nbline][j] == 0)
 		{
 			nbline--;
@@ -210,7 +210,7 @@ int		test_map_overall_integrity(t_cub *map, int nbline)
 			j = ft_strlen(map->map[i]) + 2;
 	map->map[i] = ft_str_malloc(j, ' ');
 	map->map[0] = ft_str_malloc(j, ' ');
-	map->mapsize.x = j;
+	map->mapsize.x = j - 1;
 	while (--i > 0)
 	{
 		map->map[i] = ft_strfjoin(" ", map->map[i], 2);

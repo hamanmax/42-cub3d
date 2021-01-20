@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/19 20:11:24 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/20 21:45:14 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,42 @@ void free_all(t_cub *map)
 	int i;
 
 	i = 0;
-	while (map->map[i])
+	while (i <= map->mapsize.y)
 	{
 		free(map->map[i]);
 		i++;
 	}
+	free(map->sprite);
+	free(map->screenpx);
 	free(map);
+}
+
+void set_sprite(t_cub *map)
+{
+	int i;
+	int j;
+	int k;
+
+	i = 0;
+	j = 0;
+	k = 0;
+	map->sprite = malloc(map->nbsprite * sizeof(t_float));
+	dprintf(1,"%d\t%d\n",map->mapsize.x,map->mapsize.y);
+	while (i < map->mapsize.y)
+	{
+		while(j < map->mapsize.x)
+		{
+			if (map->map[i][j] == '2')
+			{
+				map->sprite[k].pos.x = i;
+				map->sprite[k].pos.y = j;
+				k++;
+			} 
+			j++;
+		}
+		i++;
+		j = 0;
+	}
 }
 
 void ft_init_struct(t_cub *map, int code)
@@ -75,7 +105,7 @@ void ft_init_struct(t_cub *map, int code)
 	{
 		map->colorfloor = -1;
 		map->colorsky = -1;
-		map->mlx.ptr = mlx_init(); // Potentiellement a enlever //
+		map->mlx.ptr = mlx_init();
 	}
 	if (code == 1)
 	{
@@ -85,6 +115,7 @@ void ft_init_struct(t_cub *map, int code)
 		map->player.pos.y += 0.5;
 		set_dir_plane_vector(map);
 		set_data(map);
+		set_sprite(map);
 		map->mlx.img = mlx_new_image(map->mlx.ptr, map->screen.x, map->screen.y);
 		map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &map->mlx.bpp, &map->mlx.line_size, &map->mlx.endien);
 		map->mlx.win = mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3d");
@@ -93,50 +124,37 @@ void ft_init_struct(t_cub *map, int code)
 
 int				ft_key_press(int keycode, t_cub *map)
 {
-	map->kp = keycode;
-/* 	if (keycode == KEY_ESC)
-		ft_close(c, 1);
-	if (keycode == KEY_W)
-		c->move = 'W';
-	else if (keycode == KEY_S)
-		c->move = 'S';
-	else if (keycode == KEY_A)
-		c->move_ad = 'A';
-	else if (keycode == KEY_D)
-		c->move_ad = 'D';
-	else if (keycode == ARROW_LEFT)
-		c->rot = 'E';
-	else if (keycode == ARROW_RIGHT)
-		c->rot = 'Q';
-	else if (keycode == KEY_LSHIFT)
-		c->sprint = 2; */
+	if(keycode == K_W)
+	map->move.forward = 1;
+	if(keycode == K_S)
+	map->move.backward = 1;
+	if(keycode == K_A)
+	map->move.leftside = 1;
+	if(keycode == K_D)
+	map->move.rightside = 1;
+	if(keycode == K_Q)
+	map->move.leftrot = 1;
+	if(keycode == K_E)
+	map->move.rightrot = 1;
+	if(keycode == K_ESC)
+	map->move.close = 1;
 	return (1);
 }
 
 int				ft_key_release(int keycode, t_cub *map)
 {
-	if (keycode == map->kp)
-	{
-	map->kp = 0;
-	}
-/* 	if (keycode == KEY_W)
-		c->move = 0;
-	else if (keycode == KEY_S)
-		c->move = 0;
-	else if (keycode == KEY_A)
-		c->move_ad = 0;
-	else if (keycode == KEY_D)
-		c->move_ad = 0;
-	else if (keycode == ARROW_LEFT)
-		c->rot = 0;
-	else if (keycode == ARROW_RIGHT)
-		c->rot = 0;
-	else if (keycode == KEY_LSHIFT)
-		c->sprint = 1;
-	else if (c->flag == 'e' && (keycode == KEY_0 || keycode == KEY_1 ||
-		keycode == KEY_2 || keycode == KEY_3 || keycode == KEY_4 ||
-		keycode == KEY_5))
-		ft_edit_map(keycode, c); */
+	if(keycode == K_W)
+		map->move.forward = 0;
+	if(keycode == K_S)
+		map->move.backward = 0;
+	if(keycode == K_A)
+		map->move.leftside = 0;
+	if(keycode == K_D)
+		map->move.rightside = 0;
+	if(keycode == K_Q)
+		map->move.leftrot = 0;
+	if(keycode == K_E)
+		map->move.rightrot = 0;
 	return (1);
 }
 
@@ -153,10 +171,11 @@ int		main(int argc, char **argv)
 	ft_init_struct(map, 1);
 	printf("file valid\n");
 	//raycasting(map);
-	mlx_loop_hook(map->mlx.ptr, &main_loop, map);
+	map->screenpx = malloc(map->screen.x * map->screen.y * sizeof(int));
 	mlx_hook(map->mlx.win, 2, 1L << 0, &ft_key_press, map);
 	mlx_hook(map->mlx.win, 3, 1L << 1, &ft_key_release, map);
+	mlx_loop_hook(map->mlx.ptr, &main_loop, map);
 	mlx_loop(map->mlx.ptr);
-	//free_all(map);
+	free_all(map);
 	return (0);
 }
