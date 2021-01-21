@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 12:46:54 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 15:48:31 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 #include <math.h>
 #include <stddef.h>
 #include "keycode.h"
-#include "minilibx-linux/mlx.h"
-#include "libft/include/libft.h"
+#include "../minilibx-linux/mlx.h"
+#include "../libft/include/libft.h"
 
 #define PI	3.14159265359
 #define FOV	60
@@ -140,7 +140,6 @@ typedef struct	s_cub
 	int			color;
 }				t_cub;
 
-
 int		parse_file_cub(t_cub *map, char **argv, int argc);
 int		check_instruction_validity(t_cub *map, char **argv);
 int		check_texture_validity(t_cub *map, char *line);
@@ -161,10 +160,14 @@ int		test_map_validity(t_cub *map,int nbline);
 int		check_around_char(char **tab, size_t x, size_t y, char *tofind);
 int		main_loop(t_cub *map);
 int		raycasting(t_cub *map);
-t_float	set_wall_pos(float x, float y);
-void	create_new_black_window(t_cub *map);
-void	draw_base_ray(t_cub *map);
-void	get_wall_lenght(t_cub *map);
 int		deal_key(int key,t_cub *map);
+void	move(t_cub *map);
+void	move_ws(t_cub *map);
+void	move_ad(t_cub *map);
+void	rotation_qe(t_cub *map);
+void	set_data(t_cub *map);
+void	set_sprite(t_cub *map);
+void	set_dir_plane_vector(t_cub *map);
+void	free_cub(t_cub *map);
 
 #endif

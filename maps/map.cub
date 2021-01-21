@@ -1,0 +1,20 @@
+
+R     1920                         1080
+
+
+NO ./textures/mur.xpm
+SO ./textures/mur.xpm
+
+S ./textures/mur.xpm
+
+WE ./textures/mur.xpm
+
+EA ./textures/mur.xpm
+
+C 250,80,0
+F 200,25,30
+
+
+111
+1N1
+111

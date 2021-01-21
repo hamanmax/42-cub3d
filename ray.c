@@ -6,11 +6,11 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 14:33:47 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 15:04:17 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "./include/cub3d.h"
 #include <assert.h>
 
 int	set_backgroud(t_cub *map)
@@ -89,66 +89,6 @@ void draw(t_cub *map)
 		map->mlx.data[i] = map->screenpx[i];
 		//map->mlx.data[i + (map->screen.x * map->screen.y / 2)] = map->screenpx[i + (map->screen.x * map->screen.y / 2)];
 		i++;
-	}
-}
-
-int move(t_cub *map)
-{
-	if (map->move.close)
-	{
-		mlx_destroy_window(map->mlx.ptr,map->mlx.win);
-		free_cub(map);
-		exit(1);
-	}
-	if (map->move.forward)
-	{
-		if (map->map[(int)(map->player.pos.x + map->player.dir.x * MVS)][(int)(map->player.pos.y)] != '1')
-			map->player.pos.x += map->player.dir.x * MVS;
-		if (map->map[(int)(map->player.pos.x)][(int)(map->player.pos.y + map->player.dir.y * MVS)] != '1')
-			map->player.pos.y += map->player.dir.y * MVS;
-	}
-	if (map->move.backward)
-	{
-		if (map->map[(int)(map->player.pos.x - map->player.dir.x * MVS)][(int)(map->player.pos.y)] != '1')
-			map->player.pos.x -= map->player.dir.x * MVS;
-		if (map->map[(int)(map->player.pos.x)][(int)(map->player.pos.y - map->player.dir.y * MVS)] != '1')
-			map->player.pos.y -= map->player.dir.y * MVS;
-	}
-	if (map->move.rightside)
-	{
-		map->player.pos.x += map->player.plane.x * MVS;
-		if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == '1')
-			map->player.pos.x -= map->player.plane.x * MVS;
-		map->player.pos.y += map->player.plane.y * MVS;
-		if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == '1')
-			map->player.pos.y -= map->player.plane.y * MVS;
-	}
-	if (map->move.leftside)
-	{
-		map->player.pos.x -= map->player.plane.x * MVS;
-		if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == '1')
-			map->player.pos.x += map->player.plane.x * MVS;
-		map->player.pos.y -= map->player.plane.y * MVS;
-		if (map->map[(int)map->player.pos.x][(int)map->player.pos.y] == '1')
-			map->player.pos.y += map->player.plane.y * MVS;
-	}
-	if (map->move.rightrot)
-	{
-		double oldDirX = map->player.dir.x;
-		map->player.dir.x = map->player.dir.x * cos(-RTS) - map->player.dir.y * sin(-RTS);
-		map->player.dir.y = oldDirX * sin(-RTS) + map->player.dir.y * cos(-RTS);
-		double oldPlaneX = map->player.plane.x;
-		map->player.plane.x = map->player.plane.x * cos(-RTS) - map->player.plane.y * sin(-RTS);
-		map->player.plane.y = oldPlaneX * sin(-RTS) + map->player.plane.y * cos(-RTS);
-	}
-	if (map->move.leftrot)
-	{
-		double oldDirX = map->player.dir.x;
-		map->player.dir.x = map->player.dir.x * cos(RTS) - map->player.dir.y * sin(RTS);
-		map->player.dir.y = oldDirX * sin(RTS) + map->player.dir.y * cos(RTS);
-		double oldPlaneX = map->player.plane.x;
-		map->player.plane.x = map->player.plane.x * cos(-RTS) - map->player.plane.y * sin(RTS);
-		map->player.plane.y = oldPlaneX * sin(RTS) + map->player.plane.y * cos(RTS);
 	}
 }
 
