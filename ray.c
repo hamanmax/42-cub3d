@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/20 22:28:09 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 11:25:35 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,13 +184,16 @@ int set_wall(t_cub *map,int x)
 	} */
 }
 
-void draw_sprite(t_cub *map,int i)
+void draw_sprite(t_cub *map)
 {
 	t_float sprite;
+	t_float transform;
 	int i;
 	int y;
 	int d;
 	double invdet;
+	int spritescreenx;
+	int stripe;
 
 	i = 0;
 	while (i < map->nbsprite)
@@ -198,6 +201,47 @@ void draw_sprite(t_cub *map,int i)
 		sprite.x = map->sprite[i].pos.x - map->player.pos.x;
 		sprite.y = map->sprite[i].pos.y - map->player.pos.y;
 		invdet = 1.0 / (map->player.plane.x * map->player.dir.y - map->player.dir.x * map->player.plane.y);
+		transform.x = invdet * (map->player.dir.y * sprite.x - map->player.dir.x * sprite.y);
+		transform.y = invdet * (-map->player.plane.y * sprite.x + map->player.plane.x * sprite.y);
+		spritescreenx = (int)((map->screen.x / 2) * (1 + transform.x / transform.y));
+		map->spriteheight = abs((int)(map->screen.y / transform.y));
+		map->sprite_start.y = -map->spriteheight / 2 + map->screen.y / 2;
+		if (map->sprite_start.y < 0)
+			map->sprite_start.y = 0;
+		map->sprite_end.y = map->spriteheight / 2 + map->screen.y / 2;
+		if (map->sprite_end.y >= map->screen.y)
+			map->sprite_end.y = map->screen.y - 1;
+		map->sprite_width = abs((int)(map->screen.y / transform.y));
+		map->sprite_start.x = -map->sprite_width / 2 + spritescreenx;
+		if (map->sprite_start.x < 0)
+			map->sprite_start.x = 0;
+		map->sprite_end.x = map->sprite_width / 2 + spritescreenx;
+		if (map->sprite_end.x >= map->screen.x)
+			map->sprite_end.x = map->screen.x;
+		stripe = map->sprite_start.x;
+		while (stripe < map->sprite_end.x)
+		{
+			map->tex.x = (int)((256 * (stripe - (-map->sprite_width / 2 +
+			spritescreenx)) * map->mlx.w[4] / map->sprite_width) / 256);
+			if (transform.y > 0 && stripe < map->screen.x &&
+			transform.y < map->zbuffer[stripe])
+			{
+				y = map->sprite_start.y;
+				while (y < map->sprite_end.y)
+				{
+					d = y * 256 - map->screen.y * 128 + map->spriteheight * 128;
+					map->tex.y = ((d * map->mlx.h[4]) / map->spriteheight) / 256;
+					map->color = map->mlx.data_text[4][map->tex.y *
+						map->mlx.w[4] + map->tex.x];
+					if ((map->color & 0xffffff) != 0)
+						map->screenpx[y * map->screen.x + stripe] = map->color;
+					// map->screenpx[y * map->screen.x + stripe] = map->mlx.data_text[4][map->tex.y * map->mlx.w[4] + map->tex.x];
+					y++;
+				}
+			}
+		stripe++;
+		}
+		i++;
 	}
 
 }
@@ -207,15 +251,18 @@ void sort_sprite(t_cub *map)
 	t_sprite temp;
 	int i;
 
+
+
+
 	i = 0;
-	while (i < map->nbsprite)
+	while (i < map->nbsprite - 1)
 	{
 		if (map->sprite[i].dist < map->sprite[i + 1].dist)
 		{
-			map->sprite[i] = temp;
+			temp = map->sprite[i];
 			map->sprite[i] = map->sprite[i + 1];
 			map->sprite[i + 1] = temp;
-			i = 0;
+			i = -1;
 		}
 		i++;
 	}
@@ -226,7 +273,7 @@ void raycast_sprite(t_cub *map)
 	int i;
 
 	i = 0;
-	while (i< map->nbsprite)
+	while (i < map->nbsprite)
 	{
 		map->sprite[i].dist = ((map->player.pos.x - map->sprite[i].pos.x) *
 		(map->player.pos.x - map->sprite[i].pos.x) + (map->player.pos.y - map->sprite[i].pos.y) *

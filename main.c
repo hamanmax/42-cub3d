@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/20 21:45:14 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 10:49:43 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,16 +80,16 @@ void set_sprite(t_cub *map)
 	i = 0;
 	j = 0;
 	k = 0;
-	map->sprite = malloc(map->nbsprite * sizeof(t_float));
-	dprintf(1,"%d\t%d\n",map->mapsize.x,map->mapsize.y);
-	while (i < map->mapsize.y)
+	map->sprite = malloc(map->nbsprite * sizeof(t_sprite));
+	dprintf(1,"%d\t%d\n",map->nbsprite,map->mapsize.y);
+	while (i <= map->mapsize.y)
 	{
-		while(j < map->mapsize.x)
+		while(j <= map->mapsize.x)
 		{
 			if (map->map[i][j] == '2')
 			{
-				map->sprite[k].pos.x = i;
-				map->sprite[k].pos.y = j;
+				map->sprite[k].pos.x = i + 0.5;
+				map->sprite[k].pos.y = j + 0.5;
 				k++;
 			} 
 			j++;

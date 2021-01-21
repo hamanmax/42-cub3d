@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/20 22:15:02 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 09:47:38 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,17 +122,22 @@ typedef struct	s_cub
 	int			side;
 	int			textpx;
 	double		textstep;
-	t_float		tex;
+	t_int		tex;
 	double		texpos;
 	t_ste		draw;
 	t_int		mapsize;
 	t_mlx		mlx;
 	t_ray		ray;
 	t_player	player;
+	int			spriteheight;
+	t_int		sprite_start;
+	t_int		sprite_end;
+	int			sprite_width;
 	int			nbsprite;
 	t_sprite	*sprite;
 	t_move		move;
 	double		zbuffer[1920];
+	int			color;
 }				t_cub;
 
 
