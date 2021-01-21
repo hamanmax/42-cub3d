@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/20 21:19:41 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 14:29:07 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -376,6 +376,6 @@ int		check_file_validity(t_cub *map, char **argv, int argc)
 
 int		error_str_return(char *str)
 {
-	printf("ERROR\n%s\n", str);
+	ft_printf("ERROR\n%s\n", str);
 	exit(-1);
 }

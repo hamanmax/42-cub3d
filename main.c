@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 10:49:43 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 14:33:07 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void set_data(t_cub *map)
 	}
 }
 
-void free_all(t_cub *map)
+void free_cub(t_cub *map)
 {
 	int i;
 
@@ -81,7 +81,6 @@ void set_sprite(t_cub *map)
 	j = 0;
 	k = 0;
 	map->sprite = malloc(map->nbsprite * sizeof(t_sprite));
-	dprintf(1,"%d\t%d\n",map->nbsprite,map->mapsize.y);
 	while (i <= map->mapsize.y)
 	{
 		while(j <= map->mapsize.x)
@@ -169,13 +168,12 @@ int		main(int argc, char **argv)
 	ft_init_struct(map, 0);
 	parse_file_cub(map, argv, argc);
 	ft_init_struct(map, 1);
-	printf("file valid\n");
-	//raycasting(map);
+	ft_printf("file valid\n");
 	map->screenpx = malloc(map->screen.x * map->screen.y * sizeof(int));
 	mlx_hook(map->mlx.win, 2, 1L << 0, &ft_key_press, map);
 	mlx_hook(map->mlx.win, 3, 1L << 1, &ft_key_release, map);
 	mlx_loop_hook(map->mlx.ptr, &main_loop, map);
 	mlx_loop(map->mlx.ptr);
-	free_all(map);
+	free_cub(map);
 	return (0);
 }

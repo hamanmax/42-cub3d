@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 11:25:35 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 14:33:47 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int move(t_cub *map)
 	if (map->move.close)
 	{
 		mlx_destroy_window(map->mlx.ptr,map->mlx.win);
-		free_all(map);
+		free_cub(map);
 		exit(1);
 	}
 	if (map->move.forward)
@@ -158,17 +158,11 @@ int main_loop(t_cub *map)
 	raycasting(map);
 	draw(map);
 	mlx_put_image_to_window(map->mlx.ptr,map->mlx.win,map->mlx.img,0,0);
-	//ft_bzero(map->mlx.data,(map->screen.x * map->screen.y) * sizeof(int));
 }
 int set_wall(t_cub *map,int x)
 {
 	int y = map->draw.start;
 
-/* 	while (y < map->draw.start)
-	{
-		map->screenpx[y * map->screen.x + x] = map->colorsky;
-		y++;
-	} */
 	while (y < map->draw.end)
 	{
 		map->tex.y = (int)map->texpos & (map->mlx.h[map->textpx] - 1);
@@ -177,11 +171,6 @@ int set_wall(t_cub *map,int x)
 		map->mlx.data_text[map->textpx][(int)(map->mlx.h[map->textpx] * map->tex.y + map->tex.x)];
 		y++;
 	}
-/* 	while (y < map->screen.y)
-	{
-		map->mlx.data[y * map->screen.x + x] = map->colorfloor;
-		y++;
-	} */
 }
 
 void draw_sprite(t_cub *map)
@@ -250,9 +239,6 @@ void sort_sprite(t_cub *map)
 {
 	t_sprite temp;
 	int i;
-
-
-
 
 	i = 0;
 	while (i < map->nbsprite - 1)

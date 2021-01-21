@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 09:47:38 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 12:46:54 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #include <stddef.h>
 #include "keycode.h"
 #include "minilibx-linux/mlx.h"
-#include "libft/libft.h"
+#include "libft/include/libft.h"
 
 #define PI	3.14159265359
 #define FOV	60
