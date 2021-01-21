@@ -6,11 +6,11 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 15:59:58 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 16:44:01 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 20:56:33 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/cub3d.h"
+#include "../include/cub3d.h"
 
 int		check_map_validity(t_cub *map, char *found, char **line)
 {
@@ -88,12 +88,12 @@ void	test_map_char_integrity(t_cub *map, int nbline, char b[256], int j)
 		if (map->map[nbline][j] && b[map->map[nbline][j]] != 1)
 		{
 			if (b[map->map[nbline][j]] == 0 ||
-			(b[map->map[nbline][j]] == 2 && map->player.pos.y != 0))
-				exit(printf("ERROR\nProblem @ line %d column %d\n", nbline, j));
+			(b[map->map[nbline][j]] == 2 && map->pla.pos.y != 0))
+				error_str_return("Bad Map Integriy");
 			else if (b[map->map[nbline][j]] == 2)
 			{
-				map->player.pos.x = (double)nbline;
-				map->player.pos.y = (double)j + 1;
+				map->pla.pos.x = (double)nbline;
+				map->pla.pos.y = (double)j + 1;
 			}
 		}
 		if (b[map->map[nbline][j]] == 1 && map->map[nbline][j] == '2')
@@ -105,7 +105,7 @@ void	test_map_char_integrity(t_cub *map, int nbline, char b[256], int j)
 		}
 		j++;
 	}
-	if (map->player.pos.y == 0 || map->player.pos.x == 0)
+	if (map->pla.pos.y == 0 || map->pla.pos.x == 0)
 		error_str_return("Player pos not set");
 }
 
@@ -125,19 +125,11 @@ int		test_map_overall_integrity(t_cub *map, int nbline)
 	while (--i > 0)
 	{
 		map->map[i] = ft_strfjoin(" ", map->map[i], 2);
-		map->map[i] = ft_strfjoin(map->map[i], ft_str_malloc(j - ft_strlen(map->map[i]), ' '), 3);
-		dprintf(1,"%s\n",map->map[i]);
+		map->map[i] = ft_strfjoin(map->map[i],
+		ft_str_malloc(j - ft_strlen(map->map[i]), ' '), 3);
 	}
 	i = 1;
 	j = 1;
-	while (i < nbline)
-	{
-		if (!map->map[i][j] && i++)
-			j = 1;
-		if (map->map[i][j + 1] != 0 && map->map[i][j] == ' ' && j != ft_strlen(map->map[i]))
-			if (check_around_char(map->map, i, j, "1 ") == 0)
-				error_str_return("Map not close");
-		j++;
-	}
+	check_around_map(map, i, j, nbline);
 	return (0);
 }

@@ -6,11 +6,11 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 15:54:35 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 20:56:33 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./include/cub3d.h"
+#include "../include/cub3d.h"
 
 void	free_cub(t_cub *map)
 {
@@ -39,13 +39,13 @@ void	ft_init_struct(t_cub *map, int code)
 	}
 	if (code == 1)
 	{
-		map->player.orientation =
-		map->map[(int)map->player.pos.x][(int)map->player.pos.y];
-		map->player.pos.x += 0.5;
-		map->player.pos.y += 0.5;
+		map->pla.orientation =
+		map->map[(int)map->pla.pos.x][(int)map->pla.pos.y];
+		map->pla.pos.x += 0.5;
+		map->pla.pos.y += 0.5;
 		set_dir_plane_vector(map);
 		set_data(map);
-		set_sprite(map);
+		load_sprite(map);
 		map->mlx.img =
 		mlx_new_image(map->mlx.ptr, map->screen.x, map->screen.y);
 		map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &v, &v, &v);

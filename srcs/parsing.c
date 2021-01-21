@@ -6,11 +6,11 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 16:22:06 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 18:04:57 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./include/cub3d.h"
+#include "../include/cub3d.h"
 
 int		parse_file_cub(t_cub *map, char **argv, int argc)
 {
@@ -36,6 +36,20 @@ int		parse_file_cub(t_cub *map, char **argv, int argc)
 	check_struct_validity(map, 1);
 	close(fd);
 	return (0);
+}
+
+void	check_around_map(t_cub *map, int i, int j, int nbline)
+{
+	while (i < nbline)
+	{
+		if (!map->map[i][j] && i++)
+			j = 1;
+		if (map->map[i][j + 1] != 0 && map->map[i][j] == ' ' &&
+		j != ft_strlen(map->map[i]))
+			if (check_around_char(map->map, i, j, "1 ") == 0)
+				error_str_return("Map not close");
+		j++;
+	}
 }
 
 int		check_around_char(char **tab, size_t x, size_t y, char *tofind)

@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 15:48:31 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 21:23:17 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,8 @@ typedef struct	s_ray
 {
 	t_float		dir;
 	t_int		pos;
-	t_float		sidedist;
-	t_float		deltadist;
+	t_float		sdist;
+	t_float		ddist;
 	double		perpdist;
 	t_int		step;
 	int			height;
@@ -128,16 +128,17 @@ typedef struct	s_cub
 	t_int		mapsize;
 	t_mlx		mlx;
 	t_ray		ray;
-	t_player	player;
+	t_player	pla;
 	int			spriteheight;
-	t_int		sprite_start;
-	t_int		sprite_end;
-	int			sprite_width;
+	t_ste		sprite_y;
+	t_ste		sprite_x;
 	int			nbsprite;
 	t_sprite	*sprite;
 	t_move		move;
 	double		zbuffer[1920];
 	int			color;
+	t_float		spr;
+	t_float		trans;
 }				t_cub;
 
 int		parse_file_cub(t_cub *map, char **argv, int argc);
@@ -149,6 +150,7 @@ int		check_struct_validity(t_cub *map,size_t i);
 int		check_color_validity(t_cub *map, char *line,int i);
 int		check_resolution_validity(t_cub *map, char *line);
 int		check_file_validity(t_cub *map, char **argv, int argc);
+void	check_around_map(t_cub *map,int i, int j, int nbline);
 int		ft_str_char_occur(char *str, int c);
 int		ft_str_isdigit(char *str);
 int		error_str_return(char *str);
@@ -159,15 +161,27 @@ int		test_map_overall_integrity(t_cub *map, int nbline);
 int		test_map_validity(t_cub *map,int nbline);
 int		check_around_char(char **tab, size_t x, size_t y, char *tofind);
 int		main_loop(t_cub *map);
-int		raycasting(t_cub *map);
+void	raycasting(t_cub *map);
 int		deal_key(int key,t_cub *map);
 void	move(t_cub *map);
 void	move_ws(t_cub *map);
 void	move_ad(t_cub *map);
 void	rotation_qe(t_cub *map);
 void	set_data(t_cub *map);
-void	set_sprite(t_cub *map);
+void	load_sprite(t_cub *map);
+void	set_start_to_end(t_ste *draw, int height, t_int size, int sx);
 void	set_dir_plane_vector(t_cub *map);
+void	set_texture(t_cub *map);
+void	set_ray(t_cub *map, int i);
 void	free_cub(t_cub *map);
+void	set_sprite(t_cub *map);
+void	sort_sprite(t_cub *map);
+void	set_backgroud(t_cub *map);
+void	draw(t_cub *map);
+int		set_wall(t_cub *map,int x);
+void	draw_sprite(t_cub *map,int st, int spritescreenx,t_float trans);
+double calc_wallx(t_cub *map);
+void	calc_tex(t_cub *map, double wallx);
+void	calc_perp(t_cub *map);
 
 #endif

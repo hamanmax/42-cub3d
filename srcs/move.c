@@ -6,17 +6,17 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 15:04:06 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 15:57:18 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 20:56:33 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/cub3d.h"
+#include "../include/cub3d.h"
 
 void	move_ws(t_cub *map)
 {
 	t_player		p;
 
-	p = map->player;
+	p = map->pla;
 	if (map->move.forward)
 	{
 		if (map->map[(int)(p.pos.x + p.dir.x * MVS)][(int)(p.pos.y)] != '1')
@@ -31,14 +31,14 @@ void	move_ws(t_cub *map)
 		if (map->map[(int)(p.pos.x)][(int)(p.pos.y - p.dir.y * MVS)] != '1')
 			p.pos.y -= p.dir.y * MVS;
 	}
-	map->player = p;
+	map->pla = p;
 }
 
 void	move_ad(t_cub *map)
 {
 	t_player		p;
 
-	p = map->player;
+	p = map->pla;
 	if (map->move.rightside)
 	{
 		p.pos.x += p.plane.x * MVS;
@@ -57,16 +57,16 @@ void	move_ad(t_cub *map)
 		if (map->map[(int)p.pos.x][(int)p.pos.y] == '1')
 			p.pos.y += p.plane.y * MVS;
 	}
-	map->player = p;
+	map->pla = p;
 }
 
 void	rotation_qe(t_cub *map)
 {
 	t_player		p;
-	const double	olddirx = map->player.dir.x;
-	const double	oldplanex = map->player.plane.x;
+	const double	olddirx = map->pla.dir.x;
+	const double	oldplanex = map->pla.plane.x;
 
-	p = map->player;
+	p = map->pla;
 	if (map->move.rightrot)
 	{
 		p.dir.x = p.dir.x * cos(-RTS) - p.dir.y * sin(-RTS);
@@ -81,7 +81,7 @@ void	rotation_qe(t_cub *map)
 		p.plane.x = p.plane.x * cos(-RTS) - p.plane.y * sin(RTS);
 		p.plane.y = oldplanex * sin(RTS) + p.plane.y * cos(RTS);
 	}
-	map->player = p;
+	map->pla = p;
 }
 
 void	closecub(t_cub *map)

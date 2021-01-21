@@ -6,11 +6,11 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 16:08:02 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 16:10:55 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/21 16:59:11 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "include/cub3d.h"
+#include "../include/cub3d.h"
 
 int	check_texture_validity(t_cub *map, char *line)
 {
