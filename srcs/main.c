@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 20:56:33 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 16:40:20 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int		main(int argc, char **argv)
 	ft_init_struct(map, 0);
 	parse_file_cub(map, argv, argc);
 	ft_init_struct(map, 1);
-	ft_printf("file valid\n");
+	ft_ft_printf("file valid\n");
 	map->screenpx = malloc(map->screen.x * map->screen.y * sizeof(int));
 	mlx_hook(map->mlx.win, 2, 1L << 0, &ft_key_press, map);
 	mlx_hook(map->mlx.win, 3, 1L << 1, &ft_key_release, map);

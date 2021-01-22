@@ -6,13 +6,13 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 18:04:57 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 16:41:13 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-int		parse_file_cub(t_cub *map, char **argv, int argc)
+void	parse_file_cub(t_cub *map, char **argv, int argc)
 {
 	int		fd;
 	char	*line;
@@ -35,7 +35,6 @@ int		parse_file_cub(t_cub *map, char **argv, int argc)
 	check_instruction_validity(map, &line);
 	check_struct_validity(map, 1);
 	close(fd);
-	return (0);
 }
 
 void	check_around_map(t_cub *map, int i, int j, int nbline)
@@ -76,14 +75,14 @@ void	resizing_map(t_cub *map)
 {
 	if (map->screen.x > 1920 || map->screen.y > 1080)
 	{
-		printf("Resizing to display resolution\n");
+		ft_printf("Resizing to display resolution\n");
 		map->screen.x = 1920;
 		map->screen.y = 1080;
 	}
 	if ((map->screen.x >= 0 && map->screen.x < 200) ||
 	(map->screen.y >= 0 && map->screen.y < 200))
 	{
-		printf("Resizing up screen resolution\n");
+		ft_printf("Resizing up screen resolution\n");
 		map->screen.x = 640;
 		map->screen.y = 480;
 	}
@@ -91,6 +90,6 @@ void	resizing_map(t_cub *map)
 
 int		error_str_return(char *str)
 {
-	ft_printf("ERROR\n%s\n", str);
+	ft_ft_printf("ERROR\n%s\n", str);
 	exit(-1);
 }

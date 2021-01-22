@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 10:05:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 13:17:09 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 16:53:25 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 # include <stdarg.h>
 # include "./libft.h"
 
-char	**ft_split_printf(const char *str, size_t *d);
-int		ft_printf(const char *format, ...);
+char	**ft_split_ft_printf(const char *str, size_t *d);
+int		ft_ft_printf(const char *format, ...);
 int		parsing_line(char **str, va_list ap, size_t i, size_t *len);
 int		parse_d_option(char **str, va_list ap, size_t i, size_t j);
 int		parse_u_option(char **str, va_list ap, size_t i, size_t j);
@@ -60,5 +60,6 @@ size_t	apply_d_option_neg(char **str, size_t i);
 char	*apply_point_flag_bis(size_t nbr, size_t d, char *arg);
 int		apply_stars_flag_bis(char **str, va_list ap, size_t i, size_t j);
 int		check_multiflag_pourcent(char **str, size_t i, size_t j);
+int		ft_printf(const char *format, ...);
 
 #endif

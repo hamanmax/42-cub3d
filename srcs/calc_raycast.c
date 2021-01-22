@@ -6,15 +6,15 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 21:15:43 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 21:16:04 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 16:36:27 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-double calc_wallx(t_cub *map)
+double	calc_wallx(t_cub *map)
 {
-	double wallx;
+	double	wallx;
 
 	if (map->side == 0)
 		wallx = map->pla.pos.y + map->ray.perpdist * map->ray.dir.y;

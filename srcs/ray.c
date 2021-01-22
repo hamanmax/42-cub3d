@@ -6,13 +6,12 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 21:19:51 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 16:42:09 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 #include <assert.h>
-
 
 void	set_next_wall_dist(t_cub *map)
 {
@@ -37,14 +36,14 @@ void	set_next_wall_dist(t_cub *map)
 	else
 	{
 		map->ray.step.y = 1;
-		map->ray.sdist.y = 
+		map->ray.sdist.y =
 		(map->ray.pos.y + 1.0 - map->pla.pos.y) * map->ray.ddist.y;
 	}
 }
 
 void	perform_dda(t_cub *map)
 {
-	int hit;
+	int		hit;
 
 	hit = 0;
 	while (hit == 0)
@@ -66,19 +65,17 @@ void	perform_dda(t_cub *map)
 	}
 }
 
-
-
-int main_loop(t_cub *map)
+int		main_loop(t_cub *map)
 {
 	move(map);
 	raycasting(map);
 	draw(map);
-	mlx_put_image_to_window(map->mlx.ptr,map->mlx.win,map->mlx.img,0,0);
+	mlx_put_image_to_window(map->mlx.ptr, map->mlx.win, map->mlx.img, 0, 0);
 }
 
-void raycast_sprite(t_cub *map)
+void	raycast_sprite(t_cub *map)
 {
-	int i;
+	int		i;
 
 	i = 0;
 	while (i < map->nbsprite)
@@ -94,17 +91,18 @@ void raycast_sprite(t_cub *map)
 
 void	raycasting(t_cub *map)
 {
-	int i;
-	double wallx;
+	int		i;
+	double	wallx;
+
 	i = 0;
 	set_backgroud(map);
 	while (i < map->screen.x)
 	{
-		set_ray(map,i);
+		set_ray(map, i);
 		set_next_wall_dist(map);
 		perform_dda(map);
 		calc_perp(map);
-		set_start_to_end(&map->draw, map->ray.height, map->screen,0);
+		set_start_to_end(&map->draw, map->ray.height, map->screen, 0);
 		set_texture(map);
 		wallx = calc_wallx(map);
 		calc_tex(map, wallx);

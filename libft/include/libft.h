@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 15:58:20 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 12:45:49 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 16:52:50 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h>
-# include "./ftprintf.h"
+# include "ftprintf.h"
 
 int		ft_atoi(const char *str);
 void	ft_bzero(void *b, size_t len);

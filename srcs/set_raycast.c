@@ -6,13 +6,13 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 21:17:07 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 21:18:58 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 16:47:27 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-void set_ray(t_cub *map, int i)
+void	set_ray(t_cub *map, int i)
 {
 	map->ray.pos.x = (int)map->pla.pos.x;
 	map->ray.pos.y = (int)map->pla.pos.y;
@@ -24,15 +24,19 @@ void set_ray(t_cub *map, int i)
 void	set_texture(t_cub *map)
 {
 	if (map->side)
+	{
 		if (map->ray.dir.y < 0)
 			map->textpx = 2;
 		else
 			map->textpx = 3;
+	}
 	else
+	{
 		if (map->ray.dir.x < 0)
 			map->textpx = 0;
 		else
 			map->textpx = 1;
+	}
 }
 
 void	set_start_to_end(t_ste *draw, int height, t_int size, int sx)
@@ -57,11 +61,11 @@ void	set_start_to_end(t_ste *draw, int height, t_int size, int sx)
 	}
 }
 
-void set_sprite(t_cub *map)
+void	set_sprite(t_cub *map)
 {
-	int i;
-	double invdet;
-	int scx;
+	int			i;
+	double		invdet;
+	int			scx;
 
 	i = -1;
 	while (++i < map->nbsprite)
@@ -76,16 +80,16 @@ void set_sprite(t_cub *map)
 		map->spr.x + map->pla.plane.x * map->spr.y);
 		scx = (int)((map->screen.x / 2) * (1.0 + map->trans.x / map->trans.y));
 		map->spriteheight = abs((int)(map->screen.y / map->trans.y));
-		set_start_to_end(&map->sprite_y, map->spriteheight, map->screen,0);
-		set_start_to_end(&map->sprite_x, map->spriteheight, map->screen,scx);
+		set_start_to_end(&map->sprite_y, map->spriteheight, map->screen, 0);
+		set_start_to_end(&map->sprite_x, map->spriteheight, map->screen, scx);
 		draw_sprite(map, map->sprite_x.start, scx, map->trans);
 	}
 }
 
-void sort_sprite(t_cub *map)
+void	sort_sprite(t_cub *map)
 {
-	t_sprite temp;
-	int i;
+	t_sprite	temp;
+	int			i;
 
 	i = 0;
 	while (i < map->nbsprite - 1)
