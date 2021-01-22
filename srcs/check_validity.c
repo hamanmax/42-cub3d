@@ -6,13 +6,13 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 16:01:35 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 16:59:11 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 21:47:22 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
-int	check_file_validity(t_cub *map, char **argv, int argc)
+void	check_file_validity(char **argv, int argc)
 {
 	int				fd;
 	char			*file;
@@ -37,7 +37,6 @@ int	check_file_validity(t_cub *map, char **argv, int argc)
 		error_str_return("Could not open file");
 	else
 		close(fd);
-	return (1);
 }
 
 int	check_instruction_validity(t_cub *map, char **line)
@@ -73,7 +72,7 @@ int	check_struct_validity(t_cub *map, size_t i)
 		error_str_return("Resolution not set");
 	if (map->colorfloor == -1)
 		error_str_return("Color Floor not set");
-	if (!map->colorsky == -1)
+	if (map->colorsky == -1)
 		error_str_return("Color sky not set");
 	if (!map->text[NO])
 		error_str_return("NORTH texture not set");
@@ -125,7 +124,7 @@ int	check_color_validity(t_cub *map, char *line, int i)
 
 	rgb = 0;
 	j = 24;
-	if (i == 0 && map->colorsky != -1 || i == 1 && map->colorfloor != -1)
+	if ((i == 0 && map->colorsky != -1) || (i == 1 && map->colorfloor != -1))
 		error_str_return("Multiple times Color instruction");
 	if (ft_str_char_occur(line, ',') != 2)
 		error_str_return("to much/not enought ',' in instruction");

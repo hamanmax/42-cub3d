@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 16:41:13 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 17:48:38 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	parse_file_cub(t_cub *map, char **argv, int argc)
 		if (rsize != 300)
 			break ;
 	}
-	check_file_validity(map, argv, argc);
+	check_file_validity(argv, argc);
 	check_instruction_validity(map, &line);
 	check_struct_validity(map, 1);
 	close(fd);
@@ -44,7 +44,7 @@ void	check_around_map(t_cub *map, int i, int j, int nbline)
 		if (!map->map[i][j] && i++)
 			j = 1;
 		if (map->map[i][j + 1] != 0 && map->map[i][j] == ' ' &&
-		j != ft_strlen(map->map[i]))
+		(size_t)j != ft_strlen(map->map[i]))
 			if (check_around_char(map->map, i, j, "1 ") == 0)
 				error_str_return("Map not close");
 		j++;
@@ -54,19 +54,19 @@ void	check_around_map(t_cub *map, int i, int j, int nbline)
 int		check_around_char(char **tab, size_t x, size_t y, char *tofind)
 {
 	size_t	d;
-	char	buffer[256];
+	int	buffer[256];
 
 	d = 0;
 	ft_memset(buffer, 0, 256);
 	while (tofind[d])
-		buffer[tofind[d++]] = 1;
-	if (buffer[tab[x + 1][y]] != 1 || buffer[tab[x - 1][y]] != 1)
+		buffer[(int)tofind[d++]] = 1;
+	if (buffer[(int)(tab[x + 1][y])] != 1 || buffer[(int)tab[x - 1][y]] != 1)
 		return (0);
-	else if (buffer[tab[x][y + 1]] != 1 || buffer[tab[x][y - 1]] != 1)
+	else if (buffer[(int)tab[x][y + 1]] != 1 || buffer[(int)tab[x][y - 1]] != 1)
 		return (0);
-	else if (buffer[tab[x - 1][y - 1]] != 1 || buffer[tab[x + 1][y + 1]] != 1)
+	else if (buffer[(int)tab[x - 1][y - 1]] != 1 || buffer[(int)tab[x + 1][y + 1]] != 1)
 		return (0);
-	else if (buffer[tab[x - 1][y + 1]] != 1 || buffer[tab[x + 1][y - 1]] != 1)
+	else if (buffer[(int)tab[x - 1][y + 1]] != 1 || buffer[(int)tab[x + 1][y - 1]] != 1)
 		return (0);
 	return (1);
 }
@@ -90,6 +90,6 @@ void	resizing_map(t_cub *map)
 
 int		error_str_return(char *str)
 {
-	ft_ft_printf("ERROR\n%s\n", str);
+	ft_printf("ERROR\n%s\n", str);
 	exit(-1);
 }

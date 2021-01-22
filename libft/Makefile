@@ -6,7 +6,7 @@
 #    By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/25 08:58:00 by mhaman            #+#    #+#              #
-#    Updated: 2021/01/21 14:28:45 by mhaman           ###   ########lyon.fr    #
+#    Updated: 2021/01/22 17:37:19 by mhaman           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ SRC_STR		=	$(addprefix str/,ft_split.c  ft_strchr.c  ft_strfdup.c ft_str_isdigit
 
 SRC_MEM		=	$(addprefix mem/,ft_memccpy.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c ft_calloc.c ft_bzero.c)
 
-SRC_CHAR	=	$(addprefix char/, ft_isalnum.c  ft_isalpha.c  ft_isascii.c  ft_isdigit.c  ft_isprint.c  ft_isspace.c  ft_tolower.c  ft_toupper.c)
+SRC_CHAR	=	$(addprefix char/,  ft_isalpha.c  ft_isascii.c  ft_isdigit.c  ft_isprint.c  ft_isspace.c  ft_tolower.c  ft_toupper.c)
 
 SRC_PRINTF	=	$(addprefix printf/, apply_cu_flags.c  apply_d_flags.c  apply_s_option.c  apply_x_flags.c  check_zero_flag.c  ft_printf.c  ft_split_printf.c  parse_diux_option.c  parsing_line.c)
 

@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 15:58:20 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 16:52:50 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 20:54:12 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,4 +64,6 @@ char	*ft_itoa_unsigned(unsigned int i);
 int		get_next_line(int fd, char **line);
 int		ft_pow(int nb, int power);
 double	ft_round(double nb,int round);
+int		ft_str_isdigit(char *str);
+int		ft_str_char_occur(char *str, int c);
 #endif

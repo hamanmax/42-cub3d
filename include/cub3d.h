@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 21:23:17 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 22:38:54 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct	s_mlx
 	int		*data;
 	int		*data_text[TEXTURE_COUNT];
 	void	*img;
+	void	*img_txt[TEXTURE_COUNT];
 	int		bpp;
 	int		line_size;
 	int		endien;
@@ -141,7 +142,7 @@ typedef struct	s_cub
 	t_float		trans;
 }				t_cub;
 
-int		parse_file_cub(t_cub *map, char **argv, int argc);
+void	parse_file_cub(t_cub *map, char **argv, int argc);
 int		check_instruction_validity(t_cub *map, char **argv);
 int		check_texture_validity(t_cub *map, char *line);
 int		check_type_texture(char *line);
@@ -149,10 +150,8 @@ int		check_map_validity(t_cub *map, char *found, char **line);
 int		check_struct_validity(t_cub *map,size_t i);
 int		check_color_validity(t_cub *map, char *line,int i);
 int		check_resolution_validity(t_cub *map, char *line);
-int		check_file_validity(t_cub *map, char **argv, int argc);
+void	check_file_validity(char **argv, int argc);
 void	check_around_map(t_cub *map,int i, int j, int nbline);
-int		ft_str_char_occur(char *str, int c);
-int		ft_str_isdigit(char *str);
 int		error_str_return(char *str);
 void	resizing_map(t_cub *map);
 int		test_map_integrity(t_cub *map, int nbline);
@@ -178,10 +177,11 @@ void	set_sprite(t_cub *map);
 void	sort_sprite(t_cub *map);
 void	set_backgroud(t_cub *map);
 void	draw(t_cub *map);
-int		set_wall(t_cub *map,int x);
+void	set_wall(t_cub *map,int x);
 void	draw_sprite(t_cub *map,int st, int spritescreenx,t_float trans);
-double calc_wallx(t_cub *map);
+double	calc_wallx(t_cub *map);
 void	calc_tex(t_cub *map, double wallx);
 void	calc_perp(t_cub *map);
+int		closecub(t_cub *map);
 
 #endif

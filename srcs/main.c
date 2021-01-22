@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 16:40:20 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 22:42:25 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,20 @@ void	free_cub(t_cub *map)
 	int		i;
 
 	i = 0;
-	while (i <= map->mapsize.y)
+	while (i <= map->mapsize.y + 1)
+		free(map->map[i++]);
+	i = 0;
+	while (i < TEXTURE_COUNT)
 	{
-		free(map->map[i]);
+		mlx_destroy_image(map->mlx.ptr,map->mlx.img_txt[i]);
+		free(map->text[i]);
 		i++;
 	}
 	free(map->sprite);
 	free(map->screenpx);
+	free(map->map);
 	free(map);
+	exit(1);
 }
 
 void	ft_init_struct(t_cub *map, int code)
@@ -50,7 +56,7 @@ void	ft_init_struct(t_cub *map, int code)
 		mlx_new_image(map->mlx.ptr, map->screen.x, map->screen.y);
 		map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &v, &v, &v);
 		map->mlx.win =
-		mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3d");
+		mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3d"); 
 	}
 }
 
@@ -92,18 +98,17 @@ int		ft_key_release(int keycode, t_cub *map)
 
 int		main(int argc, char **argv)
 {
-	int		i;
 	t_cub	*map;
 
-	i = 0;
 	map = ft_calloc(1, sizeof(t_cub));
 	ft_init_struct(map, 0);
 	parse_file_cub(map, argv, argc);
 	ft_init_struct(map, 1);
-	ft_ft_printf("file valid\n");
+	ft_printf("file valid\n");
 	map->screenpx = malloc(map->screen.x * map->screen.y * sizeof(int));
 	mlx_hook(map->mlx.win, 2, 1L << 0, &ft_key_press, map);
 	mlx_hook(map->mlx.win, 3, 1L << 1, &ft_key_release, map);
+	mlx_hook(map->mlx.win, 33, 1L << 17, closecub, map);
 	mlx_loop_hook(map->mlx.ptr, &main_loop, map);
 	mlx_loop(map->mlx.ptr);
 	return (0);

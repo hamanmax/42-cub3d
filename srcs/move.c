@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 15:04:06 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 20:56:33 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 21:07:58 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,19 +84,18 @@ void	rotation_qe(t_cub *map)
 	map->pla = p;
 }
 
-void	closecub(t_cub *map)
+int		closecub(t_cub *map)
 {
-	if (map->move.close)
-	{
+		mlx_destroy_image(map->mlx.ptr,map->mlx.img);
 		mlx_destroy_window(map->mlx.ptr, map->mlx.win);
 		free_cub(map);
 		exit(1);
-	}
 }
 
 void	move(t_cub *map)
 {
-	closecub(map);
+	if (map->move.close)
+		closecub(map);
 	move_ws(map);
 	move_ad(map);
 	rotation_qe(map);

@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 15:12:49 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 16:37:37 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 22:40:37 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,14 @@ void	set_data(t_cub *map)
 {
 	int				v;
 	int				i;
-	void			*img_txt;
 
 	i = 0;
 	while (i < TEXTURE_COUNT)
 	{
-		img_txt =
-		mlx_xpm_file_to_image(map->mlx.ptr,
+		map->mlx.img_txt[i] = mlx_xpm_file_to_image(map->mlx.ptr,
 		map->text[i], &map->mlx.w[i], &map->mlx.h[i]);
 		map->mlx.data_text[i] =
-		(int *)mlx_get_data_addr(img_txt, &v, &v, &v);
+		(int *)mlx_get_data_addr(map->mlx.img_txt[i], &v, &v, &v);
 		i++;
 	}
 }

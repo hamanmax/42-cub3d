@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 21:19:18 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 16:46:45 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 21:33:10 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	draw(t_cub *map)
 	}
 }
 
-int		set_wall(t_cub *map, int x)
+void	set_wall(t_cub *map, int x)
 {
 	int			y;
 

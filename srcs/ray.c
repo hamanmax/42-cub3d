@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/15 11:03:13 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 16:42:09 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 22:11:46 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int		main_loop(t_cub *map)
 	raycasting(map);
 	draw(map);
 	mlx_put_image_to_window(map->mlx.ptr, map->mlx.win, map->mlx.img, 0, 0);
+	return (0);
 }
 
 void	raycast_sprite(t_cub *map)

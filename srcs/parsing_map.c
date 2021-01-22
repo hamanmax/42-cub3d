@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 15:59:58 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 20:56:33 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 20:47:42 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,9 @@ int		test_map_integrity(t_cub *map, int nbline)
 	i = 0;
 	ft_memset(buffer, 0, 256);
 	while (str[i])
-		buffer[str[i++]] = 1;
+		buffer[(int)str[i++]] = 1;
 	while (str[i - 4])
-		buffer[str[i++ - 4]] = 2;
+		buffer[(int)str[i++ - 4]] = 2;
 	test_map_char_integrity(map, nbline, buffer, 1);
 	test_map_overall_integrity(map, nbline);
 	return (1);
@@ -85,18 +85,18 @@ void	test_map_char_integrity(t_cub *map, int nbline, char b[256], int j)
 {
 	while (nbline >= 1)
 	{
-		if (map->map[nbline][j] && b[map->map[nbline][j]] != 1)
+		if (map->map[nbline][j] && b[(int)map->map[nbline][j]] != 1)
 		{
-			if (b[map->map[nbline][j]] == 0 ||
-			(b[map->map[nbline][j]] == 2 && map->pla.pos.y != 0))
+			if (b[(int)map->map[nbline][j]] == 0 ||
+			(b[(int)map->map[nbline][j]] == 2 && map->pla.pos.y != 0))
 				error_str_return("Bad Map Integriy");
-			else if (b[map->map[nbline][j]] == 2)
+			else if (b[(int)map->map[nbline][j]] == 2)
 			{
 				map->pla.pos.x = (double)nbline;
 				map->pla.pos.y = (double)j + 1;
 			}
 		}
-		if (b[map->map[nbline][j]] == 1 && map->map[nbline][j] == '2')
+		if (b[(int)map->map[nbline][j]] == 1 && map->map[nbline][j] == '2')
 			map->nbsprite++;
 		if (map->map[nbline][j] == 0)
 		{
@@ -117,7 +117,7 @@ int		test_map_overall_integrity(t_cub *map, int nbline)
 	i = 0;
 	j = 0;
 	while (++i <= nbline)
-		if (ft_strlen(map->map[i]) >= j)
+		if (ft_strlen(map->map[i]) >= (size_t)j)
 			j = ft_strlen(map->map[i]) + 2;
 	map->map[i] = ft_str_malloc(j, ' ');
 	map->map[0] = ft_str_malloc(j, ' ');

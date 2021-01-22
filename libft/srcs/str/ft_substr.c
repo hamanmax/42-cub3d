@@ -6,31 +6,11 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 19:06:39 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 12:43:19 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 17:17:47 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/libft.h"
-
-// extern	char	*ft_substr(char const *s, unsigned int start, size_t len)
-// {
-// 	char		*s2;
-// 	size_t		i;
-
-// 	if (s == NULL)
-// 		return (NULL);
-// 	i = 0;
-// 	if (!(s2 = malloc((sizeof(char) * len + 1))))
-// 		return (0);
-// 	while (len > i && s[start])
-// 	{
-// 		s2[i] = s[start];
-// 		i++;
-// 		start++;
-// 	}
-// 	s2[i] = '\0';
-// 	return (s2);
-// }
 
 char	*ft_substr(char *s, unsigned int start, size_t len)
 {
