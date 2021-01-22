@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/03 09:53:46 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 17:48:38 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/22 22:45:36 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	check_around_map(t_cub *map, int i, int j, int nbline)
 int		check_around_char(char **tab, size_t x, size_t y, char *tofind)
 {
 	size_t	d;
-	int	buffer[256];
+	int		buffer[256];
 
 	d = 0;
 	ft_memset(buffer, 0, 256);
@@ -64,9 +64,11 @@ int		check_around_char(char **tab, size_t x, size_t y, char *tofind)
 		return (0);
 	else if (buffer[(int)tab[x][y + 1]] != 1 || buffer[(int)tab[x][y - 1]] != 1)
 		return (0);
-	else if (buffer[(int)tab[x - 1][y - 1]] != 1 || buffer[(int)tab[x + 1][y + 1]] != 1)
+	else if (buffer[(int)tab[x - 1][y - 1]] != 1 ||
+			buffer[(int)tab[x + 1][y + 1]] != 1)
 		return (0);
-	else if (buffer[(int)tab[x - 1][y + 1]] != 1 || buffer[(int)tab[x + 1][y - 1]] != 1)
+	else if (buffer[(int)tab[x - 1][y + 1]] != 1 ||
+			buffer[(int)tab[x + 1][y - 1]] != 1)
 		return (0);
 	return (1);
 }
