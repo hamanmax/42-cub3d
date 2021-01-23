@@ -1,4 +1,4 @@
-R 800 600
+R 640 480
 
 NO ./textures/mur.xpm
 WE ./textures/mur2.xpm

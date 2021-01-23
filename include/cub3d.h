@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 22:38:54 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/23 10:53:49 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,8 @@
 #include "../minilibx-linux/mlx.h"
 #include "../libft/include/libft.h"
 
-#define PI	3.14159265359
-#define FOV	60
 #define MVS 0.05
-#define RTS 0.05
-#define RAD PI/180
+#define RTS 0.10
 
 enum			e_text
 {

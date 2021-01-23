@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 15:12:49 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 22:40:37 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/23 12:03:19 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	load_sprite(t_cub *map)
 	i = 0;
 	j = 0;
 	k = 0;
-	map->sprite = malloc(map->nbsprite * sizeof(t_sprite));
+	map->sprite = ft_xmalloc(map->nbsprite * sizeof(t_sprite));
 	while (i <= map->mapsize.y)
 	{
 		while (j <= map->mapsize.x)

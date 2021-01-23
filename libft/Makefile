@@ -6,7 +6,7 @@
 #    By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/25 08:58:00 by mhaman            #+#    #+#              #
-#    Updated: 2021/01/22 17:37:19 by mhaman           ###   ########lyon.fr    #
+#    Updated: 2021/01/23 15:52:29 by mhaman           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 SRC_STR		=	$(addprefix str/,ft_split.c  ft_strchr.c  ft_strfdup.c ft_str_isdigit.c  ft_strlcat.c  ft_strlen.c  ft_strmapi.c  ft_strnstr.c  ft_strsep.c  ft_subfstr.c\
 				ft_str_char_occur.c  ft_strdup.c  ft_strfjoin.c  ft_strjoin.c ft_strlcpy.c  ft_str_malloc.c  ft_strncmp.c  ft_strrchr.c  ft_strtrim.c  ft_substr.c)
 
-SRC_MEM		=	$(addprefix mem/,ft_memccpy.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c ft_calloc.c ft_bzero.c)
+SRC_MEM		=	$(addprefix mem/,ft_xmalloc.c ft_memccpy.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c ft_calloc.c ft_bzero.c)
 
 SRC_CHAR	=	$(addprefix char/,  ft_isalpha.c  ft_isascii.c  ft_isdigit.c  ft_isprint.c  ft_isspace.c  ft_tolower.c  ft_toupper.c)
 
@@ -32,35 +32,21 @@ SRC_PATH	=	srcs/
 
 SRCS		=	$(addprefix $(SRC_PATH), $(SRCS_NAME))
  
-OBJ_NAME	=	${SRC_NAME:.c=.o}
-
-OBJ_PATH	=	bin/
-
-OBJ			=	$(addprefix $(OBJ_PATH), $(OBJ_NAME))
-
-SRC_PATH	=	srcs/
-
-SRCS		=	$(addprefix $(SRC_PATH), $(SRCS_NAME))
-
 OBJ_NAME	=	${SRCS_NAME:.c=.o}
 
 OBJ_PATH	=	bin/
 
 OBJ			=	$(addprefix $(OBJ_PATH), $(OBJ_NAME))
 
-
-
-DEBUG_FLAGS ?=
-
 NAME = libft.a
 
-FLAG	=	-Wall -Wextra -g3 -D BUFFER_SIZE=100
+FLAG	=	-Wall -Wextra -Werror -D BUFFER_SIZE=100
 
 RM = rm -rf
 
 CC = cc
 
-all: $(OBJ_PATH) $(NAME)
+all:  $(OBJ_PATH) $(NAME)
 
 $(NAME): $(OBJ) $(HEADER)
 	@ar rcs $(NAME) $(OBJ)
@@ -75,10 +61,9 @@ $(OBJ_PATH):
 	@mkdir -p bin/str 2> /dev/null
 	@mkdir -p bin/write 2> /dev/null
 
-$(OBJ_PATH)%.o: $(SRC_PATH)%.c $(HEADER) Makefile
+$(OBJ_PATH)%.o: $(SRC_PATH)%.c $(HEADER)
 	@printf "\033[2K\r\033[0;31;5;110mCompiling...	\033[37m$<\033[36m \033[0m"
 	@gcc $(FLAG) -g3 -I ${HEADER} -c $< -o $@
-
 
 clean:
 	@${RM} ${OBJ_PATH}
@@ -93,5 +78,8 @@ debug:
 
 redebug:
 	make re DEBUG_FLAGS="-g3 -fsanitize=address"
+
+norme:
+	~/./norminette-client-externe/norminette.rb srcs/
 
 .PHONY: all clean fclean re debug redebug

@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/15 17:54:57 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/21 12:46:24 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/23 12:00:45 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,7 @@ static char		**ft_tab(const	char *s, char c)
 	i = 0;
 	j = 0;
 	compt = ft_compt(s, c);
-	if (!(tab = malloc((compt + 1) * sizeof(char*))))
-		return (NULL);
+	tab = ft_xmalloc((compt + 1) * sizeof(char*));
 	while (*s != '\0' && i <= compt)
 	{
 		while (*s == c && *s)

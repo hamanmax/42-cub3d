@@ -51,38 +51,38 @@ int	expose_win2(void *p)
 
 int	key_win1(int key,void *p)
 {
-  ft_printf("Key in Win1 : %d\n",key);
+  printf("Key in Win1 : %d\n",key);
   if (key==0xFF1B)
     exit(0);
 }
 
 int	key_win2(int key,void *p)
 {
-  ft_printf("Key in Win2 : %d\n",key);
+  printf("Key in Win2 : %d\n",key);
   if (key==50)
     exit(0);
 }
 
 int	key_win3(int key,void *p)
 {
-  ft_printf("Key in Win3 : %d\n",key);
+  printf("Key in Win3 : %d\n",key);
   if (key==51)
     mlx_destroy_window(mlx,win3);
 }
 
 int	mouse_win1(int button,int x,int y, void *p)
 {
-  ft_printf("Mouse in Win1, button %d at %dx%d.\n",button,x,y);
+  printf("Mouse in Win1, button %d at %dx%d.\n",button,x,y);
 }
 
 int	mouse_win2(int button,int x,int y, void *p)
 {
-  ft_printf("Mouse in Win2, button %d at %dx%d.\n",button,x,y);
+  printf("Mouse in Win2, button %d at %dx%d.\n",button,x,y);
 }
 
 int	mouse_win3(int x,int y, void *p)
 {
-  ft_printf("Mouse moving in Win3, at %dx%d.\n",x,y);
+  printf("Mouse moving in Win3, at %dx%d.\n",x,y);
 }
 
 
@@ -90,117 +90,117 @@ int	main()
 {
   int	a;
 
-  ft_printf("MinilibX Test Program\n");
+  printf("MinilibX Test Program\n");
   a = 0x11223344;
   if (((unsigned char *)&a)[0] == 0x11)
     local_endian = 1;
   else
     local_endian = 0;
-  ft_printf(" => Local Endian : %d\n",local_endian);
+  printf(" => Local Endian : %d\n",local_endian);
 
-  ft_printf(" => Connection ...");
+  printf(" => Connection ...");
   if (!(mlx = mlx_init()))
     {
-      ft_printf(" !! KO !!\n");
+      printf(" !! KO !!\n");
       exit(1);
     }
-  ft_printf("OK (use_xshm %d pshm_format %d)\n",((t_xvar *)mlx)->use_xshm,((t_xvar *)mlx)->pshm_format);
+  printf("OK (use_xshm %d pshm_format %d)\n",((t_xvar *)mlx)->use_xshm,((t_xvar *)mlx)->pshm_format);
 
-  ft_printf(" => Window1 %dx%d \"Title 1\" ...",WIN1_SX,WIN1_SY);
+  printf(" => Window1 %dx%d \"Title 1\" ...",WIN1_SX,WIN1_SY);
   if (!(win1 = mlx_new_window(mlx,WIN1_SX,WIN1_SY,"Title1")))
     {
-      ft_printf(" !! KO !!\n");
+      printf(" !! KO !!\n");
       exit(1);
     }
-  ft_printf("OK\n");
+  printf("OK\n");
 
-  ft_printf(" => Colormap sans event ...");
+  printf(" => Colormap sans event ...");
   color_map_1(win1,WIN1_SX,WIN1_SY);
-  ft_printf("OK\n");
+  printf("OK\n");
   sleep(2);
 
-  ft_printf(" => Clear Window ...");
+  printf(" => Clear Window ...");
   mlx_clear_window(mlx,win1);
-  ft_printf("OK\n");
+  printf("OK\n");
   sleep(2);
 
-  ft_printf(" => Image1 ZPixmap %dx%d ...",IM1_SX,IM1_SY);
+  printf(" => Image1 ZPixmap %dx%d ...",IM1_SX,IM1_SY);
   if (!(im1 = mlx_new_image(mlx,IM1_SX,IM1_SY)))
     {
-      ft_printf(" !! KO !!\n");
+      printf(" !! KO !!\n");
       exit(1);
     }
   data1 = mlx_get_data_addr(im1,&bpp1,&sl1,&endian1);
-  ft_printf("OK (bpp1: %d, sizeline1: %d endian: %d type: %d)\n",bpp1,sl1,endian1,
+  printf("OK (bpp1: %d, sizeline1: %d endian: %d type: %d)\n",bpp1,sl1,endian1,
 	 ((t_img *)im1)->type);
 
-  ft_printf(" => Fill Image1 ...");
+  printf(" => Fill Image1 ...");
   color_map_2(data1,bpp1,sl1,IM1_SX,IM1_SY,endian1, 1);
-  ft_printf("OK (pixmap : %d)\n",(int)((t_img *)im1)->pix);
+  printf("OK (pixmap : %d)\n",(int)((t_img *)im1)->pix);
 
-  ft_printf(" => Put Image1 ...");
+  printf(" => Put Image1 ...");
   mlx_put_image_to_window(mlx,win1,im1,20,20);
-  ft_printf("OK\n");
+  printf("OK\n");
   sleep(2);
 
-  ft_printf(" => Destroy Image1 ... ");
+  printf(" => Destroy Image1 ... ");
   mlx_destroy_image(mlx, im1);
-  ft_printf("OK\n");
+  printf("OK\n");
   sleep(2);
 
-  ft_printf(" => Image3 ZPixmap %dx%d ...",IM3_SX,IM3_SY);
+  printf(" => Image3 ZPixmap %dx%d ...",IM3_SX,IM3_SY);
   if (!(im3 = mlx_new_image(mlx,IM3_SX,IM3_SY)))
     {
-      ft_printf(" !! KO !!\n");
+      printf(" !! KO !!\n");
       exit(1);
     }
   data3 = mlx_get_data_addr(im3,&bpp3,&sl3,&endian3);
-  ft_printf("OK (bpp3 %d, sizeline3 %d endian3 %d type %d)\n",bpp3,sl3,endian3,
+  printf("OK (bpp3 %d, sizeline3 %d endian3 %d type %d)\n",bpp3,sl3,endian3,
 	 ((t_img *)im3)->type);
 
-  ft_printf(" => Fill Image3 ...");
+  printf(" => Fill Image3 ...");
   color_map_2(data3,bpp3,sl3,IM3_SX,IM3_SY,endian3, 1);
-  ft_printf("OK (pixmap : %d)\n",(int)((t_img *)im3)->pix);
+  printf("OK (pixmap : %d)\n",(int)((t_img *)im3)->pix);
 
-  ft_printf(" => Put Image3 ...");
+  printf(" => Put Image3 ...");
   mlx_put_image_to_window(mlx,win1,im3,20,20);
-  ft_printf("OK\n");
+  printf("OK\n");
   sleep(2);
 
-  ft_printf(" => String ...");
+  printf(" => String ...");
   mlx_string_put(mlx,win1,5,WIN1_SY/2,0xFF99FF,"String output");
   mlx_string_put(mlx,win1,15,WIN1_SY/2+20,0x00FFFF,"MinilibX test");
-  ft_printf("OK\n");
+  printf("OK\n");
   sleep(2);
 
-  ft_printf(" => Xpm from file ...");
+  printf(" => Xpm from file ...");
   if (!(im2 = mlx_xpm_file_to_image(mlx,"open.xpm",&xpm1_x,&xpm1_y)))
     {
-      ft_printf(" !! KO !!\n");
+      printf(" !! KO !!\n");
       exit(1);
     }
   data2 = mlx_get_data_addr(im2,&bpp2,&sl2,&endian2);
-  ft_printf("OK (xpm %dx%d)(img bpp2: %d, sizeline2: %d endian: %d type: %d)\n",
+  printf("OK (xpm %dx%d)(img bpp2: %d, sizeline2: %d endian: %d type: %d)\n",
 	 xpm1_x,xpm1_y,bpp2,sl2,endian2,((t_img *)im2)->type);
   sleep(2);
 
-  ft_printf(" => Put xpm ...");
+  printf(" => Put xpm ...");
   mlx_put_image_to_window(mlx,win1,im2,0,0);
   mlx_put_image_to_window(mlx,win1,im2,100,100);
-  ft_printf("OK\n");
+  printf("OK\n");
   sleep(2);
 
-  ft_printf(" => 2nd window,");
+  printf(" => 2nd window,");
   win2 = mlx_new_window(mlx,WIN1_SX,WIN1_SY,"Title2");
   if (!(im4 = mlx_new_image(mlx,IM3_SX, IM3_SY)))
     {
-      ft_printf(" !! KO !!\n");
+      printf(" !! KO !!\n");
       exit(1);
     }
   data4 = mlx_get_data_addr(im4,&bpp4,&sl4,&endian4);
   color_map_2(data4,bpp4,sl4,IM3_SX,IM3_SY,endian4, 2);
 
-  ft_printf(" 3rd window, Installing hooks ...");
+  printf(" 3rd window, Installing hooks ...");
   win3 = mlx_new_window(mlx,WIN1_SX,WIN1_SY,"Title3");
   mlx_expose_hook(win1,expose_win1,0);
   mlx_mouse_hook(win1,mouse_win1,0);
@@ -212,7 +212,7 @@ int	main()
 
   mlx_hook(win3, MotionNotify, PointerMotionMask, mouse_win3, 0);
 
-  ft_printf("OK\nNow in Loop. Just play. Esc in 3 to destroy, 1&2 to quit.\n");
+  printf("OK\nNow in Loop. Just play. Esc in 3 to destroy, 1&2 to quit.\n");
   
   mlx_loop(mlx);
 }
@@ -248,7 +248,7 @@ int	color_map_2(unsigned char *data,int bpp,int sl,int w,int h,int endian, int t
   unsigned char *ptr;
 
   opp = bpp/8;
-  ft_printf("(opp : %d) ",opp);
+  printf("(opp : %d) ",opp);
   y = h;
   while (y--)
     {

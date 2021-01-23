@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 15:59:58 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 20:47:42 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/23 09:59:11 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ int		check_map_validity(t_cub *map, char *found, char **line)
 	i = 1;
 	*line = ft_strfjoin("\n", *line, 4);
 	*line = ft_strfjoin(found, *line, 2);
-	map->map = malloc((j + 3) * sizeof(char *));
+	if (!(map->map = malloc((j + 3) * sizeof(char *))))
+		exit(-1);
 	buff = *line;
 	while ((found = ft_strsep(line, "\n")) && i <= j + 1)
 		if (found[0] == '1' || found[0] == ' ')

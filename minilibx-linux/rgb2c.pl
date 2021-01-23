@@ -17,9 +17,9 @@
 open(RGB, "/usr/X11/lib/X11/rgb.txt");
 
 
-ft_printf("/*\n** This is a generated file with rgb2c.pl and rgb.txt from\n");
-ft_printf("** the XFree86 distribution.\n*/\n\n");
-ft_printf("struct s_col_name mlx_col_name[] =\n{\n");
+printf("/*\n** This is a generated file with rgb2c.pl and rgb.txt from\n");
+printf("** the XFree86 distribution.\n*/\n\n");
+printf("struct s_col_name mlx_col_name[] =\n{\n");
 
 while (<RGB>)
 {
@@ -31,8 +31,8 @@ while (<RGB>)
 	{
 	    $color = "$tab[3] $tab[4]";
 	}
-	ft_printf(" { \"%s\" , 0x%x },\n", $color, $tab[0]*65536+$tab[1]*256+$tab[2]);
+	printf(" { \"%s\" , 0x%x },\n", $color, $tab[0]*65536+$tab[1]*256+$tab[2]);
     }
 }
 
-ft_printf(" { 0, 0 }\n};\n");
+printf(" { 0, 0 }\n};\n");

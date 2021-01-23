@@ -25,7 +25,7 @@ void	*mlx_init()
 	xvar->depth = DefaultDepth(xvar->display,xvar->screen);
 	if (mlx_int_get_visual(xvar)==-1)
 	{
-		ft_printf(ERR_NO_TRUECOLOR);
+		printf(ERR_NO_TRUECOLOR);
 		exit(1);
 	}
 	xvar->win_list = 0;

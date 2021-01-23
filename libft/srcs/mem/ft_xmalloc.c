@@ -1,21 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_xmalloc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/11 11:48:44 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/23 11:59:52 by mhaman           ###   ########lyon.fr   */
+/*   Created: 2021/01/23 11:56:34 by mhaman            #+#    #+#             */
+/*   Updated: 2021/01/23 15:54:07 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/libft.h"
 
-void	*ft_calloc(size_t count, size_t size)
+void	*ft_xmalloc(size_t size)
 {
-	void *ptr;
+	void	*ptr;
 
-	ptr = ft_xmalloc(count * size);
-	return (ft_memset(ptr, '\0', (count * size)));
+	ptr = malloc(size);
+	if (ptr == NULL && size != 0)
+	{
+		perror("Unable to allocate pointer");
+		exit(EXIT_FAILURE);
+	}
+	return (ptr);
 }

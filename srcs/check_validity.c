@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/21 16:01:35 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 21:47:22 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/23 10:17:53 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	check_file_validity(char **argv, int argc)
 {
-	int				fd;
-	char			*file;
+	int			fd;
+	char		*file;
 
 	if (argc < 2)
 		error_str_return("Missing map file");
@@ -39,7 +39,7 @@ void	check_file_validity(char **argv, int argc)
 		close(fd);
 }
 
-int	check_instruction_validity(t_cub *map, char **line)
+int		check_instruction_validity(t_cub *map, char **line)
 {
 	char		*found;
 	const char	*top = *line;
@@ -66,7 +66,7 @@ int	check_instruction_validity(t_cub *map, char **line)
 	return (1);
 }
 
-int	check_struct_validity(t_cub *map, size_t i)
+int		check_struct_validity(t_cub *map, size_t i)
 {
 	if (!map->screen.x || !map->screen.y)
 		error_str_return("Resolution not set");
@@ -89,7 +89,7 @@ int	check_struct_validity(t_cub *map, size_t i)
 	return (0);
 }
 
-int	check_resolution_validity(t_cub *map, char *line)
+int		check_resolution_validity(t_cub *map, char *line)
 {
 	char		*found;
 	size_t		i;
@@ -116,7 +116,7 @@ int	check_resolution_validity(t_cub *map, char *line)
 	return (1);
 }
 
-int	check_color_validity(t_cub *map, char *line, int i)
+int		check_color_validity(t_cub *map, char *line, int i)
 {
 	char		*found;
 	int			j;

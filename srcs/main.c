@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/24 14:40:25 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 22:42:25 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/23 12:02:08 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	free_cub(t_cub *map)
 	i = 0;
 	while (i < TEXTURE_COUNT)
 	{
-		mlx_destroy_image(map->mlx.ptr,map->mlx.img_txt[i]);
+		mlx_destroy_image(map->mlx.ptr, map->mlx.img_txt[i]);
 		free(map->text[i]);
 		i++;
 	}
@@ -56,7 +56,7 @@ void	ft_init_struct(t_cub *map, int code)
 		mlx_new_image(map->mlx.ptr, map->screen.x, map->screen.y);
 		map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &v, &v, &v);
 		map->mlx.win =
-		mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3d"); 
+		mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3d");
 	}
 }
 
@@ -105,7 +105,7 @@ int		main(int argc, char **argv)
 	parse_file_cub(map, argv, argc);
 	ft_init_struct(map, 1);
 	ft_printf("file valid\n");
-	map->screenpx = malloc(map->screen.x * map->screen.y * sizeof(int));
+	map->screenpx = ft_xmalloc(map->screen.x * map->screen.y * sizeof(int));
 	mlx_hook(map->mlx.win, 2, 1L << 0, &ft_key_press, map);
 	mlx_hook(map->mlx.win, 3, 1L << 1, &ft_key_release, map);
 	mlx_hook(map->mlx.win, 33, 1L << 17, closecub, map);

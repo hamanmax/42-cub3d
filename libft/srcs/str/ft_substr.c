@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/11 19:06:39 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 17:17:47 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/23 12:02:35 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	size_t			i;
 
 	i = 0;
-	if (!(finalstr = malloc((sizeof(char) * len + 1))))
-		return (0);
+	finalstr = ft_xmalloc((sizeof(char) * len + 1));
 	while (len > i && s[start])
 	{
 		finalstr[i] = s[start];
