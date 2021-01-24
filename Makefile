@@ -6,7 +6,7 @@
 #    By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/01/23 10:27:39 by mhaman            #+#    #+#              #
-#    Updated: 2021/01/23 15:55:08 by mhaman           ###   ########lyon.fr    #
+#    Updated: 2021/01/24 12:14:04 by mhaman           ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,24 +48,24 @@ $(NAME): $(OBJS) $(HEADER)
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(HEADER)
 	@printf "\033[2K\r\033[0;31;5;110mCompiling...	\033[37m$<\033[36m \033[0m"
-	@$(CC) $(FLAG) -c $< -o $@ 
+	@$(CC) $(FLAG) -c $< -o $@
 
 $(OBJ_PATH):
 	mkdir -p bin/
 
-$(LIBFT): 
+$(LIBFT):
 	@make -C libft/
 
-$(MINILIBX): 
+$(MINILIBX):
 	@make -C minilibx-linux/
 
 clean:
-	make clean -C libft/
+	make -C libft/ clean
 	$(RM) bin/
 
 fclean:
-	make fclean -C libft/
-	make clean -C minilibx-linux/
+	make -C libft/ fclean
+	make -C minilibx-linux/ clean
 	$(RM) bin/
 	$(RM Cub3D
 
