@@ -25,7 +25,7 @@
 # include "../libft/include/libft.h"
 
 # define MVS 0.05
-# define RTS 0.10
+# define RTS 0.05
 
 enum					e_text
 {

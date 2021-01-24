@@ -75,10 +75,6 @@ fclean:
 	@$(RM) Cub3D
 	@$(RM) minilibx-linux/libxmlx_linux.a
 
-norme:
-	make norme -C libft/
-	~/./norminette-client-externe/norminette.rb srcs/
-
 re: fclean all
 
 .PHONY: all fclean re clean

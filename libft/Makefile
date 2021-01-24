@@ -80,6 +80,6 @@ redebug:
 	make re DEBUG_FLAGS="-g3 -fsanitize=address"
 
 norme:
-	~/./norminette-client-externe/norminette.rb srcs/
+	norminette srcs/
 
 .PHONY: all clean fclean re debug redebug

@@ -33,9 +33,9 @@ void	set_texture(t_cub *map)
 	else
 	{
 		if (map->ray.dir.x < 0)
-			map->textpx = 0;
-		else
 			map->textpx = 1;
+		else
+			map->textpx = 0;
 	}
 }
 
