@@ -31,8 +31,6 @@ int		check_map_validity(t_cub *map, char *found, char **line)
 			error_str_return("Bad map parsing\n");
 	free(buff);
 	*line = NULL;
-	if (i == j + 1)
-		error_str_return("Information / Line after map");
 	map->mapsize.y = i - 1;
 	test_map_validity(map, i - 1);
 	return (0);
