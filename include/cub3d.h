@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/24 10:53:22 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/24 10:56:35 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,24 @@
 
 enum					e_text
 {
-					NO,
-					SO,
-					EA,
-					WE,
-					SPRITE,
-					TEXTURE_COUNT
+	NO,
+	SO,
+	EA,
+	WE,
+	SPRITE,
+	TEXTURE_COUNT
 };
 
-typedef	struct			s_bpm
+typedef	struct		s_bpm
 {
 	unsigned char	bitmap_type[2];
 	int				file_size;
 	short			reserved1;
 	short			reserved2;
 	unsigned int	offset_bits;
-}						t_bpm;
+}					t_bpm;
 
-typedef	struct			s_bpm2
+typedef	struct		s_bpm2
 {
 	unsigned int	size_header;
 	unsigned int	width;
@@ -59,9 +59,9 @@ typedef	struct			s_bpm2
 	unsigned int	ppm_y;
 	unsigned int	clr_used;
 	unsigned int	clr_important;
-}						t_bpm2;
+}					t_bpm2;
 
-typedef	struct			s_mlx
+typedef	struct		s_mlx
 {
 	void			*ptr;
 	void			*win;
@@ -74,35 +74,35 @@ typedef	struct			s_mlx
 	int				endien;
 	int				h[TEXTURE_COUNT];
 	int				w[TEXTURE_COUNT];
-}						t_mlx;
+}					t_mlx;
 
-typedef	struct			s_float
+typedef	struct		s_float
 {
 	double			x;
 	double			y;
-}						t_float;
-typedef	struct			s_int
+}					t_float;
+typedef	struct		s_int
 {
 	int				x;
 	int				y;
-}						t_int;
+}					t_int;
 
-typedef	struct			s_ste
+typedef	struct		s_ste
 {
 	int				start;
 	int				end;
-}						t_ste;
+}					t_ste;
 
-typedef	struct			s_player
+typedef	struct		s_player
 {
 	t_float			pos;
 	char			orientation;
 	t_float			dir;
 	t_float			plane;
 	t_float			camera;
-}						t_player;
+}					t_player;
 
-typedef	struct			s_move
+typedef	struct		s_move
 {
 	int				forward;
 	int				backward;
@@ -111,15 +111,15 @@ typedef	struct			s_move
 	int				rightrot;
 	int				leftrot;
 	int				close;
-}						t_move;
+}					t_move;
 
-typedef	struct			s_sprite
+typedef	struct		s_sprite
 {
 	t_float			pos;
 	double			dist;
-}						t_sprite;
+}					t_sprite;
 
-typedef	struct			s_ray
+typedef	struct		s_ray
 {
 	t_float			dir;
 	t_int			pos;
@@ -128,9 +128,9 @@ typedef	struct			s_ray
 	double			perpdist;
 	t_int			step;
 	int				height;
-}						t_ray;
+}					t_ray;
 
-typedef	struct			s_cub
+typedef	struct		s_cub
 {
 	t_int			screen;
 	int				colorsky;
@@ -161,7 +161,7 @@ typedef	struct			s_cub
 	t_float			spr;
 	t_float			trans;
 	int				screenshot;
-}						t_cub;
+}					t_cub;
 
 void	parse_file_cub(t_cub *map, char **argv, int argc);
 int		check_instruction_validity(t_cub *map, char **argv);
