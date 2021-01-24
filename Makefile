@@ -11,7 +11,8 @@
 # **************************************************************************** #
 
 SRC_NAME	=	move.c draw.c parsing.c parsing_map.c ray.c \
-set_raycast.c set_params.c check_validity.c check_texture.c main.c calc_raycast.c
+set_raycast.c set_params.c check_validity.c check_texture.c main.c \
+calc_raycast.c screenshot.c
 
 SRCS	=	$(addprefix $(SRC_PATH),$(SRC_NAME))
 

@@ -55,8 +55,6 @@ void	ft_init_struct(t_cub *map, int code)
 		map->mlx.img =
 		mlx_new_image(map->mlx.ptr, map->screen.x, map->screen.y);
 		map->mlx.data = (int *)mlx_get_data_addr(map->mlx.img, &v, &v, &v);
-		map->mlx.win =
-		mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3d");
 	}
 }
 
@@ -106,6 +104,13 @@ int		main(int argc, char **argv)
 	ft_init_struct(map, 1);
 	ft_printf("file valid\n");
 	map->screenpx = ft_xmalloc(map->screen.x * map->screen.y * sizeof(int));
+	if (map->screenshot == 1)
+	{
+		raycasting(map);
+		draw(map);
+		ft_save_bitmap("screenshot.bmp",map);
+	}
+	map->mlx.win = mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3D");
 	mlx_hook(map->mlx.win, 2, 1L << 0, &ft_key_press, map);
 	mlx_hook(map->mlx.win, 3, 1L << 1, &ft_key_release, map);
 	mlx_hook(map->mlx.win, 33, 1L << 17, closecub, map);

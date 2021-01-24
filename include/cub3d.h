@@ -37,6 +37,30 @@ enum			e_text
 	TEXTURE_COUNT
 };
 
+typedef struct		s_bpm
+{
+	unsigned char	bitmap_type[2];
+	int				file_size;
+	short			reserved1;
+	short			reserved2;
+	unsigned int	offset_bits;
+}					t_bpm;
+
+typedef struct		s_bpm2
+{
+	unsigned int	size_header;
+	unsigned int	width;
+	unsigned int	height;
+	short int		planes;
+	short int		bit_count;
+	unsigned int	compression;
+	unsigned int	image_size;
+	unsigned int	ppm_x;
+	unsigned int	ppm_y;
+	unsigned int	clr_used;
+	unsigned int	clr_important;
+}			t_bpm2;
+
 typedef struct	s_mlx
 {
 	void	*ptr;
@@ -137,6 +161,7 @@ typedef struct	s_cub
 	int			color;
 	t_float		spr;
 	t_float		trans;
+	int		screenshot;
 }				t_cub;
 
 void	parse_file_cub(t_cub *map, char **argv, int argc);
@@ -147,7 +172,7 @@ int		check_map_validity(t_cub *map, char *found, char **line);
 int		check_struct_validity(t_cub *map,size_t i);
 int		check_color_validity(t_cub *map, char *line,int i);
 int		check_resolution_validity(t_cub *map, char *line);
-void	check_file_validity(char **argv, int argc);
+void	check_file_validity(t_cub *map,char **argv, int argc);
 void	check_around_map(t_cub *map,int i, int j, int nbline);
 int		error_str_return(char *str);
 void	resizing_map(t_cub *map);
@@ -179,6 +204,7 @@ void	draw_sprite(t_cub *map,int st, int spritescreenx,t_float trans);
 double	calc_wallx(t_cub *map);
 void	calc_tex(t_cub *map, double wallx);
 void	calc_perp(t_cub *map);
-int		closecub(t_cub *map);
+int		closecub(t_cub *map, int code);
+void		ft_save_bitmap(const char *filename, t_cub *map);
 
 #endif

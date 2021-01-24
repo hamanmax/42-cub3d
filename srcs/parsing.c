@@ -31,7 +31,7 @@ void	parse_file_cub(t_cub *map, char **argv, int argc)
 		if (rsize != 300)
 			break ;
 	}
-	check_file_validity(argv, argc);
+	check_file_validity(map,argv, argc);
 	check_instruction_validity(map, &line);
 	check_struct_validity(map, 1);
 	close(fd);
