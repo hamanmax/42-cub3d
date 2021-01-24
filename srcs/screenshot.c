@@ -1,11 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   screenshot.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/01/24 10:21:56 by mhaman            #+#    #+#             */
+/*   Updated: 2021/01/24 10:22:24 by mhaman           ###   ########lyon.fr   */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../include/cub3d.h"
 
 static void	ft_bitmap_image(t_cub *map, int fd, t_bpm2 bih)
 {
-	int		x;
-	int		y;
-	int		ble;
+	int				x;
+	int				y;
+	int				ble;
 	unsigned char	color[3];
 
 	write(fd, &bih, sizeof(bih));
@@ -30,7 +41,7 @@ static void	ft_bitmap_image(t_cub *map, int fd, t_bpm2 bih)
 
 void		ft_save_bitmap(const char *filename, t_cub *map)
 {
-	int		fd;
+	int			fd;
 	t_bpm		bfh;
 	t_bpm2		bih;
 
