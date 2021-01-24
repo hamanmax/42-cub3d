@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #ifndef KEYCODE_H
-#define KEYCODE_H
+# define KEYCODE_H
 
 # include "cub3d.h"
 
