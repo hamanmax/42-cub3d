@@ -12,7 +12,7 @@
 
 #include "../include/cub3d.h"
 
-void	check_file_validity(t_cub *map,char **argv, int argc)
+void	check_file_validity(t_cub *map, char **argv, int argc)
 {
 	int			fd;
 	char		*file;
@@ -21,7 +21,6 @@ void	check_file_validity(t_cub *map,char **argv, int argc)
 		error_str_return("Missing map file");
 	if (argc == 3)
 	{
-
 		if (ft_strncmp(argv[2], "--save", 8) != 0)
 			error_str_return("Bad option here only --save available");
 		else

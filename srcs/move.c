@@ -84,7 +84,7 @@ void	rotation_qe(t_cub *map)
 	map->pla = p;
 }
 
-int		closecub(t_cub *map,int code)
+int		closecub(t_cub *map, int code)
 {
 	mlx_destroy_image(map->mlx.ptr, map->mlx.img);
 	if (code != 1)

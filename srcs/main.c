@@ -108,9 +108,10 @@ int		main(int argc, char **argv)
 	{
 		raycasting(map);
 		draw(map);
-		ft_save_bitmap("screenshot.bmp",map);
+		ft_save_bitmap("screenshot.bmp", map);
 	}
-	map->mlx.win = mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3D");
+	map->mlx.win =
+	mlx_new_window(map->mlx.ptr, map->screen.x, map->screen.y, "Cub3D");
 	mlx_hook(map->mlx.win, 2, 1L << 0, &ft_key_press, map);
 	mlx_hook(map->mlx.win, 3, 1L << 1, &ft_key_release, map);
 	mlx_hook(map->mlx.win, 33, 1L << 17, closecub, map);

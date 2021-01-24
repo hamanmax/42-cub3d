@@ -56,4 +56,3 @@ void		ft_save_bitmap(const char *filename, t_cub *map)
 	ft_bitmap_image(map, fd, bih);
 	closecub(map, 1);
 }
-
