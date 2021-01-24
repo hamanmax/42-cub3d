@@ -6,10 +6,9 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/16 10:05:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/22 16:53:25 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/24 11:00:57 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #ifndef FTPRINTF_H
 # define FTPRINTF_H

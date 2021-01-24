@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/16 15:58:20 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/23 12:05:10 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/24 11:01:04 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*ft_itoa_base_long(unsigned long nbr, char *base);
 char	*ft_itoa_unsigned(unsigned int i);
 int		get_next_line(int fd, char **line);
 int		ft_pow(int nb, int power);
-double	ft_round(double nb,int round);
+double	ft_round(double nb, int round);
 int		ft_str_isdigit(char *str);
 int		ft_str_char_occur(char *str, int c);
 void	*ft_xmalloc(size_t size);
