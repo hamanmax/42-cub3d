@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/24 10:51:34 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/24 10:53:22 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@
 
 enum					e_text
 {
-	NO,
-	SO,
-	EA,
-	WE,
-	SPRITE,
-	TEXTURE_COUNT
+					NO,
+					SO,
+					EA,
+					WE,
+					SPRITE,
+					TEXTURE_COUNT
 };
 
 typedef	struct			s_bpm
@@ -100,7 +100,7 @@ typedef	struct			s_player
 	t_float			dir;
 	t_float			plane;
 	t_float			camera;
-}					t_player;
+}						t_player;
 
 typedef	struct			s_move
 {
@@ -164,26 +164,26 @@ typedef	struct			s_cub
 }						t_cub;
 
 void	parse_file_cub(t_cub *map, char **argv, int argc);
-int	check_instruction_validity(t_cub *map, char **argv);
-int	check_texture_validity(t_cub *map, char *line);
-int	check_type_texture(char *line);
-int	check_map_validity(t_cub *map, char *found, char **line);
-int	check_struct_validity(t_cub *map, size_t i);
-int	check_color_validity(t_cub *map, char *line, int i);
-int	check_resolution_validity(t_cub *map, char *line);
+int		check_instruction_validity(t_cub *map, char **argv);
+int		check_texture_validity(t_cub *map, char *line);
+int		check_type_texture(char *line);
+int		check_map_validity(t_cub *map, char *found, char **line);
+int		check_struct_validity(t_cub *map, size_t i);
+int		check_color_validity(t_cub *map, char *line, int i);
+int		check_resolution_validity(t_cub *map, char *line);
 void	check_file_validity(t_cub *map, char **argv, int argc);
 void	check_around_map(t_cub *map, int i, int j, int nbline);
-int	error_str_return(char *str);
+int		error_str_return(char *str);
 void	resizing_map(t_cub *map);
-int	test_map_integrity(t_cub *map, int nbline);
+int		test_map_integrity(t_cub *map, int nbline);
 void	test_map_char_integrity(t_cub *map,
-	int nbline, char buffer[256], int j);
-int	test_map_overall_integrity(t_cub *map, int nbline);
-int	test_map_validity(t_cub *map, int nbline);
-int	check_around_char(char **tab, size_t x, size_t y, char *tofind);
-int	main_loop(t_cub *map);
+		int nbline, char buffer[256], int j);
+int		test_map_overall_integrity(t_cub *map, int nbline);
+int		test_map_validity(t_cub *map, int nbline);
+int		check_around_char(char **tab, size_t x, size_t y, char *tofind);
+int		main_loop(t_cub *map);
 void	raycasting(t_cub *map);
-int	deal_key(int key, t_cub *map);
+int		deal_key(int key, t_cub *map);
 void	move(t_cub *map);
 void	move_ws(t_cub *map);
 void	move_ad(t_cub *map);
@@ -204,7 +204,7 @@ void	draw_sprite(t_cub *map, int st, int spritescreenx, t_float trans);
 double	calc_wallx(t_cub *map);
 void	calc_tex(t_cub *map, double wallx);
 void	calc_perp(t_cub *map);
-int	closecub(t_cub *map, int code);
+int		closecub(t_cub *map, int code);
 void	ft_save_bitmap(const char *filename, t_cub *map);
 
 #endif
