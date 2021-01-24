@@ -6,7 +6,7 @@
 /*   By: mhaman <mhaman@student.42lyon.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/03/16 11:57:10 by mhaman            #+#    #+#             */
-/*   Updated: 2021/01/24 10:56:35 by mhaman           ###   ########lyon.fr   */
+/*   Updated: 2021/01/24 10:58:53 by mhaman           ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,48 +163,51 @@ typedef	struct		s_cub
 	int				screenshot;
 }					t_cub;
 
-void	parse_file_cub(t_cub *map, char **argv, int argc);
-int		check_instruction_validity(t_cub *map, char **argv);
-int		check_texture_validity(t_cub *map, char *line);
-int		check_type_texture(char *line);
-int		check_map_validity(t_cub *map, char *found, char **line);
-int		check_struct_validity(t_cub *map, size_t i);
-int		check_color_validity(t_cub *map, char *line, int i);
-int		check_resolution_validity(t_cub *map, char *line);
-void	check_file_validity(t_cub *map, char **argv, int argc);
-void	check_around_map(t_cub *map, int i, int j, int nbline);
-int		error_str_return(char *str);
-void	resizing_map(t_cub *map);
-int		test_map_integrity(t_cub *map, int nbline);
-void	test_map_char_integrity(t_cub *map,
-		int nbline, char buffer[256], int j);
-int		test_map_overall_integrity(t_cub *map, int nbline);
-int		test_map_validity(t_cub *map, int nbline);
-int		check_around_char(char **tab, size_t x, size_t y, char *tofind);
-int		main_loop(t_cub *map);
-void	raycasting(t_cub *map);
-int		deal_key(int key, t_cub *map);
-void	move(t_cub *map);
-void	move_ws(t_cub *map);
-void	move_ad(t_cub *map);
-void	rotation_qe(t_cub *map);
-void	set_data(t_cub *map);
-void	load_sprite(t_cub *map);
-void	set_start_to_end(t_ste *draw, int height, t_int size, int sx);
-void	set_dir_plane_vector(t_cub *map);
-void	set_texture(t_cub *map);
-void	set_ray(t_cub *map, int i);
-void	free_cub(t_cub *map);
-void	set_sprite(t_cub *map);
-void	sort_sprite(t_cub *map);
-void	set_backgroud(t_cub *map);
-void	draw(t_cub *map);
-void	set_wall(t_cub *map, int x);
-void	draw_sprite(t_cub *map, int st, int spritescreenx, t_float trans);
-double	calc_wallx(t_cub *map);
-void	calc_tex(t_cub *map, double wallx);
-void	calc_perp(t_cub *map);
-int		closecub(t_cub *map, int code);
-void	ft_save_bitmap(const char *filename, t_cub *map);
+void				parse_file_cub(t_cub *map, char **argv, int argc);
+int					check_instruction_validity(t_cub *map, char **argv);
+int					check_texture_validity(t_cub *map, char *line);
+int					check_type_texture(char *line);
+int					check_map_validity(t_cub *map, char *found, char **line);
+int					check_struct_validity(t_cub *map, size_t i);
+int					check_color_validity(t_cub *map, char *line, int i);
+int					check_resolution_validity(t_cub *map, char *line);
+void				check_file_validity(t_cub *map, char **argv, int argc);
+void				check_around_map(t_cub *map, int i, int j, int nbline);
+int					error_str_return(char *str);
+void				resizing_map(t_cub *map);
+int					test_map_integrity(t_cub *map, int nbline);
+void				test_map_char_integrity(t_cub *map,
+					int nbline, char buffer[256], int j);
+int					test_map_overall_integrity(t_cub *map, int nbline);
+int					test_map_validity(t_cub *map, int nbline);
+int					check_around_char(char **tab, size_t x,
+					size_t y, char *tofind);
+int					main_loop(t_cub *map);
+void				raycasting(t_cub *map);
+int					deal_key(int key, t_cub *map);
+void				move(t_cub *map);
+void				move_ws(t_cub *map);
+void				move_ad(t_cub *map);
+void				rotation_qe(t_cub *map);
+void				set_data(t_cub *map);
+void				load_sprite(t_cub *map);
+void				set_start_to_end(t_ste *draw, int height,
+					t_int size, int sx);
+void				set_dir_plane_vector(t_cub *map);
+void				set_texture(t_cub *map);
+void				set_ray(t_cub *map, int i);
+void				free_cub(t_cub *map);
+void				set_sprite(t_cub *map);
+void				sort_sprite(t_cub *map);
+void				set_backgroud(t_cub *map);
+void				draw(t_cub *map);
+void				set_wall(t_cub *map, int x);
+void				draw_sprite(t_cub *map, int st,
+					int spritescreenx, t_float trans);
+double				calc_wallx(t_cub *map);
+void				calc_tex(t_cub *map, double wallx);
+void				calc_perp(t_cub *map);
+int					closecub(t_cub *map, int code);
+void				ft_save_bitmap(const char *filename, t_cub *map);
 
 #endif
