@@ -44,6 +44,7 @@ all: $(MINILIBX) $(LIBFT) $(OBJ_PATH) $(NAME)
 
 $(NAME): $(OBJS) $(HEADER)
 	@gcc $(FLAG) $(OBJS) $(LIBFT) $(MINILIBX) $(LIB_LINUX)  -o $(NAME)
+	@printf "\n\033[1m\033[32mCub3D Compilation done\n\033[32m\033[1m"
 
 
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(HEADER)
@@ -51,23 +52,28 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c $(HEADER)
 	@$(CC) $(FLAG) -c $< -o $@
 
 $(OBJ_PATH):
-	mkdir -p bin/
+	@mkdir -p bin/
 
 $(LIBFT):
-	@make -C libft/
+	@printf "\033[1m\033[32mLibft Compilation done\n\033[32m\033[1m"
+	@make -s -C libft/ > /dev/null
 
 $(MINILIBX):
-	@make -C minilibx-linux/
-
+	@printf "\033[1m\033[32mMinilibx Compilation done\n\033[32m\033[1m"
+	@make -s -C minilibx-linux/ > /dev/null 2>&1
 clean:
-	make -C libft/ clean
-	$(RM) bin/
+	@printf "\033[1m\033[32mObj files deleted succesfuly\n\033[32m\033[1m"
+	@make -C libft/ clean > /dev/null
+	@$(RM) bin/
+	@make -s -C minilibx-linux/ clean > /dev/null
 
 fclean:
-	make -C libft/ fclean
-	make -C minilibx-linux/ clean
-	$(RM) bin/
-	$(RM Cub3D
+	@printf "\033[1m\033[32mObj files and binary deleted succesfuly\n\033[32m\033[1m"
+	@make -s -C libft/ fclean
+	@make -s -C minilibx-linux/ clean > /dev/null
+	@$(RM) bin/
+	@$(RM) Cub3D
+	@$(RM) minilibx-linux/libxmlx_linux.a
 
 norme:
 	make norme -C libft/
@@ -75,4 +81,4 @@ norme:
 
 re: fclean all
 
-.PHONY: all fclean
+.PHONY: all fclean re clean
